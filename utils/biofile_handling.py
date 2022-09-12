@@ -7,8 +7,9 @@ class sample_dict:
         self.conditions = conditions
         self.directory = directory
 
+# Class biofile is used to carry metadata for each file
 class biofile:
-    def __init__(self, filename, sample_dict):
+    def __init__(self, filename, sample_dict, **kwargs):
         self.filename = filename
         self.species = sample_dict.species
         self.species_prefix = prefixify(self.species)
@@ -41,24 +42,45 @@ class biofile:
         return None
         
 class genome_fasta_file(biofile):
-    def __init__(self, filename, sample_dict):
-        biofile.__init__(self, filename, sample_dict)
+    def __init__(self, filename, sample_dict, **kwargs):
+        biofile.__init__(self, filename, sample_dict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
+        self.version = version
+        
+class transdecoder_cdna_file(biofile):
+    def __init__(self, filename, sample_dict, genome_fasta_file, genome_annot_file, **kwargs):
+        biofile.__init__(self, filename, sample_dict, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
+        self.reference = genome_fasta_file.filename
+        self.reference_version = genome_fasta_file.version
+        self.annotation = genome_annot_file.filename
 
 class genome_gff_file(biofile):
-    def __init__(self, filename, sample_dict):
-        biofile.__init__(self, filename, sample_dict)
+    def __init__(self, filename, sample_dict, **kwargs):
+        biofile.__init__(self, filename, sample_dict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
+        self.reference = genome_fasta_file.filename
+        self.version = genome_fasta_file.version
 
 class genome_gtf_file(biofile):
-    def __init__(self, filename, sample_dict):
-        biofile.__init__(self, filename, sample_dict)
+    def __init__(self, filename, sample_dict, **kwargs):
+        biofile.__init__(self, filename, sample_dict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
+        self.reference = genome_fasta_file.filename
+        self.version = genome_fasta_file.version
 
 class gxc_file(biofile):
-    def __init__(self, filename, sample_dict):
-        biofile.__init__(self, filename, sample_dict)
+    def __init__(self, filename, sample_dict, **kwargs):
+        biofile.__init__(self, filename, sample_dict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.reference = genome_fasta_file.filename
+        self.reference_version = genome_fasta_file.version
+
+class idmm_file(biofile):
+    def __init__(self, filename, sample_dict, fields, **kwargs):
+        biofile.__init__(self, filename, sample_dict, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+        self.fields = fields
         
 class docket:
     def __init__(self, sample_dict):
@@ -91,7 +113,7 @@ class docket:
         
 # function for downloading and unzipping a file based on url
 def url_download_biofile(url = str(), protocol = str(),
-                         sample_dict = sample_dict, fileclass = biofile):
+                         sample_dict = sample_dict, fileclass = biofile, **kwargs):
     import os
     import subprocess
     
@@ -122,7 +144,7 @@ def url_download_biofile(url = str(), protocol = str(),
         unzip_filename = filename.replace('.' + compression, '')
         unzip_loc = outdir + unzip_filename
         if os.path.exists(unzip_loc):
-            return fileclass(unzip_filename, sample_dict) 
+            return fileclass(unzip_filename, sample_dict, **kwargs) 
         elif os.path.exists(output_loc):
             _
         else:
@@ -132,11 +154,11 @@ def url_download_biofile(url = str(), protocol = str(),
         if compression == 'gz' or 'gzip':
             subprocess.run(['gunzip', output_loc])
             
-        return fileclass(unzip_filename, sample_dict)
+        return fileclass(unzip_filename, sample_dict, **kwargs)
     else:
         if protocol == 'curl':
                 subprocess.run([protocol, url, '--output', output_loc])
-        return fileclass(filename, sample_dict)
+        return fileclass(filename, sample_dict, **kwargs)
         
 def biofile_from_s3(s3uri, sample_dict, fileclass = biofile):
     import subprocess
