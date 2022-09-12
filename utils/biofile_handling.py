@@ -7,6 +7,7 @@ class sample_dict:
         self.conditions = conditions
         self.directory = directory
 
+# Class biofile is used to carry metadata for each file
 class biofile:
     def __init__(self, filename, sample_dict):
         self.filename = filename
@@ -39,11 +40,16 @@ class biofile:
         else:
             raise Exception('This file already has an S3 URI at ' + self.s3uri)
         return None
-        
+
 class genome_fasta_file(biofile):
     def __init__(self, filename, sample_dict):
         biofile.__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
+
+class transdecoder_cdna_file(biofile):
+    def __init__(self, filename, sample_dict):
+        biofile.__init__(self, filename, sample_dict)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/transcriptome/' + self.filename
 
 class genome_gff_file(biofile):
     def __init__(self, filename, sample_dict):
@@ -59,6 +65,8 @@ class gxc_file(biofile):
     def __init__(self, filename, sample_dict):
         biofile.__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+
+        
         
 class docket:
     def __init__(self, sample_dict):
