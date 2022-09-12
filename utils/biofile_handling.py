@@ -66,6 +66,11 @@ class gxc_file(biofile):
         biofile.__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
 
+class idmm_file(biofile):
+    def __init__(self, filename, sample_dict):
+        biofile.__init__(self, filename, sample_dict)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+
         
         
 class docket:
