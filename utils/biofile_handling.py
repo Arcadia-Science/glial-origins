@@ -35,44 +35,44 @@ class BioFile:
             pass
         subprocess(['aws', 's3', 'cp', self.path, self.s3uri])
 
-class genome_fasta_file(biofile):
-    def __init__(self, filename, sample_dict, **kwargs):
-        biofile.__init__(self, filename, sample_dict, **kwargs)
+class GenomeFastaFile(BioFile):
+    def __init__(self, filename, sample_dict, version):
+        super().__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
         self.version = version
 
-class transdecoder_cdna_file(biofile):
-    def __init__(self, filename, sample_dict, genome_fasta_file, genome_annot_file, **kwargs):
-        biofile.__init__(self, filename, sample_dict, **kwargs)
+class TransdecoderCdnaFile(BioFile):
+    def __init__(self, filename, sample_dict, genome_fasta_file, genome_annot_file):
+        super().__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
         self.reference = genome_fasta_file.filename
         self.reference_version = genome_fasta_file.version
         self.annotation = genome_annot_file.filename
 
-class genome_gff_file(biofile):
-    def __init__(self, filename, sample_dict, **kwargs):
-        biofile.__init__(self, filename, sample_dict, **kwargs)
+class GenomeGffFile(BioFile):
+    def __init__(self, filename, sample_dict, genome_fasta_file):
+        super().__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference = genome_fasta_file.filename
         self.version = genome_fasta_file.version
 
-class genome_gtf_file(biofile):
-    def __init__(self, filename, sample_dict, **kwargs):
-        biofile.__init__(self, filename, sample_dict, **kwargs)
+class GenomeGtfFile(BioFile):
+    def __init__(self, filename, sample_dict, genome_fasta_file):
+        super().__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference = genome_fasta_file.filename
         self.version = genome_fasta_file.version
 
-class gxc_file(biofile):
-    def __init__(self, filename, sample_dict, **kwargs):
-        biofile.__init__(self, filename, sample_dict, **kwargs)
+class GxcFile(BioFile):
+    def __init__(self, filename, sample_dict, genome_fasta_file):
+        super().__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.reference = genome_fasta_file.filename
         self.reference_version = genome_fasta_file.version
 
-class idmm_file(biofile):
-    def __init__(self, filename, sample_dict, fields, **kwargs):
-        biofile.__init__(self, filename, sample_dict, **kwargs)
+class IdmmFile(BioFile):
+    def __init__(self, filename, sample_dict, fields):
+        super().__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.fields = fields
 
