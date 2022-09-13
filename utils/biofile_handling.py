@@ -10,35 +10,30 @@ class sample_dict:
         self.conditions = conditions
         self.directory = directory
 
-# Class biofile is used to carry metadata for each file
-class biofile:
-    def __init__(self, filename, sample_dict, **kwargs):
+# Class BioFile is used to carry metadata for each file
+class BioFile:
+    def __init__(self, filename, sample_dict):
         self.filename = filename
         self.species = sample_dict.species
-        self.species_prefix = prefixify(self.species)
         self.directory = sample_dict.directory
-        self.path = self.directory + self.filename
-        self.filetype = self.filename.split('.')[-1]
         self.s3uri = None
 
+    @property
+    def path(self):
+        return self.directory + self.filename
+
+    @property
+    def filetype(self):
+        return self.filename.split('.')[-1]
+
+    @property
+    def species_prefix(self):
+        return prefixify(self.species)
+
     def push_to_s3(self):
-        subprocess(['aws', 's3', 'cp', self.directory + self.filename, self.s3uri])
-        return None
-
-    def get_from_s3(self, directory = ''):
-        if directory != '':
-            self.directory = directory
-
-        if not os.path.exists(directory + filename):
-            subprocess(['aws', 's3', 'cp', self.s3uri, self.directory + self.filename])
-        return None
-
-    def add_s3uri(self, s3uri):
-        if self.s3uri == None:
-            self.s3uri = s3uri
-        else:
-            raise Exception('This file already has an S3 URI at ' + self.s3uri)
-        return None
+        if self.s3uri is None:
+            pass
+        subprocess(['aws', 's3', 'cp', self.path, self.s3uri])
 
 class genome_fasta_file(biofile):
     def __init__(self, filename, sample_dict, **kwargs):
