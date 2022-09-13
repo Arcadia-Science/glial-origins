@@ -148,17 +148,6 @@ def url_download_biofile(url = str(), protocol = str(),
                 subprocess.run([protocol, url, '--output', output_loc])
         return fileclass(filename, sample_dict, **kwargs)
 
-def biofile_from_s3(s3uri, sample_dict, fileclass = biofile):
-    filename = s3uri.split('/')[-1]
-
-    directory = sample_dict.directory
-    subprocess(['aws', 's3', 'cp', s3uri, directory + filename])
-
-    outfile = fileclass(filename, sample_dict)
-    outfile.add_s3uri(s3uri)
-
-    return outfile
-
 def gffread_gff_to_gtf(genome_gff_file, sample_dict, gffread_loc):
     filename = genome_gff_file.filename.replace('.gff', '.gtf')
     output = genome_gtf_file(filename, sample_dict)
