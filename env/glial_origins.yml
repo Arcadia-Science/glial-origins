@@ -58,6 +58,7 @@ dependencies:
   - decorator=5.1.1=pyhd8ed1ab_0
   - defusedxml=0.7.1=pyhd8ed1ab_0
   - diamond=2.0.15=hb97b32f_1
+  - dill=0.3.5.1=pyhd8ed1ab_0
   - distributed=2022.9.0=pyhd8ed1ab_0
   - docutils=0.19=py310hff52083_0
   - entrez-direct=16.2=he881be0_1
