@@ -10,6 +10,30 @@ class sample_dict:
         self.conditions = conditions
         self.directory = directory
 
+class docket:
+    def __init__(self, sample_dict):
+        self.species = sample_dict.species
+        self.conditions = sample_dict.conditions
+        self.directory = sample_dict.directory
+        self.files = dict()
+
+    def add_file(self, biofile):
+        self.files[biofile.filename] = biofile
+
+    def add_files(self, list):
+        for biofile in list:
+            self.files[biofile.filename] = biofile
+
+    def add_keyfile(self, biofile, key):
+        setattr(self, key, biofile)
+
+    def add_keyfiles(self, dictionary):
+        for key in dictionary:
+            setattr(self, key, dictionary[key])
+
+    def remove_file(self, key):
+        del self.files[key]
+
 # Class BioFile is used to carry metadata for each file
 class BioFile:
     def __init__(self, filename, sample_dict):
@@ -75,30 +99,6 @@ class IdmmFile(BioFile):
         super().__init__(self, filename, sample_dict)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.fields = fields
-
-class docket:
-    def __init__(self, sample_dict):
-        self.species = sample_dict.species
-        self.conditions = sample_dict.conditions
-        self.directory = sample_dict.directory
-        self.files = dict()
-
-    def add_file(self, biofile):
-        self.files[biofile.filename] = biofile
-
-    def add_files(self, list):
-        for biofile in list:
-            self.files[biofile.filename] = biofile
-
-    def add_keyfile(self, biofile, key):
-        setattr(self, key, biofile)
-
-    def add_keyfiles(self, dictionary):
-        for key in dictionary:
-            setattr(self, key, dictionary[key])
-
-    def remove_file(self, key):
-        del self.files[key]
 
 # Functions for handling biofiles
 
