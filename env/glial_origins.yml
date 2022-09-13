@@ -84,6 +84,7 @@ dependencies:
   - gcc_impl_linux-64=12.1.0=hea43390_16
   - geosketch=1.2=py_0
   - gettext=0.19.8.1=h73d1719_1008
+  - gffread=0.12.7=hd03093a_1
   - gfortran_impl_linux-64=12.1.0=h1db8e46_16
   - glib=2.72.1=h6239696_0
   - glib-tools=2.72.1=h6239696_0
