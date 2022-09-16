@@ -4,23 +4,28 @@ Evolutionary origins and relationships of glial cell types
 test
 
 ## Directory Structure
+
+Files:
 –– `README.md` file containing description of directories and their functions
 
 –– `.gitignore` file containing patterns such as `output/` and `.ipynb_checkpoints/` to be ignored by git
 
+Directories:
 –– `env/` folder containing docker containers and conda install .yml ?
 
-–– `utils/` general scripts, tools, and functions
+–– `utils/` general scripts, tools, and functions for all processes
 
-–– `downloading/` scripts to download and manage data
+–– `templates/` folder of template notebooks for specific parts of the analysis
 
-–– `orthogroups/`  scripts to generate orthogroups and OG_idmms
+––– `downloading/` template notebooks to download and manage data
 
-–– `struclusters/`  scripts to get structures from AlphaFold and make clusters with FoldSeek
+––– `orthogroups/`  template notebooks to generate orthogroups and OG_idmms
 
-–– `statvis/` custom scripts for doing custom statistics and data visualizations
+––– `struclusters/`  template notebooks to get structures from AlphaFold and make clusters with FoldSeek
 
-–– `notebooks/`  notebooks describing the exploratory analyses and linking together functions
+––– `statvis/` template notebooks for doing custom statistics and data visualizations
+
+–– `notebooks/` working notebooks describing the exploratory analyses and linking together functions
 
 ––– `speciesprefix_conditions/`  name format for folders using species prefix + conditions
 
