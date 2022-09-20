@@ -122,6 +122,9 @@ class BioFile:
             self.path = self.directory + self.filename
             self.filetype = self.filename.split('.')[-1]
             
+            if os.path.exists(self.path):
+                return self
+            
             if protocol == 'curl':
                 subprocess.run([protocol, url, '--output', self.path])
             return self
@@ -194,7 +197,18 @@ class TransdecoderOutFile(BioFile):
 
 class GenomeGffFile(BioFile):
     def __init__(self, filename: str, sampledict: SampleDict, GenomeFastaFile: GenomeFastaFile, **kwargs):
+        import subprocess
+        import os
+        
         super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+        
+        if self.filename.split('.')[-1] == 'gff3':
+            new_filename = self.filename.replace('gff3', 'gff')
+            new_path = self.directory + new_filename
+            subprocess.run(['mv', self.path, new_path])
+            self.filename = new_filename
+            self.path = new_path
+        
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference_genome = GenomeFastaFile
     
@@ -262,6 +276,18 @@ class GeneListFile(BioFile):
         filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
         
         subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type])
+        output = UniprotIDMapperFile(
+            filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+            sources = self.sources, from_type = from_type, to_type = to_type)
+        
+        return output
+    
+    def get_uniprot_ids_by_genename(self, ID_MAPPER_LOC, from_type, to_type, taxid):
+        import subprocess
+        
+        filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
+        
+        subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type, taxid])
         output = UniprotIDMapperFile(
             filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
             sources = self.sources, from_type = from_type, to_type = to_type)

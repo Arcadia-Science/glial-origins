@@ -13,6 +13,7 @@ def convert_fields_to_dict_gtf(string):
 def convert_fields_to_dict_gff(string):
     # Additional fields are demarcated with ';', splits them by ';'
     entries = string.split(";")
+    entries = [entry for entry in entries if '=' in entry]
     # Additional fields are irregularly padded with whitespace and should be cleaned by this
     output = {entry.split('=')[0]: entry.split('=')[1] for entry in entries}
     return output
