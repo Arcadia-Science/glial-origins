@@ -19,10 +19,12 @@ def convert_fields_to_dict_gff(string):
 
 # Function takes a string from the Dbxref additional fields and parses into dict
 def convert_dbxref_to_dict(string):
+    if string == None:
+        return None
     # Additional fields are demarcated with ',', splits them by ','
     entries = string.split(",")
     # Key-value pairs are specified with a ':', split into dictionary based on that sep
-    output = {entry.split(':')[0]: entry.split(':')[1] for entry in entries}
+    output = {entry.split(':')[0]: entry.split(':')[-1] for entry in entries}
     return output
 
 # Function takes a dictionary and returns an additional-fields string for GTF
@@ -36,7 +38,7 @@ def make_gene_list(lst, filename):
         for item in lst:
         # write each item on a new line
             fp.write("%s\n" % item)
-        print('Done')
+        print('Wrote', len(lst), 'gene ids to', filename)
     return True
 
 # Converts a string of format "Genus_species" to "Gspe" species prefix format

@@ -8,10 +8,10 @@ class SampleDict:
         self.directory = directory
 
 class Docket:
-    def __init__(self, SampleDict):
-        self.species = SampleDict.species
-        self.conditions = SampleDict.conditions
-        self.directory = SampleDict.directory
+    def __init__(self, sampledict):
+        self.species = sampledict.species
+        self.conditions = sampledict.conditions
+        self.directory = sampledict.directory
         self.files = dict()
         
     def add_file(self, BioFile):
@@ -34,11 +34,12 @@ class Docket:
         
 # Class BioFile is used to carry metadata for each file
 class BioFile:
-    def __init__(self, filename: str, SampleDict: SampleDict, **kwargs):
+    def __init__(self, filename: str, sampledict: SampleDict, **kwargs):
         self.filename = filename
-        self.species = SampleDict.species
-        self.conditions = SampleDict.conditions
-        self.directory = SampleDict.directory
+        self.species = sampledict.species
+        self.conditions = sampledict.conditions
+        self.directory = sampledict.directory
+        self.sampledict = SampleDict(self.species, self.conditions, self.directory)
         self.path = self.directory + self.filename
         self.species_prefix = prefixify(self.species)
         self.s3uri = None
@@ -126,8 +127,8 @@ class BioFile:
             return self
 
 class GenomeFastaFile(BioFile):
-    def __init__(self, filename: str, SampleDict: SampleDict, version: str, **kwargs):
-        super().__init__(filename = filename, SampleDict = SampleDict, **kwargs)
+    def __init__(self, filename: str, sampledict: SampleDict, version: str, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.version = version
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
         
@@ -137,12 +138,10 @@ class GenomeFastaFile(BioFile):
         import os
         import subprocess
         
-        self_SampleDict = SampleDict(self.species, self.conditions, self.directory)
-        
         cdna_name = self.filename.replace('.' + self.filetype, '_cDNA.' + self.filetype)
         cdna_output = TransdecoderCdnaFile(
             filename = cdna_name,
-            SampleDict = self_SampleDict,
+            sampledict = self.sampledict,
             GenomeFastaFile = self,
             GenomeAnnotFile = GenomeGtfFile
         )
@@ -156,8 +155,8 @@ class GenomeFastaFile(BioFile):
 
 
 class TransdecoderCdnaFile(BioFile):
-    def __init__(self, filename: str, SampleDict: SampleDict, GenomeFastaFile, GenomeAnnotFile, **kwargs):
-        super().__init__(filename = filename, SampleDict = SampleDict, **kwargs)
+    def __init__(self, filename: str, sampledict: SampleDict, GenomeFastaFile, GenomeAnnotFile, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/transcriptome/' + self.filename
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
@@ -172,13 +171,12 @@ class TransdecoderCdnaFile(BioFile):
         subprocess.run([TDPREDICT_LOC, '-t', self.path, '-O', temp_dir])
         
         output_dict = {}
-        self_SampleDict = SampleDict(self.species, self.conditions, self.directory)
         
         for suffix in suffixes:
             output_filename = self.filename + '.transdecoder' + suffix
             output_dict['transdecoder_' + suffix.replace('.', '')] = TransdecoderOutFile(
                 output_filename, 
-                self_SampleDict, 
+                self.sampledict, 
                 GenomeFastaFile = self.reference_genome, 
                 GenomeAnnotFile = self.reference_annot,
                 TransdecoderCdnaFile = self
@@ -187,46 +185,85 @@ class TransdecoderCdnaFile(BioFile):
         return output_dict
     
 class TransdecoderOutFile(BioFile):
-    def __init__(self, filename, SampleDict, GenomeFastaFile, GenomeAnnotFile, TransdecoderCdnaFile, **kwargs):
-        super().__init__(filename = filename, SampleDict = SampleDict, **kwargs)
+    def __init__(self, filename, sampledict, GenomeFastaFile, GenomeAnnotFile, TransdecoderCdnaFile, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/proteome/' + self.filename
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
         self.reference_cDNA = TransdecoderCdnaFile
 
 class GenomeGffFile(BioFile):
-    def __init__(self, filename: str, SampleDict: SampleDict, GenomeFastaFile: GenomeFastaFile, **kwargs):
-        super().__init__(filename = filename, SampleDict = SampleDict, **kwargs)
+    def __init__(self, filename: str, sampledict: SampleDict, GenomeFastaFile: GenomeFastaFile, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference_genome = GenomeFastaFile
     
     def to_gtf(self, GFFREAD_LOC):
         import subprocess
+        import os
         
-        self_SampleDict = SampleDict(self.species, self.conditions, self.directory)
-
         filename = self.filename.replace('.gff', '.gtf')
-        output = GenomeGtfFile(filename, SampleDict = self_SampleDict, GenomeFastaFile = self.reference_genome)
+        output = GenomeGtfFile(filename, sampledict = self.sampledict, GenomeFastaFile = self.reference_genome)
+        
+        if os.path.exists(output.path):
+            print('Converted file', output.filename, 'already exists at:\n', output.path)
+            return output
+        
         subprocess.run([GFFREAD_LOC, self.path, '-T', '-o', output.path])
         
         return output
 
 class GenomeGtfFile(BioFile):
-    def __init__(self, filename, SampleDict, GenomeFastaFile, **kwargs):
-        super().__init__(filename = filename, SampleDict = SampleDict, **kwargs)
+    def __init__(self, filename, sampledict, GenomeFastaFile, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference_genome = GenomeFastaFile
 
 class GxcFile(BioFile):
-    def __init__(self, filename: str, SampleDict: SampleDict, GenomeFastaFile, GenomeAnnotFile, **kwargs):
-        super().__init__(filename = filename, SampleDict = SampleDict, **kwargs)
+    def __init__(self, filename: str, sampledict: SampleDict, GenomeFastaFile, GenomeAnnotFile, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
 
 class IdmmFile(BioFile):
-    def __init__(self, filename, SampleDict, kind, sources, **kwargs):
-        super().__init__(filename = filename, SampleDict = SampleDict, **kwargs)
+    def __init__(self, filename, sampledict, kind, sources: list, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.sources = sources
         self.kind = kind
+
+class UniprotIDMapperFile(IdmmFile):
+    def __init__(self, filename, sampledict, kind, sources: list, from_type, to_type, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, kind = kind, sources = sources, **kwargs)
+        self.from_type = from_type
+        self.to_type = to_type
+        
+class GeneListFile(BioFile):
+    def __init__(self, filename, sampledict, sources: list, genes: list, identifier: str, **kwargs):
+        from string_functions import make_gene_list, prefixify
+        
+        self.identifier = identifier
+        new_filename = '_'.join([prefixify(sampledict.species), sampledict.conditions, self.identifier, 'ids.txt'])
+        
+        if filename != '':
+            print('filename is ignored and generated by input as ', new_filename)
+
+        super().__init__(filename = new_filename, sampledict = sampledict, **kwargs)
+
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+        self.sources = sources
+        
+        make_gene_list(genes, self.path)
+    
+    def get_uniprot_ids(self, ID_MAPPER_LOC, from_type, to_type):
+        import subprocess
+        
+        filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
+        
+        subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type])
+        output = UniprotIDMapperFile(
+            filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+            sources = self.sources, from_type = from_type, to_type = to_type)
+        
+        return output

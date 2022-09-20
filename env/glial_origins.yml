@@ -87,6 +87,7 @@ dependencies:
   - gettext=0.19.8.1=h73d1719_1008
   - gffread=0.12.7=hd03093a_1
   - gfortran_impl_linux-64=12.1.0=h1db8e46_16
+  - ghostscript=9.54.0=h27087fc_2
   - glib=2.72.1=h6239696_0
   - glib-tools=2.72.1=h6239696_0
   - glpk=4.65=h9202a9a_1004
@@ -435,6 +436,7 @@ dependencies:
   - seaborn-base=0.12.0=pyhd8ed1ab_0
   - sed=4.8=he412f7d_0
   - send2trash=1.8.0=pyhd8ed1ab_0
+  - seqlogo=5.29.8=py_0
   - session-info=1.0.0=pyhd8ed1ab_0
   - setuptools=65.3.0=py310hff52083_0
   - sip=6.6.2=py310hd8f1fbe_0
@@ -479,6 +481,7 @@ dependencies:
   - urllib3=1.26.11=pyhd8ed1ab_0
   - wcwidth=0.2.5=pyh9f0ad1d_2
   - webencodings=0.5.1=py_1
+  - weblogo=3.7.12=pyhd8ed1ab_0
   - websocket-client=1.4.1=pyhd8ed1ab_0
   - wget=1.20.3=ha56f1ee_1
   - wheel=0.37.1=pyhd8ed1ab_0

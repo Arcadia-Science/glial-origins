@@ -3,13 +3,6 @@
 # Store the ids as a variable:
 ids=$(cat $1 | tr '\n' ',')
 
-# remove the last character if it's an inserted comma
-lastchr=${ids#${ids%?}}
-if [ "$lastchr" == "," ]
-then
-    ids=${ids::-1}
-fi
-
 # Write the curl forms to a file:
 echo "from=$2&to=$3&ids=$ids" > $1-form.txt
 
