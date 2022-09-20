@@ -32,6 +32,10 @@ def convert_dbxref_to_dict(string):
 def convert_dict_to_fields_gtf(dictionary):
     return '; '.join([key + ' "' + value + '"' for key,value in dictionary.items()])
 
+# Function takes a dictionary and returns an additional-fields string for GTF
+def convert_dict_to_fields_gff(dictionary):
+    return ';'.join([str(key) + '=' + str(value) for key,value in dictionary.items()])
+
 # Makes a gene list .txt file from a python list
 def make_gene_list(lst, filename):
     # Creates a file with name `filename`

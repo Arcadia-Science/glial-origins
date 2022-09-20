@@ -212,7 +212,7 @@ class GenomeGffFile(BioFile):
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference_genome = GenomeFastaFile
     
-    def to_gtf(self, GFFREAD_LOC):
+    def to_gtf(self, GFFREAD_LOC, keep_all = False):
         import subprocess
         import os
         
