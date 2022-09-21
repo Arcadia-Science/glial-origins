@@ -30,6 +30,39 @@ class Docket:
             
     def remove_file(self, key):
         del self.files[key]
+
+class MultiSpeciesDocket:
+    def __init__(self, species_dict: dict, global_conditions: str):
+        self.species_dict = species_dict
+        self.global_conditions = global_conditions
+        self.SampleDicts = {}
+        
+        for species in species_dict:
+            species_prefix = prefixify(species)
+            conditions = species_dict[species]
+            output_folder = '../../output/' + species_prefix + '_' + conditions + '/'
+            species_SampleDict = SampleDict(species, conditions, output_folder)
+            self.SampleDicts[species_prefix] = species_SampleDict
+        
+        self.species_concat = ''.join(sorted(self.SampleDicts.keys()))
+        self.directory = '../../output/' + self.species_concat + '_' + self.global_conditions + '_' + 'OrthoFinder/'
+    
+    def make_directory(self):
+        import os
+        if not os.path.exists(self.directory):
+            os.mkdir(self.directory)
+        return None
+    
+    def get_Dockets(self):
+        import dill
+        
+        self.species_Dockets = {}
+        
+        for sampledict in self.SampleDicts.values():
+            species_prefix = prefixify(sampledict.species)
+            with open(sampledict.directory + '_'.join([species_prefix, sampledict.conditions, 'sample_Docket.pkl']), 'rb') as file:
+                self.species_Dockets[species_prefix] = dill.load(file)
+        return None
         
         
 # Class BioFile is used to carry metadata for each file
@@ -293,3 +326,20 @@ class GeneListFile(BioFile):
             sources = self.sources, from_type = from_type, to_type = to_type)
         
         return output
+
+class MultiSpeciesFile():
+    def __init__(self, filename, multispeciesdocket, **kwargs):
+        self.filename = filename
+        self.multispeciesdocket = multispeciesdocket
+        self.species = list(self.multispeciesdocket.species_dict.keys())
+        self.global_conditions = self.multispeciesdocket.global_conditions
+        self.directory = self.multispeciesdocket.directory
+        self.path = self.directory + self.filename
+        self.species_concat = self.multispeciesdocket.species_concat
+        self.s3uri = None
+
+class OrthoFinderOutputFile(MultiSpeciesFile):
+    def __init__(self, filename, multispeciesdocket, directory: str, **kwargs):
+        super().__init__(filename = filename, multispeciesdocket = multispeciesdocket, **kwargs)
+        self.directory = directory
+        self.path = self.directory + self.filename
