@@ -235,7 +235,7 @@ dependencies:
   - nspr=4.32=h9c3ff4c_1
   - nss=3.78=h2350873_0
   - numba=0.55.0=py310h00e6091_0
-  - numpy=1.23.3=py310h53a5b5f_0
+  - numpy=1.21.6=py310h45f3432_0
   - openjpeg=2.5.0=h7d73246_1
   - openmpi=4.1.4=ha1ae619_101
   - openssl=1.1.1q=h166bdaf_0
