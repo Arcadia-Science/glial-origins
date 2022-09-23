@@ -30,11 +30,32 @@ class Docket:
             
     def remove_file(self, key):
         del self.files[key]
+    
+    def pickle(self):
+        import dill
+        self.dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_Docket.pkl'])
+
+        with open(dill_filename, 'wb') as file:
+            dill.dump(sample_Docket, file)
+    
+    def unpickle(self):
+        import dill
+        import os
+        
+        dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_Docket.pkl'])
+        if os.path.exists(dill_filepath):
+            self.dill_filepath = dill_filepath
+
+        with open(self.dill_filepath, 'rb') as file:
+            self = dill.load(file)
+        
+        return self
 
 class MultiSpeciesDocket:
-    def __init__(self, species_dict: dict, global_conditions: str):
+    def __init__(self, species_dict: dict, global_conditions: str, analysis_type):
         self.species_dict = species_dict
         self.global_conditions = global_conditions
+        self.analysis_type = analysis_type
         self.SampleDicts = {}
         
         for species in species_dict:
@@ -45,7 +66,7 @@ class MultiSpeciesDocket:
             self.SampleDicts[species_prefix] = species_SampleDict
         
         self.species_concat = ''.join(sorted(self.SampleDicts.keys()))
-        self.directory = '../../output/' + self.species_concat + '_' + self.global_conditions + '_' + 'OrthoFinder/'
+        self.directory = '../../output/' + self.species_concat + '_' + self.global_conditions + '_' + self.analysis_type + '/'
     
     def make_directory(self):
         import os
@@ -272,6 +293,13 @@ class GxcFile(BioFile):
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
+
+class ExcFile(BioFile):
+    def __init__(self, filename: str, sampledict: SampleDict, gxcfile, embedding, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.original = gxcfile
+        self.embedding = embedding
 
 class IdmmFile(BioFile):
     def __init__(self, filename, sampledict, kind, sources: list, **kwargs):
