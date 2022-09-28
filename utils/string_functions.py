@@ -29,10 +29,14 @@ def convert_dbxref_to_dict(string):
     return output
 
 # Function takes a dictionary and returns an additional-fields string for GTF
+# For example, a dictionary {'gene_name': 'Hh', 'gene_id': '123'} becomes
+# 'gene_name "Hh"; gene_id "123"'
 def convert_dict_to_fields_gtf(dictionary):
     return '; '.join([key + ' "' + value + '"' for key,value in dictionary.items()])
 
 # Function takes a dictionary and returns an additional-fields string for GTF
+# For example, a dictionary {'gene_name': 'Hh', 'gene_id': '123'} becomes
+# 'gene_name=Hh;gene_id=123'
 def convert_dict_to_fields_gff(dictionary):
     return ';'.join([str(key) + '=' + str(value) for key,value in dictionary.items()])
 

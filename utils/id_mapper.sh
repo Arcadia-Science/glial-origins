@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# This script queries the UniProt ID Mapping API to convert
+# one list of gene names into another (usually UniProtKB)
+
+# This script takes 3 arguments:
+# $1: a newline-separated txt file with a list of gene names
+#     with a filename ending in '_ids.txt'
+# $2: a 'from' value which states the starting name type
+# $3: a 'to' value which states the return name type
+
 # Store the ids as a variable:
 ids=$(cat $1 | tr '\n' ',')
 

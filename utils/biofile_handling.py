@@ -7,7 +7,7 @@ class SampleDict:
         self.conditions = conditions
         self.directory = directory
 
-class Docket:
+class Docket:                             
     def __init__(self, sampledict):
         self.species = sampledict.species
         self.conditions = sampledict.conditions
