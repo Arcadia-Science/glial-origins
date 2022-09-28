@@ -1,0 +1,7 @@
+HOME_DIR = '/home/ec2-user/miniconda3/'
+GFFREAD_LOC = HOME_DIR + 'envs/glial_origins/bin/gffread'
+TRANSDECODER_LOC = HOME_DIR + 'pkgs/transdecoder-5.5.0-pl526_1/opt/transdecoder/'
+TDLONGORF_LOC = HOME_DIR + 'pkgs/transdecoder-5.5.0-pl526_1/opt/transdecoder/TransDecoder.LongOrfs'
+TDPREDICT_LOC = HOME_DIR + 'pkgs/transdecoder-5.5.0-pl526_1/opt/transdecoder/TransDecoder.Predict'
+ID_MAPPER_LOC = '../../utils/id_mapper.sh'
+ID_MAPPER_GENENAME_LOC = '../../utils/id_mapper_genename.sh'
