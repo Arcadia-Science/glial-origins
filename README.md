@@ -1,14 +1,12 @@
 # glial-origins
 Evolutionary origins and relationships of glial cell types
 
-test
-
 ## Directory Structure
 
 Files:
 –– `README.md` file containing description of directories and their functions
 
-–– `.gitignore` file containing patterns such as `output/` and `.ipynb_checkpoints/` to be ignored by git
+–– `.gitignore` file containing patterns such as `output/` and `.ipynb_checkpoints/` to be ignored by git
 
 Directories:
 –– `env/` folder containing docker containers and conda install .yml ?
