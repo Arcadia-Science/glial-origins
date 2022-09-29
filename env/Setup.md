@@ -85,6 +85,8 @@ On the command line, use:
 
 14. Start working on analyses!
 
+> A good place to start is by downloading datasets, e.g. [1_Drer_adultbrain_downloading.ipynb](https://github.com/Arcadia-Science/glial-origins/blob/das/orthofinder-dev/notebooks/Drer_adultbrain/1_Drer_adultbrain_downloading.ipynb).
+
 ## On an existing Cloud9 Instance
 
 1. After starting up the instance, git clone this repository using HTTPS and authenticate.  
@@ -98,3 +100,5 @@ On the command line, use:
 4. Run Jupyter lab and set up the server using steps 11-13 above. If you have already set security group rules, you may not need to do this again.
 
 5. Start working on analyses!
+
+> A good place to start is by downloading datasets, e.g. [1_Drer_adultbrain_downloading.ipynb](https://github.com/Arcadia-Science/glial-origins/blob/das/orthofinder-dev/notebooks/Drer_adultbrain/1_Drer_adultbrain_downloading.ipynb).
