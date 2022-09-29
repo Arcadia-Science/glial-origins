@@ -1,4 +1,6 @@
 # Function takes a string from the GTF additional fields (column 8) and parses into dict
+# For example, a string of format 'gene_name "Hh"; gene_id "123"' becomes
+# {'gene_name': 'Hh', 'gene_id': '123'}
 def convert_fields_to_dict_gtf(string):
     # Additional fields are demarcated with ';', splits them by ';'
     # Additional fields string ends in a terminal ';', causing problems later; this handles that
@@ -10,6 +12,8 @@ def convert_fields_to_dict_gtf(string):
     return output
 
 # Function takes a string from the GFF additional fields (column 8) and parses into dict
+# For example, a string of format 'gene_name=Hh;gene_id=123' becomes
+# {'gene_name': 'Hh', 'gene_id': '123'}
 def convert_fields_to_dict_gff(string):
     # Additional fields are demarcated with ';', splits them by ';'
     entries = string.split(";")
@@ -19,6 +23,8 @@ def convert_fields_to_dict_gff(string):
     return output
 
 # Function takes a string from the Dbxref additional fields and parses into dict
+# For example, a string of format 'Ensembl:123104,UniProtKB:Q7D56' becomes
+# {'Ensembl': '123104', 'UniProtKB': 'Q7D56'}
 def convert_dbxref_to_dict(string):
     if string == None:
         return None
@@ -41,6 +47,11 @@ def convert_dict_to_fields_gff(dictionary):
     return ';'.join([str(key) + '=' + str(value) for key,value in dictionary.items()])
 
 # Makes a gene list .txt file from a python list
+# Each item of the list is written to a new line
+# For example, a list ['Hh', 'bcd', 'nos'] becomes a text file:
+# Hh
+# bcd
+# nos
 def make_gene_list(lst, filename):
     # Creates a file with name `filename`
     with open(filename, 'w') as fp:
@@ -51,5 +62,8 @@ def make_gene_list(lst, filename):
     return True
 
 # Converts a string of format "Genus_species" to "Gspe" species prefix format
+# Takes the first letter of "Genus" -> G
+# Takes the first three letters of "species" -> spe
+# Concatenates -> Gspe
 def prefixify(species):
     return species.split('_')[0][0] + species.split('_')[1][0:3]
