@@ -44,16 +44,14 @@ On the command line, use:
 `conda install mamba`
 > Choose `y` when prompted.
 
-9. Create base environment.
-
+9. Create base environment.  
 `mamba env create -f env/glial_origins.yml`
 
 ## On an existing Cloud9 Instance
 
-1. After starting up the instance, git clone this repository using HTTPS and authenticate.
+1. After starting up the instance, git clone this repository using HTTPS and authenticate.  
 On the command line, use:
-
-`git clone https://github.com/Arcadia-Science/glial-origins.git`
+`git clone https://github.com/Arcadia-Science/glial-origins.git`  
 
 2. If Conda or Mamba are not already installed, install them following steps 4-7 above.
 
