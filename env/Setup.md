@@ -1,6 +1,6 @@
 # Setup
 
-## On AWS Cloud9 Instance
+## On a fresh AWS Cloud9 Instance
 
 1. Create a new AWS Cloud9 instance. Choose a configuration that gives you ~64GB of RAM (e.g. m4.4xlarge). Use a Amazon Linux 2 machine.
 
@@ -42,3 +42,13 @@ For example, you might use:
 
 9. Create base environment.
 `mamba env create -f env/glial_origins.yml`
+
+## On an existing Cloud9 Instance
+
+1. After starting up the instance, git clone this repository using HTTPS and authenticate.
+On the command line, use:
+`git clone https://github.com/Arcadia-Science/glial-origins.git`
+
+2. If Conda or Mamba are not already installed, install them following steps 4-7 above.
+
+3. Create the base environment using steps 8-9 above.
