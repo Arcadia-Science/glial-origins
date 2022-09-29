@@ -55,13 +55,13 @@ On the command line, use:
 11. Run Jupyter.  
 `jupyter lab --ip 0.0.0.0 --port 8888`
 > This should output a bunch of lines of text.  
-> You'll want to pay attention to the lines that say something like:
-` To access the server, open this file in a browser:
-        file:///home/ec2-user/.local/share/jupyter/runtime/jpserver-30829-open.html
-    Or copy and paste one of these URLs:
-        http://ip-172-31-22-55.us-west-1.compute.internal:8888/lab?token=dbaec68e69abc5a9e6ccc5bf413eb2a170c938c37ddb55c1
-     or http://127.0.0.1:8888/lab?token=dbaec68e69abc5a9e6ccc5bf413eb2a170c938c37ddb55c1`
-> You'll use the long string after `token=` to set the passphrase for the Jupyter lab server in step 13.
+> You'll want to pay attention to the lines that say something like:  
+` To access the server, open this file in a browser:  
+        file:///home/ec2-user/.local/share/jupyter/runtime/jpserver-30829-open.html 
+    Or copy and paste one of these URLs:  
+        http://ip-172-31-22-55.us-west-1.compute.internal:8888/lab?token=dbaec68e69abc5a9e6ccc5bf413eb2a170c938c37ddb55c1  
+     or http://127.0.0.1:8888/lab?token=dbaec68e69abc5a9e6ccc5bf413eb2a170c938c37ddb55c1`  
+> You'll use the long string after `token=` to set the passphrase for the Jupyter lab server in step 13.  
 
 12. Go to the Cloud9 console and go to the EC2 instance.  
 - From the Cloud9 "Your Environments" section, click on the name of your new environment (e.g. `glial-origins-analysis`).
