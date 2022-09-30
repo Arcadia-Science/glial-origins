@@ -1,4 +1,13 @@
 from string_functions import *
+import os
+import subprocess
+
+GIT_HOME = subprocess.run(['git', 'rev-parse', '--show-toplevel'], stdout=subprocess.PIPE).stdout.decode("utf-8").strip('\n')
+GLOBAL_OUTPUT_DIRECTORY = GIT_HOME + '/output/'
+
+if not os.path.exists(GLOBAL_OUTPUT_DIRECTORY):
+    os.mkdir(GLOBAL_OUTPUT_DIRECTORY)
+    print(GLOBAL_OUTPUT_DIRECTORY, 'does not exist; making it now')
 
 # Class definitions to handle BioFiles between scripts
 class SampleDict:
@@ -35,8 +44,8 @@ class Docket:
         import dill
         self.dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_Docket.pkl'])
 
-        with open(dill_filename, 'wb') as file:
-            dill.dump(sample_Docket, file)
+        with open(self.dill_filepath, 'wb') as file:
+            dill.dump(self, file)
     
     def unpickle(self):
         import dill
@@ -231,13 +240,15 @@ class TransdecoderCdnaFile(BioFile):
         
         for suffix in suffixes:
             output_filename = self.filename + '.transdecoder' + suffix
-            output_dict['transdecoder_' + suffix.replace('.', '')] = TransdecoderOutFile(
+            output_file = TransdecoderOutFile(
                 output_filename, 
                 self.sampledict, 
                 GenomeFastaFile = self.reference_genome, 
                 GenomeAnnotFile = self.reference_annot,
                 TransdecoderCdnaFile = self
             )
+            subprocess.run(['mv', output_file.filename, output_file.path])
+            output_dict['transdecoder_' + suffix.replace('.', '')] = output_file
         
         return output_dict
     
