@@ -382,4 +382,3 @@ class OrthoFinderOutputFile(MultiSpeciesFile):
         super().__init__(filename = filename, multispeciesdocket = multispeciesdocket)
         self.directory = directory
         self.path = self.directory + self.filename
-        
