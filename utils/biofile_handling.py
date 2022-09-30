@@ -16,7 +16,7 @@ class SampleDict:
         self.conditions = conditions
         self.directory = directory
 
-class Docket:                             
+class BioFileDocket:                             
     def __init__(self, sampledict):
         self.species = sampledict.species
         self.conditions = sampledict.conditions
@@ -42,7 +42,7 @@ class Docket:
     
     def pickle(self):
         import dill
-        self.dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_Docket.pkl'])
+        self.dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
 
         with open(self.dill_filepath, 'wb') as file:
             dill.dump(self, file)
@@ -51,7 +51,7 @@ class Docket:
         import dill
         import os
         
-        dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_Docket.pkl'])
+        dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
         if os.path.exists(dill_filepath):
             self.dill_filepath = dill_filepath
 
@@ -60,7 +60,7 @@ class Docket:
         
         return self
 
-class MultiSpeciesDocket:
+class MultiSpeciesBioFileDocket:
     def __init__(self, species_dict: dict, global_conditions: str, analysis_type):
         self.species_dict = species_dict
         self.global_conditions = global_conditions
@@ -83,15 +83,15 @@ class MultiSpeciesDocket:
             os.mkdir(self.directory)
         return None
     
-    def get_Dockets(self):
+    def get_BioFileDockets(self):
         import dill
         
-        self.species_Dockets = {}
+        self.species_BioFileDockets = {}
         
         for sampledict in self.SampleDicts.values():
             species_prefix = prefixify(sampledict.species)
-            with open(sampledict.directory + '_'.join([species_prefix, sampledict.conditions, 'sample_Docket.pkl']), 'rb') as file:
-                self.species_Dockets[species_prefix] = dill.load(file)
+            with open(sampledict.directory + '_'.join([species_prefix, sampledict.conditions, 'sample_BioFileDocket.pkl']), 'rb') as file:
+                self.species_BioFileDockets[species_prefix] = dill.load(file)
         return None
         
         
@@ -367,18 +367,18 @@ class GeneListFile(BioFile):
         return output
 
 class MultiSpeciesFile():
-    def __init__(self, filename, multispeciesdocket):
+    def __init__(self, filename, multispeciesbiofiledocket):
         self.filename = filename
-        self.multispeciesdocket = multispeciesdocket
-        self.species = list(self.multispeciesdocket.species_dict.keys())
-        self.global_conditions = self.multispeciesdocket.global_conditions
-        self.directory = self.multispeciesdocket.directory
+        self.multispeciesbiofiledocket = multispeciesbiofiledocket
+        self.species = list(self.multispeciesbiofiledocket.species_dict.keys())
+        self.global_conditions = self.multispeciesbiofiledocket.global_conditions
+        self.directory = self.multispeciesbiofiledocket.directory
         self.path = self.directory + self.filename
-        self.species_concat = self.multispeciesdocket.species_concat
+        self.species_concat = self.multispeciesbiofiledocket.species_concat
         self.s3uri = None
 
 class OrthoFinderOutputFile(MultiSpeciesFile):
-    def __init__(self, filename, multispeciesdocket, directory: str):
-        super().__init__(filename = filename, multispeciesdocket = multispeciesdocket)
+    def __init__(self, filename, multispeciesbiofiledocket, directory: str):
+        super().__init__(filename = filename, multispeciesbiofiledocket = multispeciesbiofiledocket)
         self.directory = directory
         self.path = self.directory + self.filename
