@@ -367,7 +367,7 @@ class GeneListFile(BioFile):
         return output
 
 class MultiSpeciesFile():
-    def __init__(self, filename, multispeciesdocket, **kwargs):
+    def __init__(self, filename, multispeciesdocket):
         self.filename = filename
         self.multispeciesdocket = multispeciesdocket
         self.species = list(self.multispeciesdocket.species_dict.keys())
@@ -378,8 +378,8 @@ class MultiSpeciesFile():
         self.s3uri = None
 
 class OrthoFinderOutputFile(MultiSpeciesFile):
-    def __init__(self, filename, multispeciesdocket, directory: str, **kwargs):
-        super().__init__(filename = filename, multispeciesdocket = multispeciesdocket, **kwargs)
+    def __init__(self, filename, multispeciesdocket, directory: str):
+        super().__init__(filename = filename, multispeciesdocket = multispeciesdocket)
         self.directory = directory
         self.path = self.directory + self.filename
         
