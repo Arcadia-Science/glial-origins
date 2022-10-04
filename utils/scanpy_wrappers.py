@@ -60,3 +60,4 @@ class ScanpyMetaObject():
         sc.tl.umap(self.adata)
         sc.tl.leiden(self.adata)
         sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, save = '_'.join([self.species_prefix, self.datatype, 'leiden.pdf']))
+        
