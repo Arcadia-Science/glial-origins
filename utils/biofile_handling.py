@@ -1,4 +1,13 @@
 from string_functions import *
+import os
+import subprocess
+
+GIT_HOME = subprocess.run(['git', 'rev-parse', '--show-toplevel'], stdout=subprocess.PIPE).stdout.decode("utf-8").strip('\n')
+GLOBAL_OUTPUT_DIRECTORY = GIT_HOME + '/output/'
+
+if not os.path.exists(GLOBAL_OUTPUT_DIRECTORY):
+    os.mkdir(GLOBAL_OUTPUT_DIRECTORY)
+    print(GLOBAL_OUTPUT_DIRECTORY, 'does not exist; making it now')
 
 # Class definitions to handle BioFiles between scripts
 class SampleDict:
@@ -7,7 +16,7 @@ class SampleDict:
         self.conditions = conditions
         self.directory = directory
 
-class Docket:
+class BioFileDocket:                             
     def __init__(self, sampledict):
         self.species = sampledict.species
         self.conditions = sampledict.conditions
@@ -30,6 +39,60 @@ class Docket:
             
     def remove_file(self, key):
         del self.files[key]
+    
+    def pickle(self):
+        import dill
+        self.dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
+
+        with open(self.dill_filepath, 'wb') as file:
+            dill.dump(self, file)
+    
+    def unpickle(self):
+        import dill
+        import os
+        
+        dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
+        if os.path.exists(dill_filepath):
+            self.dill_filepath = dill_filepath
+
+        with open(self.dill_filepath, 'rb') as file:
+            self = dill.load(file)
+        
+        return self
+
+class MultiSpeciesBioFileDocket:
+    def __init__(self, species_dict: dict, global_conditions: str, analysis_type):
+        self.species_dict = species_dict
+        self.global_conditions = global_conditions
+        self.analysis_type = analysis_type
+        self.SampleDicts = {}
+        
+        for species in species_dict:
+            species_prefix = prefixify(species)
+            conditions = species_dict[species]
+            output_folder = '../../output/' + species_prefix + '_' + conditions + '/'
+            species_SampleDict = SampleDict(species, conditions, output_folder)
+            self.SampleDicts[species_prefix] = species_SampleDict
+        
+        self.species_concat = ''.join(sorted(self.SampleDicts.keys()))
+        self.directory = '../../output/' + self.species_concat + '_' + self.global_conditions + '_' + self.analysis_type + '/'
+    
+    def make_directory(self):
+        import os
+        if not os.path.exists(self.directory):
+            os.mkdir(self.directory)
+        return None
+    
+    def get_BioFileDockets(self):
+        import dill
+        
+        self.species_BioFileDockets = {}
+        
+        for sampledict in self.SampleDicts.values():
+            species_prefix = prefixify(sampledict.species)
+            with open(sampledict.directory + '_'.join([species_prefix, sampledict.conditions, 'sample_BioFileDocket.pkl']), 'rb') as file:
+                self.species_BioFileDockets[species_prefix] = dill.load(file)
+        return None
         
         
 # Class BioFile is used to carry metadata for each file
@@ -177,13 +240,15 @@ class TransdecoderCdnaFile(BioFile):
         
         for suffix in suffixes:
             output_filename = self.filename + '.transdecoder' + suffix
-            output_dict['transdecoder_' + suffix.replace('.', '')] = TransdecoderOutFile(
+            output_file = TransdecoderOutFile(
                 output_filename, 
                 self.sampledict, 
                 GenomeFastaFile = self.reference_genome, 
                 GenomeAnnotFile = self.reference_annot,
                 TransdecoderCdnaFile = self
             )
+            subprocess.run(['mv', output_file.filename, output_file.path])
+            output_dict['transdecoder_' + suffix.replace('.', '')] = output_file
         
         return output_dict
     
@@ -240,6 +305,13 @@ class GxcFile(BioFile):
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
 
+class ExcFile(BioFile):
+    def __init__(self, filename: str, sampledict: SampleDict, gxcfile, embedding, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.original = gxcfile
+        self.embedding = embedding
+
 class IdmmFile(BioFile):
     def __init__(self, filename, sampledict, kind, sources: list, **kwargs):
         super().__init__(filename = filename, sampledict = sampledict, **kwargs)
@@ -293,3 +365,20 @@ class GeneListFile(BioFile):
             sources = self.sources, from_type = from_type, to_type = to_type)
         
         return output
+
+class MultiSpeciesFile():
+    def __init__(self, filename, multispeciesbiofiledocket):
+        self.filename = filename
+        self.multispeciesbiofiledocket = multispeciesbiofiledocket
+        self.species = list(self.multispeciesbiofiledocket.species_dict.keys())
+        self.global_conditions = self.multispeciesbiofiledocket.global_conditions
+        self.directory = self.multispeciesbiofiledocket.directory
+        self.path = self.directory + self.filename
+        self.species_concat = self.multispeciesbiofiledocket.species_concat
+        self.s3uri = None
+
+class OrthoFinderOutputFile(MultiSpeciesFile):
+    def __init__(self, filename, multispeciesbiofiledocket, directory: str):
+        super().__init__(filename = filename, multispeciesbiofiledocket = multispeciesbiofiledocket)
+        self.directory = directory
+        self.path = self.directory + self.filename
