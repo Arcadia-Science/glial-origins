@@ -149,4 +149,3 @@ class ScanpyMetaObject():
         ids = [i for i in id_table[to_id].values if i in list(self.adata.var.index)]
         
         return ids
-    
