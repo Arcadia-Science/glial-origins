@@ -2,6 +2,15 @@
 
 This README describes the analysis pipelines currently implemented by the notebooks in this repo.
 
+## General naming conventions
+
+Notebooks for running analyses are prefixed with a number based on their function, as described below.
+
+`1_` – notebooks for downloading files
+`2_` – notebooks for performing embedding of datasets
+`3_` – notebooks for analyzing cells of a single species and comparing to the same cells in a new embedding
+`4_` – notebooks for analyzing cells of multiple species in the same joint embedding
+
 ## Vertebrate adult brain analysis (Drer, Mmus, Xlae) using OrthoFinder
 Analysis of cells from three adult brain scRNA-Seq datasets from zebrafish, mouse, and frog (_Xenopus laevis_) using an OrthoFinder embedding.
 
@@ -18,5 +27,5 @@ Analysis of cells from three adult brain scRNA-Seq datasets from zebrafish, mous
 > Working on patching this still.
 
 2. Run the OrthoFinder analysis at:  
-- `DrerMmusXlae_adultbrain_OrthoFinder/1_DrerMmusXlae_adultbrain_runOrthoFinder.ipynb`  
+- `DrerMmusXlae_adultbrain_OrthoFinder/2_DrerMmusXlae_adultbrain_runOrthoFinder.ipynb`  
 > This runs OrthoFinder on peptides from the three datasets.
