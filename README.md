@@ -4,9 +4,9 @@ Evolutionary origins and relationships of glial cell types
 ## Directory Structure
 
 ### Files:
-- `README.md` file containing description of directories and their functions
-- `.gitignore` file containing patterns such as `output/` and `.ipynb_checkpoints/` to be ignored by git
-- `BioFile_README.md` file describing BioFile and BioFileDocket classes and their uses
+- this [README.md](README.md) file containing description of directories and their functions
+- [.gitignore](.gitignore) file containing patterns such as `output/` and `.ipynb_checkpoints/` to be ignored by git
+- [BioFile_README.md](BioFile_README.md) file describing BioFile and BioFileDocket classes and their uses
 
 ### Directories:
 - `env/` folder containing conda install `.yml` files
