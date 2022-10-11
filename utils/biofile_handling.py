@@ -119,7 +119,7 @@ class BioFile:
             raise Exception('This file already has an S3 URI at ' + self.s3uri)
         return None
     
-    def get_from_s3(self, s3uri: str, directory = ''):
+    def get_from_s3(self, s3uri: str):
         import os
         import subprocess
         
@@ -129,20 +129,30 @@ class BioFile:
         else:
             raise Exception('This file already has an S3 URI at ' + self.s3uri)
         
-        if directory != '':
-            self.directory = directory
-        
-        if not os.path.exists(directory + filename):
-            subprocess(['aws', 's3', 'cp', self.s3uri, self.directory + self.filename])
+        if not os.path.exists(self.path):
+            subprocess(['aws', 's3', 'cp', self.s3uri, self.path])
         return self
     
-    def push_to_s3(self):
+    def push_to_s3(self, overwrite = False):
         import subprocess
         
         if self.s3uri is None:
-            pass
+            raise Exception('There is no s3uri. Use add_s3uri() to add a URI.')
         
-        subprocess(['aws', 's3', 'cp', self.directory + self.filename, self.s3uri])
+        bucket = self.s3uri.lstrip('s3://').split('/')[0]
+        file_key = self.s3uri.split(bucket)[1].lstrip('/')
+        
+        # check if file exists in S3 already
+        output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stderr=subprocess.PIPE)
+
+        if 'Not Found' in str(output.stderr):
+            subprocess(['aws', 's3', 'cp', self.path, self.s3uri])
+        elif overwrite:
+            print(self.filename, 'already exists in S3 bucket; overwriting.')
+            subprocess(['aws', 's3', 'cp', self.path, self.s3uri])
+        else:
+            print(self.filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
+        
         return None
 
     def get_from_url(self, url: str, protocol: str):
