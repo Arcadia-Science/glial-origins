@@ -51,6 +51,7 @@ On the command line, use:
 
 10. Activate the new conda environment.  
 `conda activate glial_origins`
+> Note: You'll also need to run this command whenever you restart the Cloud9 instance.
 
 11. Run Jupyter.  
 `jupyter lab --ip 0.0.0.0 --port 8888`
