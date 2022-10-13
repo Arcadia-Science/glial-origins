@@ -4,6 +4,8 @@ import subprocess
 
 GIT_HOME = subprocess.run(['git', 'rev-parse', '--show-toplevel'], stdout=subprocess.PIPE).stdout.decode("utf-8").strip('\n')
 GLOBAL_OUTPUT_DIRECTORY = GIT_HOME + '/output/'
+S3_BUCKET = 's3://arcadia-reference-datasets'
+S3_PKL_DIR = 'glial-origins-pkl'
 
 if not os.path.exists(GLOBAL_OUTPUT_DIRECTORY):
     os.mkdir(GLOBAL_OUTPUT_DIRECTORY)
@@ -25,7 +27,7 @@ class BioFileDocket:
     
     @property
     def s3uri(self):
-        return 's3://arcadia-reference-datasets/glial-origins-pkl/' + self.dill_filename
+        return '/'.join([S3_BUCKET, S3_PKL_DIR, self.dill_filename])
     
     @property
     def dill_filename(self):
@@ -70,17 +72,17 @@ class BioFileDocket:
         
         return self
     
-    def local_to_s3(self, overwrite = False):
-        files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
-
-        for file in files.values():
-            file.push_to_s3(overwrite)
-    
-    def s3_to_local(self, overwrite = False):
+    def s3_sync(self, how: str, overwrite = False):
         files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
         
-        for file in files.values():
-            file.get_from_s3(overwrite)
+        if how == 'push':
+            for file in files.values():
+                file.push_to_s3(overwrite)
+        elif how == 'pull':
+            for file in files.values():
+                file.get_from_s3(overwrite)
+        else:
+            raise Exception('"how=" expects "push" or "pull" as input value')
     
     def get_from_s3(self, overwrite = False):
         import os
