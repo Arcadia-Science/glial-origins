@@ -158,13 +158,9 @@ class MultiSpeciesBioFileDocket:
                 self.species_BioFileDockets[species_prefix] = dill.load(file)
         return None
     
-    def s3_to_local(self, overwrite = False):
+    def s3_sync(self, how: str, overwrite = False):
         for species_prefix in self.species_BioFileDockets:
-            self.species_BioFileDockets[species_prefix].s3_to_local(overwrite)
-    
-    def local_to_s3(self, overwrite = False):
-        for species_prefix in self.species_BioFileDockets:
-            self.species_BioFileDockets[species_prefix].local_to_s3(overwrite)
+            self.species_BioFileDockets[species_prefix].s3_sync(how = how, overwrite = overwrite)
         
         
 # Class BioFile is used to carry metadata for each file
@@ -401,6 +397,12 @@ class IdmmFile(BioFile):
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.sources = sources
         self.kind = kind
+        
+class CellAnnotFile(BioFile):
+    def __init__(self, filename, sampledict, sources: list, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.sources = sources
 
 class UniprotIDMapperFile(IdmmFile):
     def __init__(self, filename, sampledict, kind, sources: list, from_type, to_type, **kwargs):
@@ -451,7 +453,7 @@ class GeneListFile(BioFile):
         
         return output
 
-class MultiSpeciesFile():
+class MultiSpeciesFile(BioFile):
     def __init__(self, filename, multispeciesbiofiledocket):
         self.filename = filename
         self.multispeciesbiofiledocket = multispeciesbiofiledocket
@@ -467,3 +469,4 @@ class OrthoFinderOutputFile(MultiSpeciesFile):
         super().__init__(filename = filename, multispeciesbiofiledocket = multispeciesbiofiledocket)
         self.directory = directory
         self.path = self.directory + self.filename
+        self.s3uri = '/'.join([S3_BUCKET, 'orthofinder', self.filename])
