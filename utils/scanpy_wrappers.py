@@ -84,7 +84,6 @@ class ScanpyMetaObject():
         cell_annots = pd.read_csv(cellannot.path, sep = '\t')
         cell_ids = cell_ids.merge(cell_annots, on = 'cell_barcode', how = 'left')
         cell_ids.fillna('Unlabeled', inplace = True)
-        cell_ids = cell_ids.groupby('cell_barcode').agg({i:'first' for i in cell_ids.columns}).reset_index(drop = True)
         self.adata.obs['celltype'] = cell_ids['celltype'].values
     
     # Perform PCA, displaying the first two PCs and the PCA variance ratio
