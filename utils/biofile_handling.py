@@ -22,6 +22,18 @@ class BioFileDocket:
         self.conditions = sampledict.conditions
         self.directory = sampledict.directory
         self.files = dict()
+    
+    @property
+    def s3uri(self):
+        return 's3://arcadia-reference-datasets/glial-origins-pkl/' + self.dill_filename
+    
+    @property
+    def dill_filename(self):
+        return '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
+    
+    @property
+    def dill_filepath(self):
+        return self.directory + self.dill_filename
         
     def add_file(self, BioFile):
         self.files[BioFile.filename] = BioFile
@@ -42,7 +54,6 @@ class BioFileDocket:
     
     def pickle(self):
         import dill
-        self.dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
 
         with open(self.dill_filepath, 'wb') as file:
             dill.dump(self, file)
@@ -51,14 +62,57 @@ class BioFileDocket:
         import dill
         import os
         
-        dill_filepath = self.directory + '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
-        if os.path.exists(dill_filepath):
-            self.dill_filepath = dill_filepath
+        if not os.path.exists(self.dill_filepath):
+            raise Exception("Can't unpickle file; .pkl file doesn't exist yet at " + self.dill_filepath)
 
         with open(self.dill_filepath, 'rb') as file:
             self = dill.load(file)
         
         return self
+    
+    def local_to_s3(self, overwrite = False):
+        files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
+
+        for file in files.values():
+            file.push_to_s3(overwrite)
+    
+    def s3_to_local(self, overwrite = False):
+        files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
+        
+        for file in files.values():
+            file.get_from_s3(overwrite)
+    
+    def get_from_s3(self, overwrite = False):
+        import os
+        import subprocess
+        
+        if not os.path.exists(self.dill_filepath):
+            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.dill_filepath])
+            return self
+        elif overwrite:
+            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.dill_filepath])
+            return self
+        else:
+            print('file', self.dill_filename, 'already exists at', self.dill_filepath)
+            return self
+    
+    def push_to_s3(self, overwrite = False):
+        import subprocess
+        
+        bucket = self.s3uri.lstrip('s3://').split('/')[0]
+        file_key = self.s3uri.split(bucket)[1].lstrip('/')
+        
+        # check if file exists in S3 already
+        output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+        if 'Not Found' in str(output.stderr):
+            subprocess.run(['aws', 's3', 'cp', self.dill_filepath, self.s3uri])
+        elif overwrite:
+            print(self.dill_filename, 'already exists in S3 bucket; overwriting.')
+            subprocess.run(['aws', 's3', 'cp', self.dill_filepath, self.s3uri])
+        else:
+            print(self.dill_filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
+        return None
 
 class MultiSpeciesBioFileDocket:
     def __init__(self, species_dict: dict, global_conditions: str, analysis_type):
@@ -90,9 +144,25 @@ class MultiSpeciesBioFileDocket:
         
         for sampledict in self.SampleDicts.values():
             species_prefix = prefixify(sampledict.species)
-            with open(sampledict.directory + '_'.join([species_prefix, sampledict.conditions, 'sample_BioFileDocket.pkl']), 'rb') as file:
+            
+            dill_filename = '_'.join([species_prefix, sampledict.conditions, 'sample_BioFileDocket.pkl'])
+            dill_filepath = sampledict.directory + dill_filename
+            dill_s3uri = 's3://arcadia-reference-datasets/glial-origins-pkl/' + dill_filename
+            
+            if not os.path.exists(dill_filepath):
+                subprocess.run(['aws', 's3', 'cp', dill_s3uri, dill_filepath])
+            
+            with open(dill_filepath, 'rb') as file:
                 self.species_BioFileDockets[species_prefix] = dill.load(file)
         return None
+    
+    def s3_to_local(self, overwrite = False):
+        for species_prefix in self.species_BioFileDockets:
+            self.species_BioFileDockets[species_prefix].s3_to_local(overwrite)
+    
+    def local_to_s3(self, overwrite = False):
+        for species_prefix in self.species_BioFileDockets:
+            self.species_BioFileDockets[species_prefix].local_to_s3(overwrite)
         
         
 # Class BioFile is used to carry metadata for each file
@@ -119,30 +189,41 @@ class BioFile:
             raise Exception('This file already has an S3 URI at ' + self.s3uri)
         return None
     
-    def get_from_s3(self, s3uri: str, directory = ''):
+    def get_from_s3(self, overwrite = False):
         import os
         import subprocess
         
-        if self.s3uri == None:
-            self.s3uri = s3uri
-            self.filetype = self.s3uri.split('.')[-1]
+        if not os.path.exists(self.path):
+            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.path])
+            return self
+        elif overwrite:
+            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.path])
+            return self
         else:
-            raise Exception('This file already has an S3 URI at ' + self.s3uri)
-        
-        if directory != '':
-            self.directory = directory
-        
-        if not os.path.exists(directory + filename):
-            subprocess(['aws', 's3', 'cp', self.s3uri, self.directory + self.filename])
-        return self
+            print('file', self.filename, 'already exists at', self.path)
+            return self
     
-    def push_to_s3(self):
+    def push_to_s3(self, overwrite = False):
         import subprocess
         
         if self.s3uri is None:
-            pass
+            raise Exception('There is no s3uri. Use add_s3uri() to add a URI.')
         
-        subprocess(['aws', 's3', 'cp', self.directory + self.filename, self.s3uri])
+        bucket = self.s3uri.lstrip('s3://').split('/')[0]
+        file_key = self.s3uri.split(bucket)[1].lstrip('/')
+        
+        # check if file exists in S3 already
+        # suppress stdout and save stderr as file to detect non-existing files
+        output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+        if 'Not Found' in str(output.stderr):
+            subprocess.run(['aws', 's3', 'cp', self.path, self.s3uri])
+        elif overwrite:
+            print(self.filename, 'already exists in S3 bucket; overwriting.')
+            subprocess.run(['aws', 's3', 'cp', self.path, self.s3uri])
+        else:
+            print(self.filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
+        
         return None
 
     def get_from_url(self, url: str, protocol: str):
