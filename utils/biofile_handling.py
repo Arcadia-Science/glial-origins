@@ -406,6 +406,12 @@ class CellAnnotFile(BioFile):
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.sources = sources
 
+class CellAnnotFile(BioFile):
+    def __init__(self, filename, sampledict, sources: list, **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.sources = sources
+
 class UniprotIDMapperFile(IdmmFile):
     def __init__(self, filename, sampledict, kind, sources: list, from_type, to_type, **kwargs):
         super().__init__(filename = filename, sampledict = sampledict, kind = kind, sources = sources, **kwargs)
