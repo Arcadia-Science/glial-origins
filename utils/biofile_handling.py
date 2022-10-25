@@ -9,6 +9,9 @@ if not os.path.exists(GLOBAL_OUTPUT_DIRECTORY):
     os.mkdir(GLOBAL_OUTPUT_DIRECTORY)
     print(GLOBAL_OUTPUT_DIRECTORY, 'does not exist; making it now')
 
+def s3_transfer(to_loc, from_loc):
+    subprocess.run(['aws', 's3', 'cp', to_loc, from_loc])
+
 # Class definitions to handle BioFiles between scripts
 class SampleDict:
     def __init__(self, species: str, conditions: str, directory: str):
@@ -87,10 +90,10 @@ class BioFileDocket:
         import subprocess
         
         if not os.path.exists(self.dill_filepath):
-            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.dill_filepath])
+            s3_transfer(self.s3uri, self.dill_filepath)
             return self
         elif overwrite:
-            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.dill_filepath])
+            s3_transfer(self.s3uri, self.dill_filepath)
             return self
         else:
             print('file', self.dill_filename, 'already exists at', self.dill_filepath)
@@ -106,10 +109,10 @@ class BioFileDocket:
         output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
         if 'Not Found' in str(output.stderr):
-            subprocess.run(['aws', 's3', 'cp', self.dill_filepath, self.s3uri])
+            s3_transfer(self.dill_filepath, self.s3uri)
         elif overwrite:
             print(self.dill_filename, 'already exists in S3 bucket; overwriting.')
-            subprocess.run(['aws', 's3', 'cp', self.dill_filepath, self.s3uri])
+            s3_transfer(self.dill_filepath, self.s3uri)
         else:
             print(self.dill_filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
         return None
@@ -150,7 +153,7 @@ class MultiSpeciesBioFileDocket:
             dill_s3uri = 's3://arcadia-reference-datasets/glial-origins-pkl/' + dill_filename
             
             if not os.path.exists(dill_filepath):
-                subprocess.run(['aws', 's3', 'cp', dill_s3uri, dill_filepath])
+                s3_transfer(dill_s3uri, dill_filepath)
             
             with open(dill_filepath, 'rb') as file:
                 self.species_BioFileDockets[species_prefix] = dill.load(file)
@@ -194,10 +197,10 @@ class BioFile:
         import subprocess
         
         if not os.path.exists(self.path):
-            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.path])
+            s3_transfer(self.s3uri, self.path)
             return self
         elif overwrite:
-            subprocess.run(['aws', 's3', 'cp', self.s3uri, self.path])
+            s3_transfer(self.s3uri, self.path)
             return self
         else:
             print('file', self.filename, 'already exists at', self.path)
@@ -217,10 +220,10 @@ class BioFile:
         output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
         if 'Not Found' in str(output.stderr):
-            subprocess.run(['aws', 's3', 'cp', self.path, self.s3uri])
+            s3_transfer(self.path, self.s3uri)
         elif overwrite:
             print(self.filename, 'already exists in S3 bucket; overwriting.')
-            subprocess.run(['aws', 's3', 'cp', self.path, self.s3uri])
+            s3_transfer(self.path, self.s3uri)
         else:
             print(self.filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
         
