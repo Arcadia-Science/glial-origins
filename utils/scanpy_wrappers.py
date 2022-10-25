@@ -156,3 +156,12 @@ class ScanpyMetaObject():
         ids = [i for i in id_table[to_id].values if i in list(self.adata.var.index)]
         
         return ids
+
+def diagonalize_df(df):
+    max_order = [list(df.loc[i]).index(max(df.loc[i])) for i in df.index]
+    reordered = df.copy(deep = True)
+    reordered['max_col'] = max_order
+    reordered = reordered.sort_values(axis = 'index', by = 'max_col')
+    reordered.drop('max_col', axis = 1, inplace = True)
+    
+    return reordered
