@@ -508,6 +508,7 @@ dependencies:
   - r-sdmtools=1.1_221.2=r36h516909a_1
   - r-selectr=0.4_2=r36h6115d3f_1
   - r-seurat=3.0.2=r36h0357c0b_1
+  - r-seuratobject=4.0.0=r36h03ef668_0
   - r-snow=0.4_3=r36h6115d3f_1002
   - r-stringi=1.6.2=r36hcabe038_0
   - r-stringr=1.4.0=r36h6115d3f_2
