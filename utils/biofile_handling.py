@@ -175,15 +175,28 @@ class BioFile:
         self.species = sampledict.species
         self.conditions = sampledict.conditions
         self.directory = sampledict.directory
-        self.sampledict = SampleDict(self.species, self.conditions, self.directory)
-        self.path = self.directory + self.filename
-        self.species_prefix = prefixify(self.species)
         self.s3uri = None
         
         if 'url' and 'protocol' in kwargs.keys():
             self.get_from_url(kwargs['url'], kwargs['protocol'], filename = filename)
         elif 's3uri' in kwargs.keys():
             self.get_from_s3(kwargs['s3uri'])
+    
+    @property
+    def path(self):
+        return self.directory + self.filename
+    
+    @property
+    def species_prefix(self):
+        return prefixify(self.species)
+    
+    @property
+    def sampledict(self):
+        return SampleDict(self.species, self.conditions, self.directory)
+    
+    @property
+    def filetype(self):
+        return self.filename.split('.')[-1]
     
     def add_s3uri(self, s3uri: str):
         if self.s3uri == None:
@@ -251,8 +264,6 @@ class BioFile:
         if compression != 'none':
             output_loc = self.directory + filename
             self.filename = filename.replace('.' + compression, '')
-            self.path = self.directory + self.filename
-            self.filetype = self.filename.split('.')[-1]
             
             if os.path.exists(self.path):
                 return self
@@ -267,8 +278,6 @@ class BioFile:
                 return self
         else:
             self.filename = filename
-            self.path = self.directory + self.filename
-            self.filetype = self.filename.split('.')[-1]
             
             if os.path.exists(self.path):
                 return self
@@ -282,6 +291,36 @@ class GenomeFastaFile(BioFile):
         super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.version = version
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
+    
+    def rename_RefSeq_chromosomes(self, replace = False):
+        from Bio import SeqIO
+
+        new_filename = self.filename + '.renamed.fa'
+        new_filepath = self.directory + new_filename
+
+        with open(self.path) as original, open(new_filepath, 'w') as corrected:
+            records = SeqIO.parse(self.path, 'fasta')
+            for record in records:      
+                if 'chromosome' in record.description:
+                    print('starting name:', record.description)
+                    new_id = str(record.description).split('chromosome')[1].split(',')[0].strip(' ')
+                    record.id = new_id
+                    record.description = new_id
+                    print('new name:', record.id)
+                SeqIO.write(record, corrected, 'fasta')
+        
+        if replace:
+            self.filename = new_filename
+            
+            return None
+        
+        else:
+            new_file = GenomeFastaFile(
+                filename = new_filename,
+                sampledict = self.sampledict,
+                version = self.version
+            )
+            return new_file
         
     def get_transdecoder_cdna_gtf(self, GenomeGtfFile, TRANSDECODER_LOC, **kwargs):
         PERL_SCRIPT_LOC = TRANSDECODER_LOC + 'util/gtf_genome_to_cdna_fasta.pl'
@@ -326,8 +365,8 @@ class TransdecoderCdnaFile(BioFile):
         for suffix in suffixes:
             output_filename = self.filename + '.transdecoder' + suffix
             output_file = TransdecoderOutFile(
-                output_filename, 
-                self.sampledict, 
+                filename = output_filename, 
+                sampledict = self.sampledict, 
                 GenomeFastaFile = self.reference_genome, 
                 GenomeAnnotFile = self.reference_annot,
                 TransdecoderCdnaFile = self
@@ -357,7 +396,6 @@ class GenomeGffFile(BioFile):
             new_path = self.directory + new_filename
             subprocess.run(['mv', self.path, new_path])
             self.filename = new_filename
-            self.path = new_path
         
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference_genome = GenomeFastaFile
@@ -440,6 +478,14 @@ class CellRangerFeaturesFile(BioFile):
         super().__init__(filename = filename, sampledict = sampledict, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
 
+class LoomFile(BioFile):
+    def __init__(self, sampledict: SampleDict, filename = '', **kwargs):
+        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+    
+    def to_gxc(self, filename, GenomeFastaFile, GenomeAnnotFile, overwrite = False):
+        print('hi')
+        
 class GxcFile(BioFile):
     def __init__(self, sampledict: SampleDict, GenomeFastaFile, GenomeAnnotFile, filename = '', **kwargs):
         super().__init__(filename = filename, sampledict = sampledict, **kwargs)
@@ -499,7 +545,7 @@ class GeneListFile(BioFile):
         
         subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type])
         output = UniprotIDMapperFile(
-            filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+            filename = filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
             sources = self.sources, from_type = from_type, to_type = to_type)
         
         return output
@@ -511,7 +557,7 @@ class GeneListFile(BioFile):
         
         subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type, taxid])
         output = UniprotIDMapperFile(
-            filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+            filename = filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
             sources = self.sources, from_type = from_type, to_type = to_type)
         
         return output
@@ -523,12 +569,14 @@ class MultiSpeciesFile():
         self.species = list(self.multispeciesbiofiledocket.species_dict.keys())
         self.global_conditions = self.multispeciesbiofiledocket.global_conditions
         self.directory = self.multispeciesbiofiledocket.directory
-        self.path = self.directory + self.filename
         self.species_concat = self.multispeciesbiofiledocket.species_concat
         self.s3uri = None
+    
+    @property
+    def path(self):
+        return self.directory + self.filename
 
 class OrthoFinderOutputFile(MultiSpeciesFile):
     def __init__(self, multispeciesbiofiledocket, directory: str, filename = ''):
         super().__init__(filename = filename, multispeciesbiofiledocket = multispeciesbiofiledocket)
         self.directory = directory
-        self.path = self.directory + self.filename
