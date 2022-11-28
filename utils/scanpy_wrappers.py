@@ -21,7 +21,10 @@ class ScanpyMetaObject():
     
     @property
     def species_prefix(self):
-        return prefixify(self.species)
+        if '_' not in self.species:
+            return self.species
+        else:
+            return prefixify(self.species)
     
     @property
     def matrixpath(self):
@@ -139,7 +142,11 @@ class ScanpyMetaObject():
         datatype = key.split('_')[2]
         
         top_genelist_filename = '_'.join([self.species_prefix, self.datatype, 'top', top_type, datatype, 'ids.txt'])
-        top_genelist_file = GeneListFile(top_genelist_filename, self.sampledict, self.matrix, getattr(self, key), datatype)
+        top_genelist_file = GeneListFile(filename = top_genelist_filename, 
+                                         sampledict = self.sampledict, 
+                                         sources = self.matrix, 
+                                         genes = getattr(self, key), 
+                                         identifier = datatype)
         setattr(self, key + '_file', top_genelist_file)
     
     # Using an IdmmFile object, convert IDs from one type to another
