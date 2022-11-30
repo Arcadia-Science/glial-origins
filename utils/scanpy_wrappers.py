@@ -43,19 +43,24 @@ class ScanpyMetaObject():
         return self.directory + self.resultsfile
     
     # read in a file using scanpy read, transposing it if needed
-    def read(self, delimiter = '\t', cache = True, transpose = True):
+    def read(self, delimiter = '\t', cache = True, transpose = True, filter_set = set()):
         self.adata = sc.read(self.matrixpath, cache = cache, delimiter = delimiter)
+        
+        if len(filter_set) != 0:
+            self.adata = self.adata[self.adata.obs.index.isin(filter_set)].copy()
         
         if transpose:
             self.adata = self.adata.transpose()
     
     # generate a violin and scatter plot for the x and y variables passed
     # Usually used for total_counts vs. n_genes_by_counts
-    def violin(self, x = 'total_counts', y = 'n_genes_by_counts'):
+    def violin(self, x = 'total_counts', y = 'n_genes_by_counts', plot = True):
         sc.pp.calculate_qc_metrics(self.adata, percent_top=None, log1p=False, inplace=True)
-        sc.pl.violin(self.adata, [y, x],
+        
+        if plot:
+            sc.pl.violin(self.adata, [y, x],
              jitter=0.4, multi_panel=True)
-        sc.pl.scatter(self.adata, x=x, y=y)
+            sc.pl.scatter(self.adata, x=x, y=y)
     
     # Filter out the data by minimum genes per cell and minimum cells per gene
     def cellgene_filter(self, min_genes=100, min_cells=20):
@@ -70,9 +75,10 @@ class ScanpyMetaObject():
         sc.pp.log1p(self.adata)
     
     # Filter highly variable genes using mean and dispersion, saving a raw copy if needed
-    def variable_filter(self, min_mean = 0.0125, max_mean = 3, min_disp = 0.1, max_disp = 10):
+    def variable_filter(self, min_mean = 0.0125, max_mean = 3, min_disp = 0.1, max_disp = 10, plot = True):
         sc.pp.highly_variable_genes(self.adata, min_mean = min_mean, max_mean=max_mean, min_disp=min_disp, max_disp=max_disp)
-        sc.pl.highly_variable_genes(self.adata)
+        if plot:
+            sc.pl.highly_variable_genes(self.adata)
         
         self.adata.raw = self.adata
         self.adata = self.adata[:, self.adata.var.highly_variable]
@@ -89,18 +95,48 @@ class ScanpyMetaObject():
         cell_ids.fillna('Unlabeled', inplace = True)
         self.adata.obs['celltype'] = cell_ids['celltype'].values
     
+    def map_cellannots_multispecies(self, msd):
+        cell_ids = pd.DataFrame({'cell_barcode':self.adata.obs.index})
+        
+        cell_annots = pd.DataFrame()
+        
+        for i, pre in enumerate(msd.species_BioFileDockets):
+            dummy = pd.read_csv(msd.species_BioFileDockets[pre].cellannot.path, sep = '\t')
+            dummy['cell_barcode'] = pre + '_' + dummy['cell_barcode']
+            dummy['celltype'] = pre + '_' + dummy['celltype']
+            
+            if i == 0:
+                cell_annots = dummy
+            else:
+                cell_annots = pd.concat([cell_annots, dummy])
+            
+        cell_ids = cell_ids.merge(cell_annots, on = 'cell_barcode', how = 'left')
+        cell_ids.fillna('Unlabeled', inplace = True)
+        self.adata.obs['celltype'] = cell_ids['celltype'].values
+    
     # Perform PCA, displaying the first two PCs and the PCA variance ratio
-    def pca_basic(self, svd_solver='arpack'):
+    def pca_basic(self, svd_solver='arpack', color = [], plot = True):
         sc.tl.pca(self.adata, svd_solver=svd_solver)
-        sc.pl.pca(self.adata, save = self.species_prefix + self.datatype + '_pca.pdf')
-        sc.pl.pca_variance_ratio(self.adata, log=True)
+        
+        if not plot:
+            return None
+        
+        if color != []:
+            sc.pl.pca(self.adata, color = color, save = self.species_prefix + self.datatype + '_pca.pdf')
+        else:
+            sc.pl.pca(self.adata, save = self.species_prefix + self.datatype + '_pca.pdf')
+            sc.pl.pca_variance_ratio(self.adata, log=True)
     
     # Perform UMAP and then Leiden clustering using parameters passed in
     # Save the plot by default
-    def umap_leiden(self, n_neighbors=50, n_pcs = 40, legend_loc='on data', save = True):
+    def umap_leiden(self, n_neighbors=50, n_pcs = 40, legend_loc='on data', save = True, plot = True):
         sc.pp.neighbors(self.adata, n_neighbors=n_neighbors, n_pcs=n_pcs)
         sc.tl.umap(self.adata)
         sc.tl.leiden(self.adata)
+        
+        if not plot:
+            return None
+        
         if save:
             sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, save = '_'.join([self.species_prefix, self.datatype, 'leiden.pdf']))
         else:
@@ -153,14 +189,17 @@ class ScanpyMetaObject():
     # Usually you'll be converting from gene_name to the embedding (e.g. Orthogroup)
     # Prints a table of the mappings
     # Returns a list of ids for the ones actually present in the scanpy object
-    def map_gene_to_id(self, idmm, gene_list: list, from_id: str, to_id: str):
+    def map_gene_to_id(self, idmm, gene_list: list, from_id: str, to_id: str, check_ids = True):
         import pandas as pd
         idmm = pd.read_csv(idmm.path, sep = '\t')
 
         id_table = idmm[idmm[from_id].isin(gene_list)][[from_id, to_id]].drop_duplicates()
         display(id_table)
         
-        ids = [i for i in id_table[to_id].values if i in list(self.adata.var.index)]
+        if check_ids:
+            ids = [i for i in id_table[to_id].values if i in list(self.adata.var.index)]
+        else:
+            ids = [i for i in id_table[to_id].values]
         
         return ids
 

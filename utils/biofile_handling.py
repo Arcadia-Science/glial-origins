@@ -37,6 +37,10 @@ class BioFileDocket:
     @property
     def dill_filepath(self):
         return self.directory + self.dill_filename
+    
+    @property
+    def sampledict(self):
+        return SampleDict(self.species, self.conditions, self.directory)
        
     def set_taxid(self, taxid):
         self.taxid = str(taxid)
