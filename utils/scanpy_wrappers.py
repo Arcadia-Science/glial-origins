@@ -79,6 +79,13 @@ class ScanpyMetaObject():
         sc.pp.regress_out(self.adata, how)
         sc.pp.scale(self.adata, max_value = max_value)
     
+    def map_cellannots(self, cellannot):
+        cell_ids = pd.DataFrame({'cell_barcode':self.adata.obs.index})
+        cell_annots = pd.read_csv(cellannot.path, sep = '\t')
+        cell_ids = cell_ids.merge(cell_annots, on = 'cell_barcode', how = 'left')
+        cell_ids.fillna('Unlabeled', inplace = True)
+        self.adata.obs['celltype'] = cell_ids['celltype'].values
+    
     # Perform PCA, displaying the first two PCs and the PCA variance ratio
     def pca_basic(self, svd_solver='arpack'):
         sc.tl.pca(self.adata, svd_solver=svd_solver)
@@ -149,3 +156,12 @@ class ScanpyMetaObject():
         ids = [i for i in id_table[to_id].values if i in list(self.adata.var.index)]
         
         return ids
+
+def diagonalize_df(df):
+    max_order = [list(df.loc[i]).index(max(df.loc[i])) for i in df.index]
+    reordered = df.copy(deep = True)
+    reordered['max_col'] = max_order
+    reordered = reordered.sort_values(axis = 'index', by = 'max_col')
+    reordered.drop('max_col', axis = 1, inplace = True)
+    
+    return reordered
