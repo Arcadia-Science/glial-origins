@@ -58,6 +58,9 @@ class BioFileDocket:
     def add_keyfiles(self, dictionary):
         for key in dictionary:
             setattr(self, key, dictionary[key])
+    
+    def remove_keyfile(self, key):
+        delattr(self, key)
             
     def remove_file(self, key):
         del self.files[key]
@@ -635,3 +638,135 @@ class JointExcFile(MultiSpeciesFile):
         self.sources = sources
         self.embedding = embedding
         self.s3uri = 's3://arcadia-reference-datasets/' + self.embedding + '_JointExc/' + self.filename
+
+def gxc_to_exc(sample_MSD, embedding_df, exc_file):
+    import pandas as pd
+    import os
+    
+    embedding = embedding_df.columns[0]
+    
+    if embedding == 'Orthogroup':
+        print('Using Orthogroup embeddings as expected from OrthoFinder')
+    elif embedding == 'StruCluster':
+        print('Using StruCluster embeddings as expected from FoldSeek')
+    else:
+        raise Exception('Dataframe must have "Orthogroup" or "StruCluster" as embedding')
+    
+    # Iterates through all of the species in the Species BioFileDocket
+    for pre in sample_MSD.species_BioFileDockets.keys():
+    
+        # Generates filename automatically
+        exc_filename = sample_MSD.species_BioFileDockets[pre].gxc.filename.replace('.' + sample_MSD.species_BioFileDockets[pre].gxc.filetype, '_as' + embedding + '.' + sample_MSD.species_BioFileDockets[pre].gxc.filetype)
+    
+        # Generates file object
+        exc = ExcFile(
+            filename = exc_filename,
+            sampledict = sample_MSD.SampleDicts[pre],
+            gxcfile = sample_MSD.species_BioFileDockets[pre].gxc,
+            embedding = embedding
+            )
+        embedding_exc = embedding + '_exc'
+    
+        # Checks whether an Embedding_exc file already exists; avoid re-generating if it does
+        if os.path.exists(exc.path):
+            print(embedding_exc + 'file already exists at', exc.path, 'skipping')
+            sample_MSD.species_BioFileDockets[pre].add_keyfile(exc, embedding_exc)
+        
+            continue
+        
+        # Copies orthogroups dataframe to do transformations without modifying original
+        embedding_df_copy = embedding_df.copy(deep = True)
+        
+        if embedding == 'Orthogroup':
+            # Automatically gets the expected column name of the OrthoFinder file
+            species_column = sample_MSD.species_BioFileDockets[pre].cdna.filename + '.transdecoder'
+            print('Expanding column', species_column)
+    
+            # Expands orthogroups column for species-specific dataset
+            embedding_df_copy['protein_id'] = embedding_df_copy[species_column].str.split(', ')
+            embedding_df_copy = embedding_df_copy.explode('protein_id')
+            embedding_df_copy['transcript_id'] = embedding_df_copy['protein_id'].str.split('.', expand = True)[0]
+    
+            # Gets id mapping between transcript, protein, and Orthogroup ids
+            keys = embedding_df_copy[['transcript_id', 'protein_id', embedding]].drop_duplicates()
+            keys.dropna(inplace = True)
+            
+            print('Extracting keys for', embedding)
+            
+            idmm_kind = 'og_idmm'
+            fileouttype = 'OGfile'
+            
+            original_idmm = sample_MSD.species_BioFileDockets[pre].gtf_idmm
+            
+            # Loads the gtf id mapping matrix                                                                    
+            original_idmm_df = pd.read_csv(original_idmm.path, index_col = 0, sep = '\t')
+            
+            # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
+            exc_idmm_df = original_idmm_df.merge(keys, on = 'transcript_id')  
+            exc_idmm_filename = pre + '_' + sample_MSD.SampleDicts[pre].conditions + '_' + idmm_kind + '.tsv'
+            
+        elif embedding == 'StruCluster':
+            # Automatically gets the expected column name of the FoldSeek output file
+            species_column = pre
+            
+            # Expands struclusters column for species-specific dataset
+            embedding_df_copy['uniprot_id'] = embedding_df_copy[species_column].str.split(',')
+            embedding_df_copy = embedding_df_copy.explode('uniprot_id')
+    
+            # Gets id mapping between transcript and FoldSeek ids
+            keys = embedding_df_copy[['uniprot_id', embedding]].drop_duplicates()
+            keys.dropna(inplace = True)
+            
+            idmm_kind = 'sc_idmm'
+            fileouttype = 'SCfile'
+            
+            original_idmm = sample_MSD.species_BioFileDockets[pre].uniprot_idmm
+            
+            # Loads the gtf id mapping matrix                                                                    
+            original_idmm_df = pd.read_csv(original_idmm.path, index_col = 0, sep = '\t')
+    
+            # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
+            exc_idmm_df = original_idmm_df.merge(keys, on = 'uniprot_id')  
+            exc_idmm_filename = pre + '_' + sample_MSD.SampleDicts[pre].conditions + '_' + idmm_kind + '.tsv'
+    
+        exc_idmm = IdmmFile(
+            filename = exc_idmm_filename,
+            sampledict = sample_MSD.SampleDicts[pre],
+            kind = idmm_kind,
+            sources = [exc_file, original_idmm]
+            )
+        print('Saving keys to', exc_idmm_filename)
+        exc_idmm_df.to_csv(exc_idmm.path, sep = '\t', index = None)
+        print('Done saving', exc_idmm_filename)
+    
+        # Adds the new og_idmm to the BioFileDocket for the species
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc_idmm, idmm_kind)
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc_file, sample_MSD.species_concat + '_' + fileouttype)
+        
+        # Extracts gene_name to embedding mapping keys
+        gene_keys = exc_idmm_df[['gene_name', embedding]].drop_duplicates()
+        
+        print('Generating exc file at', exc.path)
+        # Reads in original gxc matrix file
+        gxc_df = pd.read_csv(sample_MSD.species_BioFileDockets[pre].gxc.path, sep = '\t')
+        # Automatically gets the first column name of file for later use
+        gxc_original_dataname = gxc_df.columns[0]
+        # Renames that column to 'gene_name' for easier merging
+        gxc_df.rename(columns = {gxc_original_dataname: 'gene_name'}, inplace = True)
+        # Merges gxc with orthogroup gene keys to generate exc dataframe
+        exc_df = gene_keys.merge(gxc_df, on = 'gene_name')
+    
+        # Removes 'gene_name' column
+        exc_df = exc_df.drop(columns = 'gene_name')
+        # Aggregates read counts per cell by Orthogroup ID
+        exc_df = exc_df.groupby(embedding).agg({i: ('first' if i == embedding else 'sum') for i in exc_df.columns}).reset_index(drop = True)
+        exc_df = exc_df.drop_duplicates(keep = 'first', subset = exc_df.columns[1:])
+        
+        print('Preview of exc file:', exc.path)
+        display(exc_df)
+    
+        # Saves new exc matrix to file and puts it into the species BioFileDocket
+        exc_df.to_csv(exc.path, sep = '\t', index = None)
+        print('Exc file saved at', exc.path)
+        
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc, embedding_exc)
