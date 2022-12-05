@@ -11,13 +11,27 @@ if not os.path.exists(GLOBAL_OUTPUT_DIRECTORY):
 
 def s3_transfer(to_loc, from_loc):
     subprocess.run(['aws', 's3', 'cp', to_loc, from_loc])
+    
+def make_output_directory(species, conditions):
+    import os
+    from string_functions import prefixify
+    
+    species_prefix = prefixify(species)
+
+    # Specify folder as destination for file downloads
+    output_directory = '../../output/' + prefixify(species) + '_' + conditions + '/'
+
+    if not os.path.exists(output_directory):
+        os.mkdir(output_directory)
+    
+    return output_directory
 
 # Class definitions to handle BioFiles between scripts
 class SampleDict:
-    def __init__(self, species: str, conditions: str, directory: str):
+    def __init__(self, species: str, conditions: str):
         self.species = species
         self.conditions = conditions
-        self.directory = directory
+        self.directory = make_output_directory(species, conditions)
 
 class BioFileDocket:                             
     def __init__(self, sampledict):
