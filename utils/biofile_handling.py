@@ -180,17 +180,17 @@ class MultiSpeciesBioFileDocket:
         
 # Class BioFile is used to carry metadata for each file
 class BioFile:
-    def __init__(self, sampledict: SampleDict, filename = '', **kwargs):
+    def __init__(self, sampledict: SampleDict, filename = '', url = None, protocol = None, s3uri = None, **kwargs):
         self.filename = filename
         self.species = sampledict.species
         self.conditions = sampledict.conditions
         self.directory = sampledict.directory
-        self.s3uri = None
+        self.s3uri = s3uri
         
-        if 'url' and 'protocol' in kwargs.keys():
-            self.get_from_url(kwargs['url'], kwargs['protocol'], filename = filename)
-        elif 's3uri' in kwargs.keys():
-            self.get_from_s3(kwargs['s3uri'])
+        if url != None and protocol != None:
+            self.get_from_url(url, protocol, filename = filename)
+        elif s3uri != None:
+            self.get_from_s3(s3uri)
     
     @property
     def path(self):
@@ -221,6 +221,9 @@ class BioFile:
     def get_from_s3(self, overwrite = False):
         import os
         import subprocess
+        
+        if self.filename == '':
+            self.filename = self.s3uri.split('/')[-1]
         
         if not os.path.exists(self.path):
             s3_transfer(self.s3uri, self.path)
