@@ -87,6 +87,10 @@ class BioFileDocket:
     
     Attributes:
         directory (str): output directory for files in the dataset.
+        metadata (:obj:`dummy_object`): a collector for miscellaneous metadata.
+        files (dict): a dictionary of assorted files associated with the data.
+        keyfiles (attr): unique key-identified attributes representing key files.
+            You can add these using BioFileDocket.add_keyfile() or .add_keyfiles().
     """
     def __init__(self, species: int, conditions: int):
         if '_' not in species:
@@ -295,39 +299,50 @@ class BioFileDocket:
             print(self.dill_filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
         return None
 
-class MultiSpeciesBioFileDocket:
-    def __init__(self, species_dict: dict, global_conditions: str, analysis_type):
+class MultiSpeciesBioFileDocket(BioFileDocket):
+    """MultiSpeciesBioFileDocket objects collect BioFileDockets and relate them to one another.
+    
+    Args:
+        species_dict (dict): key is species name in 'Genus_species' format; value is conditions.
+            These must be exact matches, or it will not work.
+        global_conditions (str): a summary identifier for this collection of species' datasets.
+        analysis_type (str): one-word description of the analysis type.
+    
+    Attributes:
+        directory (str): output directory for files in the dataset.
+    """
+    def __init__(self, species_dict: dict, global_conditions: str, analysis_type: str):
         self.species_dict = species_dict
         self.global_conditions = global_conditions
         self.analysis_type = analysis_type
-        self.SampleDicts = {}
         self.metadata = dummy_object()
-        
-        # create dummy species_SampleDicts
-        for species in species_dict:
-            conditions = species_dict[species]
-            species_prefix = prefixify(species)
-            output_folder = make_output_directory(species, conditions, stringonly = True)
-            species_SampleDict = SampleDict(species, conditions, output_folder)
-            self.SampleDicts[species_prefix] = species_SampleDict
         
         directory = make_output_directory(self.species_concat, '_'.join([self.global_conditions, self.analysis_type]))
         self.directory = directory
     
     @property
     def species_concat(self):
-        return ''.join(sorted(self.SampleDicts.keys()))
+        """str: concatenation of species prefixes in alphabetical order."""
+        return ''.join(sorted([prefixify(species) for species in self.species_dict]))
+    
+    @property
+    def dill_filename(self):
+        """str: the unique filename of the BioFileDocket .pkl file."""
+        return '_'.join([self.species_concat, self.global_conditions, self.analysis_type, 'MultiSpeciesBioFileDocket.pkl'])
     
     def get_BioFileDockets(self):
+        """Gets species BioFileDocket .pkl files from S3 for each species in the species_dict."""
         import dill
         
         self.species_BioFileDockets = {}
         
-        for sampledict in self.SampleDicts.values():
-            species_prefix = prefixify(sampledict.species)
+        for species in self.species_dicts:
+            conditions = self.species_dicts[species]
+            species_prefix = prefixify(species)
+            species_directory = make_output_directory(species, conditions, stringonly = True)
             
-            dill_filename = '_'.join([species_prefix, sampledict.conditions, 'sample_BioFileDocket.pkl'])
-            dill_filepath = sampledict.directory + dill_filename
+            dill_filename = '_'.join([species_prefix, conditions, 'sample_BioFileDocket.pkl'])
+            dill_filepath = species_directory + dill_filename
             dill_s3uri = 's3://arcadia-reference-datasets/glial-origins-pkl/' + dill_filename
             
             if not os.path.exists(dill_filepath):
@@ -335,20 +350,42 @@ class MultiSpeciesBioFileDocket:
             
             with open(dill_filepath, 'rb') as file:
                 self.species_BioFileDockets[species_prefix] = dill.load(file)
-        return None
+                
+        return self
     
     def s3_to_local(self, overwrite = False):
+        """Iteratively calls s3_to_local on all BioFileDockets in the group."""
         for species_prefix in self.species_BioFileDockets:
             self.species_BioFileDockets[species_prefix].s3_to_local(overwrite)
     
     def local_to_s3(self, overwrite = False):
+        """Iteratively calls local_to_s3 on all BioFileDockets in the group."""
         for species_prefix in self.species_BioFileDockets:
             self.species_BioFileDockets[species_prefix].local_to_s3(overwrite)
         
-        
 # Class BioFile is used to carry metadata for each file
 class BioFile:
-    def __init__(self, sampledict: SampleDict, filename = '', url = None, protocol = None, unzip = True, s3uri = None):
+    """BioFile objects collect metadata about specific biological filetypes.
+    
+    Args:
+        sampledict (:obj:`SampleDict`): a SampleDict object from the BioFileDocket.
+        filename (str, optional): the name of the file.
+        url (str, optional): when downloading a file on object creation, pass a string url along with a protocol.
+        protocol (str, optional): passed along with a url for automatic download on object creation.
+        s3uri (str, optional): the s3uri of the file, if downloading from s3 upon object creation.
+        unzip (bool, optional): whether or not to unzip a file on download. Defaults to True.
+    
+    Attributes:
+        species (str): species of the file, extracted from sampledict.
+        conditions (str): conditions of the file, extracted from sampledict.
+        directory (str): directory of the file, extracted from sampledict.
+        exists (bool): checks whether the file currently exists.
+        path (str): path to the file, including the filename.
+        species_prefix (str): runs prefixify(species).
+        sampledict (:obj:`SampleDict`): a SampleDict object from the BioFileDocket.
+        filetype (str): infers filetype using the string after the final `.` in filename.
+    """
+    def __init__(self, sampledict: SampleDict, filename = '', url = None, protocol = None, s3uri = None, unzip = True):
         self.filename = filename
         self.species = sampledict.species
         self.conditions = sampledict.conditions
@@ -364,28 +401,31 @@ class BioFile:
             
     @property
     def exists(self):
+        """bool: checks whether the file currently exists."""
         return os.path.exists(self.path)
     
     @property
     def path(self):
+        """str: path to the file, including the filename."""
         return self.directory + self.filename
     
     @property
     def species_prefix(self):
-        if '_' not in self.species:
-            return self.species
-        else:
-            return prefixify(self.species)
+        """str: runs prefixify(species)."""
+        return prefixify(self.species)
     
     @property
     def sampledict(self):
+        """:obj:`SampleDict`: a SampleDict object for the file."""
         return SampleDict(self.species, self.conditions, self.directory)
     
     @property
     def filetype(self):
+        """str: infers filetype using the string after the final `.` in filename."""
         return self.filename.split('.')[-1]
     
     def add_s3uri(self, s3uri: str):
+        """Adds an s3uri to the BioFile object if it doesn't already exist."""
         if self.s3uri == None:
             self.s3uri = s3uri
         else:
@@ -393,6 +433,11 @@ class BioFile:
         return None
     
     def get_from_s3(self, overwrite = False):
+        """Downloads the BioFile from AWS S3.
+        
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
         import os
         import subprocess
         
@@ -410,6 +455,11 @@ class BioFile:
             return self
     
     def push_to_s3(self, overwrite = False):
+        """Uploads the BioFile to AWS S3.
+        
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
         import subprocess
         
         if self.s3uri is None:
@@ -433,12 +483,20 @@ class BioFile:
         return None
 
     def get_from_url(self, url: str, protocol: str, filename = '', unzip = True):
+        """Downloads the BioFile from a URL using a chosen protocol, unzipping optionally.
+        
+        Args:
+            url (str): url of the file.
+            protocol (str): protocol to be used for download.
+            filename (str, optional): name of file to be saved. If empty, will generate name from URL.
+            unzip (bool): decide whether to unzip if it is a zipped file. Defaults to True.
+        """
         import os
         import subprocess
         
         self.url = url
 
-        protocols = ['curl', 'wget', 'rsync']
+        protocols = ['curl', 'wget']
         if protocol not in protocols:
             raise ValueError("Invalid protocol. Expected one of: %s" % protocols)   
         
@@ -457,11 +515,11 @@ class BioFile:
             
             if os.path.exists(self.path):
                 return self
-            elif os.path.exists(output_loc):
-                _
             else:
                 if protocol == 'curl':
                     subprocess.run([protocol, url, '--output', output_loc])
+                elif protocol == 'wget':
+                    subprocess.run([protocol, '-O', output_loc, url])
                 
                 if compression == 'gz' or 'gzip':
                     subprocess.run(['gunzip', output_loc])
@@ -473,7 +531,10 @@ class BioFile:
                 return self
             
             if protocol == 'curl':
-                subprocess.run([protocol, url, '--output', self.path])
+                subprocess.run([protocol, url, '--output', self.path]) 
+            elif protocol == 'wget':
+                    subprocess.run([protocol, '-O', self.path, url])
+            
             return self
 
 class GenomeFastaFile(BioFile):
