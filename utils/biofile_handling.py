@@ -1,96 +1,230 @@
 from string_functions import *
-import os
-import subprocess
-
-GIT_HOME = subprocess.run(['git', 'rev-parse', '--show-toplevel'], stdout=subprocess.PIPE).stdout.decode("utf-8").strip('\n')
-GLOBAL_OUTPUT_DIRECTORY = GIT_HOME + '/output/'
+from install_locs import *
+import os, subprocess, re
+from typing import Union
 
 if not os.path.exists(GLOBAL_OUTPUT_DIRECTORY):
     os.mkdir(GLOBAL_OUTPUT_DIRECTORY)
     print(GLOBAL_OUTPUT_DIRECTORY, 'does not exist; making it now')
 
-def s3_transfer(to_loc, from_loc):
-    subprocess.run(['aws', 's3', 'cp', to_loc, from_loc])
+def s3_transfer(to_loc: str, from_loc: str):
+    """Transfers files to and from AWS S3 and local.  
     
-def make_output_directory(species, conditions):
-    import os
+    One of the two parameters must be an AWS S3 URI in string format.  
+    
+    Args:
+        to_loc (str): path of the destination file.
+        from_loc (str): path of the origin file.
+    """
+    subprocess.run(['aws', 's3', 'cp', to_loc, from_loc])
+
+# Makes a directory based on species and conditions
+# If species
+def make_output_directory(species: str, conditions: str, stringonly = False):
+    """Creates an output directory based on species and condition parameters.  
+    
+    Does not create a directory if it already exists.  
+    Output directory is placed in the `GLOBAL_OUTPUT_DIRECTORY`, as defined by `env/install_locs.py`.
+    Default `GLOBAL_OUTPUT_DIRECTORY` is `output/`.
+    
+    Args:
+        species (str): species name in `Genus_species` format.
+        conditions (str): unique conditions identifier for dataset.
+        stringonly (bool, optional): whether to only output the string without creating a directory
+    
+    Returns:
+        output_directory (str): path of the output directory, in format `Gspe_conditions`.
+    """
     from string_functions import prefixify
     
     species_prefix = prefixify(species)
 
     # Specify folder as destination for file downloads
-    output_directory = '../../output/' + prefixify(species) + '_' + conditions + '/'
+    output_directory = GLOBAL_OUTPUT_DIRECTORY + prefixify(species) + '_' + conditions + '/'
+    
+    if stringonly:
+        return output_directory
 
     if not os.path.exists(output_directory):
+        print('creating', output_directory)
         os.mkdir(output_directory)
+    else:
+        print(output_directory, 'already exists')
     
     return output_directory
 
+class dummy_object(object):
+    """simple dummy object to enable dot access to keys"""
+    pass
+
 # Class definitions to handle BioFiles between scripts
 class SampleDict:
-    def __init__(self, species: str, conditions: str):
+    """A dictionary containing dataset-specific fields: species, conditions, and directory.
+    
+    This class is used to uniquely associate BioFile objects with specific datasets.
+    
+    Args:
+        species (str): species name in 'Genus_species' format.
+        conditions (str): unique conditions identitier for dataset.
+        directory (str): output directory for files in the dataset.
+    """
+    def __init__(self, species: str, conditions: str, directory: str):
         self.species = species
         self.conditions = conditions
-        self.directory = make_output_directory(species, conditions)
+        self.directory = directory
 
-class BioFileDocket:                             
-    def __init__(self, sampledict):
-        self.species = sampledict.species
-        self.conditions = sampledict.conditions
-        self.directory = sampledict.directory
+class BioFileDocket:
+    """BioFileDocket objects collect BioFiles and relate them to one another.
+    
+    Important files called `keyfiles` get their own uniquely-named attribute.  
+    These files can be accessed using a dot operator.
+    For example, `BFD.genome_fasta` would return a GenomeFastaFile object.
+    `BFD.genome_fasta.path` would return the path to that GenomeFastaFile object.
+    
+    Args:
+        species (str): species name in 'Genus_species' format.
+        conditions (str): unique conditions identitier for dataset.
+    
+    Attributes:
+        directory (str): output directory for files in the dataset.
+    """
+    def __init__(self, species: int, conditions: int):
+        if '_' not in species:
+            raise Exception('Please include an underscore in the species name with format:\nGenus_species')
+        self.species = species
+        
+        if any(not c.isalnum() for c in conditions):
+            raise Exception('Conditions can only include alphanumeric characters')
+        self.conditions = conditions
+        
+        directory = make_output_directory(self.species, self.conditions)
+        self.directory = directory
+        print('Files will be saved into', self.directory)
+        
         self.files = dict()
+        self.metadata = dummy_object()
     
     @property
     def s3uri(self):
+        """str: the S3 URI of the BioFileDocket."""
         return 's3://arcadia-reference-datasets/glial-origins-pkl/' + self.dill_filename
     
     @property
     def dill_filename(self):
+        """str: the unique filename of the BioFileDocket .pkl file."""
         return '_'.join([prefixify(self.species), self.conditions, 'sample_BioFileDocket.pkl'])
     
     @property
     def dill_filepath(self):
+        """str: the path of the BioFileDocket .pkl file."""
         return self.directory + self.dill_filename
     
     @property
     def sampledict(self):
+        """:obj:`SampleDict` the full SampleDict of the BioFileDocket."""
         return SampleDict(self.species, self.conditions, self.directory)
+    
+    def set_metadata(self, key: str, value: any, replace = False):
+        """Adds a metadata feature using a unique key identifier.
+        
+        Checks to make sure that key does not already exist.
+        Also makes sure key is only alphanumeric or underscores.
+        
+        Args:
+            key (str): a unique key
+            value (obj): any field you want to record
+        """
+        if not re.match(r'^\w+$', key):
+            raise Exception('key can only include alphanumeric characters and underscores')
+        if hasattr(self.metadata, key):
+            if replace:
+                print('overwriting ' + key)
+            else:
+                print('key "' + key + '" already exists, ignoring')
+                return
+        setattr(self.metadata, key, value)
        
-    def set_taxid(self, taxid):
-        self.taxid = str(taxid)
+    def set_taxid(self, taxid: Union[str, int]):
+        """Adds a taxid attribute to the BioFileDocket.
+        
+        Tolerates either `int` or `str` input.
+        """
+        self.metadata.taxid = str(taxid)
         
     def add_file(self, BioFile):
+        """Places a BioFile object into the `files` attribute.
+        
+        The objects can be accessed using their filename.
+        
+        Note:
+            The actual files of BioFile objects in this list are not automatically uploaded.
+        """
         self.files[BioFile.filename] = BioFile
         
     def add_files(self, list):
+        """Places a list of files into the `files` attribute."""
         for BioFile in list:
-            self.files[BioFile.filename] = BioFile
+            self.add_file(BioFile)
+    
+    def remove_file(self, filename):
+        """Removes a file based on filename from the files attribute."""
+        del self.files[filename]
             
-    def add_keyfile(self, BioFile, key):
+    def add_keyfile(self, key: str, BioFile):
+        """Adds a BioFile object using a unique key identifier.
+        
+        Checks to make sure that key does not already exist.
+        Also makes sure key is only alphanumeric or underscores.
+        
+        Args:
+            key (str): a unique key
+            BioFile (:obj:`BioFile`): a BioFile object
+        """
+        if not re.match(r'^\w+$', key):
+            raise Exception('key can only include alphanumeric characters and underscores')
+        if hasattr(self, key):
+            raise Exception('key "' + key + '" already exists')
         setattr(self, key, BioFile)
         
-    def add_keyfiles(self, dictionary):
+    def add_keyfiles(self, dictionary: dict):
+        """Adds a dictionary of BioFile objects using key:BioFile object pairs."""
         for key in dictionary:
-            setattr(self, key, dictionary[key])
+            self.add_keyfile(key, dictionary[key])
     
-    def remove_keyfile(self, key):
-        delattr(self, key)
-            
-    def remove_file(self, key):
-        del self.files[key]
+    def remove_keyfile(self, key, warn = True):
+        """Deletes a keyfile from the BioFileDocket if warn == False."""
+        if not warn:
+            delattr(self, key)
+        else:
+            raise Warning('If you want to delete this keyfile, set warn = False.')
     
     def pickle(self):
+        """Creates a .pkl file for the BioFileDocket object.
+        
+        The filename and path are automatically generated.
+        """
         import dill
-
+        
         with open(self.dill_filepath, 'wb') as file:
             dill.dump(self, file)
     
     def unpickle(self):
+        """Unpickles a .pkl file for the BioFileDocket object.
+        
+        The filename and path are automatically generated.
+        
+        Returns:
+            self :obj:`BioFileDocket`: returns the unpickled BioFileDocket object.
+        
+        Raises:
+            FileNotFoundError: if the .pkl file doesn't exist yet.
+        """
+        
         import dill
         import os
         
         if not os.path.exists(self.dill_filepath):
-            raise Exception("Can't unpickle file; .pkl file doesn't exist yet at " + self.dill_filepath)
+            raise FileNotFoundError("Can't unpickle file; .pkl file doesn't exist yet at " + self.dill_filepath)
 
         with open(self.dill_filepath, 'rb') as file:
             self = dill.load(file)
@@ -98,18 +232,33 @@ class BioFileDocket:
         return self
     
     def local_to_s3(self, overwrite = False):
+        """Uploads all keyfiles that are BioFiles to S3 using their s3uri attributes.
+        
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
         files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
 
         for file in files.values():
             file.push_to_s3(overwrite)
     
     def s3_to_local(self, overwrite = False):
+        """Downloads all keyfiles that are BioFiles from S3 using their s3uri attributes.
+        
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
         files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
         
         for file in files.values():
             file.get_from_s3(overwrite)
     
     def get_from_s3(self, overwrite = False):
+        """Downloads the .pkl file for the BioFileDocket from AWS S3.
+        
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
         import os
         import subprocess
         
@@ -124,6 +273,11 @@ class BioFileDocket:
             return self
     
     def push_to_s3(self, overwrite = False):
+        """Uploads the .pkl file for the BioFileDocket to AWS S3.
+        
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
         import subprocess
         
         bucket = self.s3uri.lstrip('s3://').split('/')[0]
@@ -147,22 +301,22 @@ class MultiSpeciesBioFileDocket:
         self.global_conditions = global_conditions
         self.analysis_type = analysis_type
         self.SampleDicts = {}
+        self.metadata = dummy_object()
         
+        # create dummy species_SampleDicts
         for species in species_dict:
-            species_prefix = prefixify(species)
             conditions = species_dict[species]
-            output_folder = '../../output/' + species_prefix + '_' + conditions + '/'
+            species_prefix = prefixify(species)
+            output_folder = make_output_directory(species, conditions, stringonly = True)
             species_SampleDict = SampleDict(species, conditions, output_folder)
             self.SampleDicts[species_prefix] = species_SampleDict
         
-        self.species_concat = ''.join(sorted(self.SampleDicts.keys()))
-        self.directory = '../../output/' + self.species_concat + '_' + self.global_conditions + '_' + self.analysis_type + '/'
+        directory = make_output_directory(self.species_concat, '_'.join([self.global_conditions, self.analysis_type]))
+        self.directory = directory
     
-    def make_directory(self):
-        import os
-        if not os.path.exists(self.directory):
-            os.mkdir(self.directory)
-        return None
+    @property
+    def species_concat(self):
+        return ''.join(sorted(self.SampleDicts.keys()))
     
     def get_BioFileDockets(self):
         import dill
@@ -194,7 +348,7 @@ class MultiSpeciesBioFileDocket:
         
 # Class BioFile is used to carry metadata for each file
 class BioFile:
-    def __init__(self, sampledict: SampleDict, filename = '', url = None, protocol = None, s3uri = None, **kwargs):
+    def __init__(self, sampledict: SampleDict, filename = '', url = None, protocol = None, unzip = True, s3uri = None):
         self.filename = filename
         self.species = sampledict.species
         self.conditions = sampledict.conditions
@@ -202,9 +356,15 @@ class BioFile:
         self.s3uri = s3uri
         
         if url != None and protocol != None:
-            self.get_from_url(url, protocol, filename = filename)
+            self.get_from_url(url = url, protocol = protocol, filename = filename, unzip = unzip)
         elif s3uri != None:
             self.get_from_s3(s3uri)
+        elif filename == '':
+            raise Exception('File must minimally have a filename.\nTo download from url, pass both a url and protocol.\nTo download from s3uri, pass s3uri.')
+            
+    @property
+    def exists(self):
+        return os.path.exists(self.path)
     
     @property
     def path(self):
@@ -272,13 +432,13 @@ class BioFile:
         
         return None
 
-    def get_from_url(self, url: str, protocol: str, filename = ''):
+    def get_from_url(self, url: str, protocol: str, filename = '', unzip = True):
         import os
         import subprocess
         
         self.url = url
 
-        protocols = ['curl']
+        protocols = ['curl', 'wget', 'rsync']
         if protocol not in protocols:
             raise ValueError("Invalid protocol. Expected one of: %s" % protocols)   
         
@@ -435,7 +595,7 @@ class GenomeGffFile(BioFile):
         import os
         
         filename = self.filename.replace('.gff', '.gtf')
-        output = GenomeGtfFile(filename, sampledict = self.sampledict, GenomeFastaFile = self.reference_genome)
+        output = GenomeGtfFile(filename = filename, sampledict = self.sampledict, GenomeFastaFile = self.reference_genome)
         
         if os.path.exists(output.path):
             print('Converted file', output.filename, 'already exists at:\n', output.path)
