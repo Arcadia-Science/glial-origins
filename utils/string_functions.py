@@ -66,4 +66,8 @@ def make_gene_list(lst, filename):
 # Takes the first three letters of "species" -> spe
 # Concatenates -> Gspe
 def prefixify(species):
-    return species.split('_')[0][0] + species.split('_')[1][0:3]
+    try:
+        output = species.split('_')[0][0] + species.split('_')[1][0:3]
+        return output
+    except IndexError:
+        return species
