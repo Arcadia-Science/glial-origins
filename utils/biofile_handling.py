@@ -315,15 +315,25 @@ class MultiSpeciesBioFileDocket(BioFileDocket):
         self.species_dict = species_dict
         self.global_conditions = global_conditions
         self.analysis_type = analysis_type
+        
+        # Dummy variables to be backwards-compatible with BioFileDocket
+        self.species = self.species_concat
+        self.conditions = '_'.join([self.global_conditions, self.analysis_type])
+        
         self.metadata = dummy_object()
         
-        directory = make_output_directory(self.species_concat, '_'.join([self.global_conditions, self.analysis_type]))
+        directory = make_output_directory(self.species_concat, self.conditions)
         self.directory = directory
     
     @property
     def species_concat(self):
         """str: concatenation of species prefixes in alphabetical order."""
         return ''.join(sorted([prefixify(species) for species in self.species_dict]))
+    
+    @property
+    def sampledict(self):
+        """:obj:`SampleDict`: a MultiSpeciesBioFileDocket-formatted sampledict."""
+        return SampleDict(self.species_concat, self.conditions, self.directory)
     
     @property
     def dill_filename(self):
@@ -365,7 +375,7 @@ class MultiSpeciesBioFileDocket(BioFileDocket):
         
 # Class BioFile is used to carry metadata for each file
 class BioFile:
-    """BioFile objects collect metadata about specific biological filetypes.
+    """BioFile objects collect metadata about biological filetypes.
     
     Args:
         sampledict (:obj:`SampleDict`): a SampleDict object from the BioFileDocket.
@@ -374,16 +384,6 @@ class BioFile:
         protocol (str, optional): passed along with a url for automatic download on object creation.
         s3uri (str, optional): the s3uri of the file, if downloading from s3 upon object creation.
         unzip (bool, optional): whether or not to unzip a file on download. Defaults to True.
-    
-    Attributes:
-        species (str): species of the file, extracted from sampledict.
-        conditions (str): conditions of the file, extracted from sampledict.
-        directory (str): directory of the file, extracted from sampledict.
-        exists (bool): checks whether the file currently exists.
-        path (str): path to the file, including the filename.
-        species_prefix (str): runs prefixify(species).
-        sampledict (:obj:`SampleDict`): a SampleDict object from the BioFileDocket.
-        filetype (str): infers filetype using the string after the final `.` in filename.
     """
     def __init__(self, sampledict: SampleDict, filename = '', url = None, protocol = None, s3uri = None, unzip = True):
         self.filename = filename
@@ -538,12 +538,21 @@ class BioFile:
             return self
 
 class GenomeFastaFile(BioFile):
-    def __init__(self, sampledict: SampleDict, version: str, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for genome fasta files.
+    
+    Args:
+        see BioFile
+        
+    Unique Args:
+        version (str): the specific version number of the genome.
+    """
+    def __init__(self, version: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.version = version
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
     
     def rename_RefSeq_chromosomes(self, replace = False):
+        """Renames the chromosomes of a RefSeq genome to numerical chromosomes."""
         from Bio import SeqIO
 
         new_filename = self.filename + '.renamed.fa'
@@ -574,6 +583,15 @@ class GenomeFastaFile(BioFile):
             return new_file
         
     def get_transdecoder_cdna_gtf(self, GenomeGtfFile, TRANSDECODER_LOC, **kwargs):
+        """Generates a TransdecoderCdnaFile given a GenomeGtfFile.
+        
+        Args:
+            GenomeGtfFile (:obj:`GenomeGtfFile`): a GenomeGtfFile object that is compatible with the GenomeFastaFile.
+            TRANSDECODER_LOC (str): the path to the parent directory of Transdecoder.
+        
+        Returns:
+            cdna_output (:obj:`TransdecoderCdnaFile`): a TransdecoderCdnaFile object.
+        """
         PERL_SCRIPT_LOC = TRANSDECODER_LOC + 'util/gtf_genome_to_cdna_fasta.pl'
         
         import os
@@ -581,12 +599,12 @@ class GenomeFastaFile(BioFile):
         
         cdna_name = self.filename.replace('.' + self.filetype, '_cDNA.' + self.filetype)
         cdna_output = TransdecoderCdnaFile(
-            filename = cdna_name,
             sampledict = self.sampledict,
+            filename = cdna_name,
             GenomeFastaFile = self,
             GenomeAnnotFile = GenomeGtfFile
         )
-        if os.path.exists(cdna_output.path):
+        if cdna_output.exists:
             return cdna_output
         else:
             output_file = open(cdna_output.path, "w")
@@ -594,15 +612,32 @@ class GenomeFastaFile(BioFile):
             subprocess.call([PERL_SCRIPT_LOC, GenomeGtfFile.path, self.path], stdout=output_file)
             return cdna_output
 
-
 class TransdecoderCdnaFile(BioFile):
-    def __init__(self, sampledict: SampleDict, GenomeFastaFile, GenomeAnnotFile, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for Transdecoder cDNA files.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+        reference_annot (:obj:`GenomeGffFile` or :obj:`GenomeGtfFile`): the BioFile object of the associated genome annotation file.
+    """
+    def __init__(self, GenomeFastaFile, GenomeAnnotFile, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/transcriptome/' + self.filename
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
 
     def to_pep_files(self, TDLONGORF_LOC, TDPREDICT_LOC):
+        """ Generates a peptide file from a Transdecoder cDNA file.
+        
+        Args:
+            TDLONGORF_LOC (str): path to the TransDecoder.LongOrfs binary.
+            TDPREDICT_LOC (str): path to the TransDecoder.Predict binary.
+        
+        Returns:
+            output_dict (:obj:`dict` of :obj:`TransdecoderOutFile`): a dictionary of Transdecoder output files.
+        """
         import subprocess
         
         suffixes = ['.bed', '.cds', '.gff3', '.pep']
@@ -628,19 +663,38 @@ class TransdecoderCdnaFile(BioFile):
         return output_dict
     
 class TransdecoderOutFile(BioFile):
-    def __init__(self, sampledict, GenomeFastaFile, GenomeAnnotFile, TransdecoderCdnaFile, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for Transdecoder cDNA files.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+        reference_annot (:obj:`GenomeGffFile` or :obj:`GenomeGtfFile`): the BioFile object of the associated genome annotation file.
+        reference_cDNA (:obj:`TransdecoderCdnaFile`): the BioFile object of the associated Transdecoder cDNA file.
+    """
+    def __init__(self, GenomeFastaFile, GenomeAnnotFile, TransdecoderCdnaFile, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/proteome/' + self.filename
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
         self.reference_cDNA = TransdecoderCdnaFile
 
 class GenomeGffFile(BioFile):
-    def __init__(self, sampledict: SampleDict, GenomeFastaFile: GenomeFastaFile, filename = '', **kwargs):
-        import subprocess
-        import os
+    """A BioFile object for a genome reference in GFF format.
+    
+    If a file ends in `.gff3`, renames it to end in `.gff` instead.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+    """
+    def __init__(self, reference_genome, *args, **kwargs):
+        import subprocess, os
         
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+        super().__init__(*args, **kwargs)
         
         if self.filename.split('.')[-1] == 'gff3':
             new_filename = self.filename.replace('gff3', 'gff')
@@ -649,7 +703,7 @@ class GenomeGffFile(BioFile):
             self.filename = new_filename
         
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
-        self.reference_genome = GenomeFastaFile
+        self.reference_genome = reference_genome
     
     def to_gtf(self, GFFREAD_LOC, keep_all = False):
         import subprocess
@@ -658,29 +712,55 @@ class GenomeGffFile(BioFile):
         filename = self.filename.replace('.gff', '.gtf')
         output = GenomeGtfFile(filename = filename, sampledict = self.sampledict, GenomeFastaFile = self.reference_genome)
         
-        if os.path.exists(output.path):
+        if output.exists:
             print('Converted file', output.filename, 'already exists at:\n', output.path)
             return output
         
         subprocess.run([GFFREAD_LOC, self.path, '-T', '-o', output.path])
-        
         return output
 
 class GenomeGtfFile(BioFile):
-    def __init__(self, sampledict, GenomeFastaFile, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for a genome reference in GTF format.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+    """
+    def __init__(self, reference_genome, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
-        self.reference_genome = GenomeFastaFile
+        self.reference_genome = reference_genome
 
 class CellRangerFileGroup:
-    def __init__(self, sampledict: SampleDict, barcodes_url, features_url, matrix_url, protocol):
-        self.sampledict = sampledict
-        self.barcodes = CellRangerBarcodesFile(sampledict = sampledict, url = barcodes_url, protocol = protocol)
-        self.matrix = CellRangerMatrixFile(sampledict = sampledict, url = matrix_url, protocol = protocol)
-        self.features = CellRangerFeaturesFile(sampledict = sampledict, url = features_url, protocol = protocol)
+    """A special object that collects the multiple files of a CellRanger file.
     
+    Args:
+        sampledict (:obj:`SampleDict`): a SampleDict object from the BioFileDocket.
+        barcodes_address (str): the address of the barcodes file as either url or s3uri.
+        features_address (str): the address of the features file as either url or s3uri.
+        matrix_address (str): the address of the matrix file as either url or s3uri.
+        how (str): 'url' or 's3uri' to choose a method of download.
+        protocol (str): when using url, the protocol to use. Defaults to 'curl'.
+    """
+    def __init__(self, sampledict: SampleDict, barcodes_url: str, features_url: str, matrix_url: str, how = None, protocol = 'curl'):
+        self.sampledict = sampledict
+        
+        if how == 'url':
+            self.barcodes = CellRangerBarcodesFile(sampledict = sampledict, url = barcodes_address, protocol = protocol)
+            self.matrix = CellRangerMatrixFile(sampledict = sampledict, url = matrix_address, protocol = protocol)
+            self.features = CellRangerFeaturesFile(sampledict = sampledict, url = features_address, protocol = protocol)
+        elif how == 's3uri':
+            self.barcodes = CellRangerBarcodesFile(sampledict = sampledict, s3uri = barcodes_address)
+            self.matrix = CellRangerMatrixFile(sampledict = sampledict, s3uri = matrix_address)
+            self.features = CellRangerFeaturesFile(sampledict = sampledict, s3uri = features_address)
+        else:
+            raise Exception('Must specify how = "url" or "s3uri".')
+
     # Converts a group of CellRanger files into a single dense csv matrix
-    def to_gxc(self, filename, GenomeFastaFile, GenomeAnnotFile, overwrite = False):
+    def to_gxc(self, GenomeFastaFile, GenomeAnnotFile, filename: str, overwrite = False):
+        """Converts the group of cell ranger files to a GxcFile and returns the file object."""
         import csv, gzip, os
         import scipy.io
         import pandas as pd
@@ -690,10 +770,10 @@ class CellRangerFileGroup:
          
         # list of transcript ids, e.g. 'ENSG00000243485'
         feature_ids = [row[0] for row in csv.reader(open(self.features.path), delimiter="\t")]
- 
+        
         # list of gene names, e.g. 'MIR1302-2HG'
         gene_names = [row[1] for row in csv.reader(open(self.features.path), delimiter="\t")]
- 
+        
         barcodes = [row[0] for row in csv.reader(open(self.barcodes.path), delimiter="\t")]
         
         # transform table to pandas dataframe and label rows and columns
@@ -705,9 +785,9 @@ class CellRangerFileGroup:
         display(matrix.head(10))
         
         # save the table as a CSV (note the CSV will be a very large file)
-        output = GxcFile(self.sampledict, GenomeFastaFile, GenomeAnnotFile, filename)
+        output = GxcFile(sampledict = self.sampledict, filename = filename, GenomeFastaFile, GenomeAnnotFile)
         
-        if not os.path.exists(output.path):
+        if not output.exists:
             matrix.to_csv(output.path, index=False, sep = '\t')
         else:
             print('File already exists at', output.path, '. Set overwrite = True to overwrite.')
@@ -715,64 +795,143 @@ class CellRangerFileGroup:
         return output
 
 class CellRangerBarcodesFile(BioFile):
-    def __init__(self, sampledict: SampleDict, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for the barcodes file of a CellRanger file.
+    
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         
 class CellRangerMatrixFile(BioFile):
-    def __init__(self, sampledict: SampleDict, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for the matrix file of a CellRanger file.
+    
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
 
 class CellRangerFeaturesFile(BioFile):
-    def __init__(self, sampledict: SampleDict, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for the features file of a CellRanger file.
+    
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
 
 class LoomFile(BioFile):
-    def __init__(self, sampledict: SampleDict, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for a Loom file.
+    
+    Not built out yet!
+    
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
     
     def to_gxc(self, filename, GenomeFastaFile, GenomeAnnotFile, overwrite = False):
-        print('hi')
+        print('This is not built yet!')
         
 class GxcFile(BioFile):
-    def __init__(self, sampledict: SampleDict, GenomeFastaFile, GenomeAnnotFile, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for a genes x cells matrix.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+        reference_annot (:obj:`GenomeGffFile` or :obj:`GenomeGtfFile`): the BioFile object of the associated genome annotation file.
+    """
+    def __init__(self, GenomeFastaFile, GenomeAnnotFile, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.reference_genome = GenomeFastaFile
         self.reference_annot = GenomeAnnotFile
 
 class ExcFile(BioFile):
-    def __init__(self, sampledict: SampleDict, gxcfile, embedding, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A BioFile object for an embedding x cells matrix.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        gxcfile (:obj:`GxcFile`): the original `GxcFile` object used to generate the new embedding.
+        embedding (str): a description of the new embedding.
+    """
+    def __init__(self, gxcfile, embedding: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.original = gxcfile
         self.embedding = embedding
 
 class IdmmFile(BioFile):
-    def __init__(self, sampledict, kind, sources: list, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """An ID-mapping matrix file. Each row represents a feature and each column represents a name of that feature in a namespace.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        sources (list of :obj:`BioFile` objects): a list of the source BioFile objects.
+        kind (str): a one-word description of the kind of idmm.
+    """
+    def __init__(self, kind: str, sources: list, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.sources = sources
         self.kind = kind
         
 class CellAnnotFile(BioFile):
-    def __init__(self, sampledict, sources: list, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """A cell annotation matrix file with two columns: 'cell_barcode' and 'celltype'.
+    
+    Each cell should have a cell barcode exactly matching its name in the Gxc or Exc embedding.  
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        sources (list of :obj:`BioFile` objects): a list of the source BioFile objects.
+    """
+    def __init__(self, sources: list, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.sources = sources
 
 class UniprotIDMapperFile(IdmmFile):
-    def __init__(self, sampledict, kind, sources: list, from_type, to_type, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, kind = kind, sources = sources, **kwargs)
+    """An BioFile object for the output file generated by calling the UNIPROT ID mapping API.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        from_type (str): the source datatype (e.g. 'Ensembl')
+        to_type (str): the destination datatype (e.g. 'UniprotKB')
+    """
+    def __init__(self, from_type: str, to_type: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.from_type = from_type
         self.to_type = to_type
 
 class UniProtTaxidListFile(BioFile):
-    def __init__(self, sampledict, taxid, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
+    """An BioFile object for pulling files from Uniprot based on input taxid.
+    
+    Defaults to creating a file based on a taxid passed on object creation.  
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        taxid (str or int): the taxid of the species of interest.
+        make (bool): whether or not to make the file upon object creation. defaults to True.
+    """
+    def __init__(self, taxid: Union[str, int], make = True, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         
         self.taxid = str(taxid)
         
@@ -781,29 +940,59 @@ class UniProtTaxidListFile(BioFile):
         
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         
-        if not os.path.exists(self.path):
+        if make:
+            self.get_proteins()
+        else:
+            print('make set to False; skipping file creation. Use .get_proteins() to create the file separately.')
+        
+    def get_proteins(self):
+        """Queries the Uniprot API to extract all proteins for the taxid associated with this object."""
+        if not self.exists:
             with open(self.path, "w") as outfile:
                 subprocess.run(['curl', 
                   'https://rest.uniprot.org/uniprotkb/stream?fields=accession%2Corganism_id%2Corganism_name&format=tsv&query=%28%28taxonomy_id%3A' + self.taxid + '%29%29'],
                   stdout = outfile)
+        return self
         
 class GeneListFile(BioFile):
-    def __init__(self, sampledict, sources: list, genes: list, identifier: str, filename = '', **kwargs):
-        from string_functions import make_gene_list, prefixify
-         
-        if filename == '':
-            print('filename is ignored and generated by input as ', new_filename)
-        else:
-            new_filename = filename
-
-        super().__init__(filename = new_filename, sampledict = sampledict, **kwargs)
+    """An BioFile object for a gene list file, which is a .txt file with a gene on each line.
+    
+    Defaults to creating a file based on a list of genes passed on object creation.  
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        sources (list of :obj:`BioFile` objects): a list of the source BioFile objects.
+        identifier (str): a description of the identifier type for this gene list.
+        make (bool): whether or not to make the file upon object creation. defaults to True.
+    """
+    def __init__(self, sources: list, genes: list, identifier: str, make = True, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.sources = sources
+        self.identifier = identifier
         
+        if make:
+            self.make_file(genes)
+        else:
+            print('make set to False; skipping file creation. Use .make_file(genes) to create the file separately.')
+    
+    def make_file(self, genes: list):
+        """Makes a gene list file at a given location when passed a list object."""
         make_gene_list(genes, self.path)
     
-    def get_uniprot_ids(self, ID_MAPPER_LOC, from_type, to_type):
+    def get_uniprot_ids(self, ID_MAPPER_LOC: str, from_type: str, to_type: str):
+        """Queries the Uniprot API to get ID mapping based on from_type and to_type, returning an UniprotIDMapperFile object.
+        
+        If the number of genes in the file exceeds 100k, generates temporary files to query the API multiple times.
+        
+        Args:
+            ID_MAPPER_LOC (str): path to the ID mapping script, usually at ID_MAPPER_LOC.
+            from_type (str): the source datatype (e.g. 'Ensembl')
+            to_type (str): the destination datatype (e.g. 'UniprotKB')
+        """
         import subprocess
         
         num_lines = sum(1 for line in open(self.path))
@@ -825,6 +1014,7 @@ class GeneListFile(BioFile):
             return output
     
     def get_uniprot_ids_by_genename(self, ID_MAPPER_LOC, from_type, to_type, taxid):
+        """Don't use this, it's not built out yet."""
         import subprocess
         
         filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
@@ -836,48 +1026,72 @@ class GeneListFile(BioFile):
         
         return output
 
-class AlphaFoldFiles(BioFile):
-    def __init__(self, sampledict: SampleDict, gxcfile, embedding, filename = '', **kwargs):
-        super().__init__(filename = filename, sampledict = sampledict, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
-        self.original = gxcfile
-        self.embedding = embedding
-
 class MultiSpeciesFile(BioFile):
-    def __init__(self, multispeciesbiofiledocket, filename = ''):
-        self.filename = filename
-        self.multispeciesbiofiledocket = multispeciesbiofiledocket
-        self.species = list(self.multispeciesbiofiledocket.species_dict.keys())
-        self.global_conditions = self.multispeciesbiofiledocket.global_conditions
-        self.directory = self.multispeciesbiofiledocket.directory
-        self.species_concat = self.multispeciesbiofiledocket.species_concat
-        self.s3uri = None
+    """A special class of BioFile objects for files with multiple associated species.
+    
+    This subclass uses species_concat as its species and its conditions is a '_' concatenation of its global_conditions and analysis_type.
+    
+    Args:
+        see BioFile
+    
+    Unique Args:
+        species_dict (dict): species dictionary from the MultiSpeciesBioFileDocket.
+    """
+    def __init__(self, species_dict: dict, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.species_dict = species_dict
+        self.global_conditions = sampledict.conditions.split('_')[0]
+        self.analysis_type = sampledict.conditions.split('_')[1]
     
     @property
-    def path(self):
-        return self.directory + self.filename
-
+    def species_concat(self):
+        """str: concatenation of species prefixes in alphabetical order."""
+        return ''.join(sorted([prefixify(species) for species in self.species_dict]))
+    
+    @property
+    def sampledict(self):
+        """:obj:`SampleDict`: a MultiSpeciesBioFileDocket-formatted sampledict."""
+        return SampleDict(self.species_concat, self.conditions, self.directory)
+        
 class OrthoFinderOutputFile(MultiSpeciesFile):
-    def __init__(self, multispeciesbiofiledocket, directory: str, filename = ''):
-        super().__init__(filename = filename, multispeciesbiofiledocket = multispeciesbiofiledocket)
-        self.directory = directory
+    """A MultiSpeciesFile for OrthoFinder output.
+    
+    Args:
+        see MultiSpeciesFile and BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(, *args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/OrthoFinder_output/' + self.filename
 
 class FoldSeekOutputFile(MultiSpeciesFile):
-    def __init__(self, multispeciesbiofiledocket, directory: str, filename = ''):
-        super().__init__(filename = filename, multispeciesbiofiledocket = multispeciesbiofiledocket)
-        self.directory = directory
+    """A MultiSpeciesFile for FoldSeek output.
+    
+    Args:
+        see MultiSpeciesFile and BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.s3uri = 's3://arcadia-reference-datasets/FoldSeek_output/' + self.filename
 
 class JointExcFile(MultiSpeciesFile):
-    def __init__(self, multispeciesbiofiledocket, directory: str, filename = '', embedding = '', sources = []):
-        super().__init__(filename = filename, multispeciesbiofiledocket = multispeciesbiofiledocket)
-        self.directory = directory
+    """A MultiSpeciesFile for collecting an ExcFile with multiple species.
+    
+    Args:
+        see MultiSpeciesFile and BioFile
+    
+    Unique Args:
+        gxcfile (:obj:`GxcFile`): the original `GxcFile` object used to generate the new embedding.
+        embedding (str): a description of the new embedding.
+    """
+    def __init__(self, sources: list, embedding: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.sources = sources
         self.embedding = embedding
         self.s3uri = 's3://arcadia-reference-datasets/' + self.embedding + '_JointExc/' + self.filename
 
 def gxc_to_exc(sample_MSD, embedding_df, exc_file):
+    """Converts an GxcFile into an ExcFile, returning the new file object."""
+    
     import pandas as pd
     import os
     
@@ -906,7 +1120,7 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file):
         embedding_exc = embedding + '_exc'
     
         # Checks whether an Embedding_exc file already exists; avoid re-generating if it does
-        if os.path.exists(exc.path):
+        if exc.exists:
             print(embedding_exc + 'file already exists at', exc.path, 'skipping')
             sample_MSD.species_BioFileDockets[pre].add_keyfile(exc, embedding_exc)
         
