@@ -1,0 +1,5 @@
+# mkdocs.yml
+site_name: BioFile Handling
+
+theme:
+  name: "readthedocs"
