@@ -62,12 +62,12 @@ dependencies:
   - bwidget=1.9.14=ha770c72_1
   - bzip2=1.0.8=h7f98852_4
   - c-ares=1.18.1=h7f98852_0
-  - ca-certificates=2022.9.24=ha878542_0
+  - ca-certificates=2022.12.7=ha878542_0
   - cached-property=1.5.2=hd8ed1ab_1
   - cached_property=1.5.2=pyha770c72_1
   - cachetools=5.2.0=pyhd8ed1ab_0
   - cairo=1.16.0=h6cf1ce9_1008
-  - certifi=2022.9.24=pyhd8ed1ab_0
+  - certifi=2022.12.7=pyhd8ed1ab_0
   - cffi=1.15.1=py310h255011f_0
   - charset-normalizer=2.1.1=pyhd8ed1ab_0
   - click=8.1.3=py310hff52083_0
@@ -122,6 +122,7 @@ dependencies:
   - gfortran_impl_linux-64=9.5.0=hf1096a2_19
   - gfortran_linux-64=9.5.0=hdb51d14_11
   - ghostscript=9.54.0=h27087fc_2
+  - ghp-import=2.1.0=pyhd8ed1ab_0
   - glib=2.72.1=h6239696_0
   - glib-tools=2.72.1=h6239696_0
   - glpk=4.65=h9202a9a_1004
@@ -248,12 +249,15 @@ dependencies:
   - lz4-c=1.9.3=h9c3ff4c_1
   - mafft=7.505=hec16e2b_0
   - make=4.3=hd18ef5c_1
+  - markdown=3.3.7=pyhd8ed1ab_0
   - markupsafe=2.1.1=py310h5764c6d_1
   - matplotlib-base=3.5.3=py310h8d5ebf3_2
   - matplotlib-inline=0.1.6=pyhd8ed1ab_0
   - mcl=14.137=pl5321hec16e2b_8
+  - mergedeep=1.3.4=pyhd8ed1ab_0
   - metis=5.1.0=h58526e2_1006
   - mistune=2.0.4=pyhd8ed1ab_0
+  - mkdocs=1.4.2=pyhd8ed1ab_0
   - mkl=2022.1.0=hc2b9512_224
   - mmseqs2=13.45111=h95f258a_1
   - monotonic=1.5=py_0
@@ -287,7 +291,7 @@ dependencies:
   - openjpeg=2.5.0=h7d73246_1
   - openmpi=4.1.4=ha1ae619_101
   - openpyxl=3.0.10=py310h5764c6d_1
-  - openssl=1.1.1s=h166bdaf_0
+  - openssl=1.1.1s=h0b41bf4_1
   - orthofinder=2.5.4=hdfd78af_0
   - packaging=21.3=pyhd8ed1ab_0
   - pandas=1.4.4=py310h769672d_0
@@ -367,6 +371,7 @@ dependencies:
   - pytz=2022.2.1=pyhd8ed1ab_0
   - pyu2f=0.1.5=pyhd8ed1ab_0
   - pyyaml=6.0=py310h5764c6d_4
+  - pyyaml-env-tag=0.1=pyhd8ed1ab_0
   - pyzmq=23.2.1=py310h330234f_0
   - qt-main=5.15.2=hf8cb05d_0
   - qtconsole=5.3.2=pyhd8ed1ab_0
@@ -623,6 +628,7 @@ dependencies:
   - umap-learn=0.5.3=py310hff52083_0
   - unicodedata2=14.0.0=py310h5764c6d_1
   - urllib3=1.26.11=pyhd8ed1ab_0
+  - watchdog=2.2.0=py310hff52083_0
   - wcwidth=0.2.5=pyh9f0ad1d_2
   - webencodings=0.5.1=py_1
   - weblogo=3.7.12=pyhd8ed1ab_0
