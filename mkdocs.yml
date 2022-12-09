@@ -6,6 +6,9 @@ theme:
 
 plugins:
   - mkdocstrings:
+      watch:
+        - utils/biofile_handling.py
+        - utils/string_functions.py
       default_handler: python
       handlers:
         python:
