@@ -102,8 +102,8 @@
               
                 <h1 id="about-biofile-handling">About BioFile Handling</h1>
 <h2 id="biofile-objects">BioFile objects</h2>
-<p>Files in this project are handled using the BioFile class. See image below for a summary.</p>
-<p><img alt="BioFile Basics" src="https://user-images.githubusercontent.com/6531296/192902320-38d7cd9d-4dbb-4d80-af01-5e5f51c90710.png" /></p>
+<p>Files in this project are managed using BioFile handling.</p>
+<p><img alt="BioFile Basics" src="https://user-images.githubusercontent.com/6531296/206793321-537f9254-0c73-48b3-9c6d-949d4aa44799.png" /></p>
 <h3 id="what-are-biofile-objects-used-for">What are BioFile objects used for?</h3>
 <p>BioFile objects are used to track the myriad metadata associated with a given type of file. 
 For example, a file might be associated with a specific species and a specific tissue type.
@@ -123,7 +123,7 @@ For example, you could quickly get the filename of the <code>GenomeFastaFile</co
 <h2 id="biofiledockets">BioFileDockets</h2>
 <p>BioFileDockets are another class of objects used in this analysis.
 BioFileDocket objects store all BioFile objects associated with a specific dataset.</p>
-<p><img alt="Docket Objects" src="https://user-images.githubusercontent.com/6531296/192902098-1cd67311-ccbb-4d76-bc2e-f505d95810a5.png" /></p>
+<p><img alt="Docket Objects" src="https://user-images.githubusercontent.com/6531296/206793358-7ef91d7b-e17a-4c7d-85ac-3958ebfef4c1.png" /></p>
 <h3 id="what-are-biofiledocket-objects-used-for">What are BioFileDocket objects used for?</h3>
 <p>BioFileDocket objects keep track of all BioFile objects associated with a specific dataset.
 For example, a mouse adult brain RNA-Seq dataset might have a <code>BioFileDocket</code> that stores the <code>GenomeFastaFile</code>, <code>GenomeGtfFile</code>, <code>IdmmFile</code>, <code>GxcFile</code>, and other objects specific to that dataset.</p>
