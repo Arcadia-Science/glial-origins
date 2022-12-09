@@ -1,5 +1,2 @@
 # Glial Origins
-
-
-
-::: utils.biofile_handling
+Evolutionary origins and relationships of glial cell types
