@@ -9,8 +9,8 @@ plugins:
       default_handler: python
 
 nav:
-  - index.md: Home
-  - BioFile_README.md: About BioFile Handling
-  - biofile_doc.md: BioFile Usage
-  - string_functions_doc.md: String Functions Usage
-  - scanpy_wrappers_doc.md: Scanpy Wrappers Usage
+  - Home: index.md
+  - About BioFile Handling: BioFile_README.md
+  - BioFile Usage: biofile_doc.md
+  - String Functions Usage: string_functions_doc.md
+  - Scanpy Wrappers Usage: scanpy_wrappers_doc.md
