@@ -3,3 +3,7 @@ site_name: BioFile Handling
 
 theme:
   name: "readthedocs"
+
+plugins:
+  - mkdocstrings:
+      default_handler: python
