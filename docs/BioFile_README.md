@@ -2,9 +2,9 @@
 
 ## BioFile objects
 
-Files in this project are handled using the BioFile class. See image below for a summary.
+Files in this project are managed using BioFile handling.
 
-![BioFile Basics](https://user-images.githubusercontent.com/6531296/192902320-38d7cd9d-4dbb-4d80-af01-5e5f51c90710.png)
+![BioFile Basics](https://user-images.githubusercontent.com/6531296/206793321-537f9254-0c73-48b3-9c6d-949d4aa44799.png)
 
 ### What are BioFile objects used for?
 
@@ -36,7 +36,7 @@ For example, you could quickly get the filename of the `GenomeFastaFile` associa
 BioFileDockets are another class of objects used in this analysis.
 BioFileDocket objects store all BioFile objects associated with a specific dataset.
 
-![Docket Objects](https://user-images.githubusercontent.com/6531296/192902098-1cd67311-ccbb-4d76-bc2e-f505d95810a5.png)
+![Docket Objects](https://user-images.githubusercontent.com/6531296/206793358-7ef91d7b-e17a-4c7d-85ac-3958ebfef4c1.png)
 
 ### What are BioFileDocket objects used for?
 
