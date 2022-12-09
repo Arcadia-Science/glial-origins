@@ -69,7 +69,7 @@ def convert_dbxref_to_dict(string: str):
     output = {entry.split(':')[0]: entry.split(':')[-1] for entry in entries}
     return output
 
-def convert_dict_to_fields_gtf(dictionar: dict):
+def convert_dict_to_fields_gtf(dictionary: dict):
     """Takes a `dict` and converts it to a `string` for the additional fields section of GTF format.
     
     Args:
