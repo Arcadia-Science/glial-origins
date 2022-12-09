@@ -1,0 +1,3640 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>BioFile Usage - Glial Origins</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "BioFile Usage";
+        var mkdocs_page_input_path = "biofile_doc.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Glial Origins
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../BioFile_README/">About BioFile Handling</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">BioFile Usage</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling">utils.biofile_handling</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.BioFile">BioFile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.add_s3uri">add_s3uri()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.exists">exists()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.filetype">filetype()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.get_from_s3">get_from_s3()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.get_from_url">get_from_url()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.path">path()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.push_to_s3">push_to_s3()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.sampledict">sampledict()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.species_prefix">species_prefix()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFile.unzip">unzip()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket">BioFileDocket</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.add_file">add_file()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.add_files">add_files()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.add_keyfile">add_keyfile()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.add_keyfiles">add_keyfiles()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.dill_filename">dill_filename()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.dill_filepath">dill_filepath()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.get_from_s3">get_from_s3()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.local_to_s3">local_to_s3()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.pickle">pickle()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.push_to_s3">push_to_s3()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.remove_file">remove_file()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.remove_keyfile">remove_keyfile()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.s3_to_local">s3_to_local()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.s3uri">s3uri()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.sampledict">sampledict()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.set_taxid">set_taxid()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.species_prefix">species_prefix()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.BioFileDocket.unpickle">unpickle()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.CellAnnotFile">CellAnnotFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.CellRangerBarcodesFile">CellRangerBarcodesFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.CellRangerFeaturesFile">CellRangerFeaturesFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.CellRangerFileGroup">CellRangerFileGroup</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.CellRangerFileGroup.to_gxc">to_gxc()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.CellRangerMatrixFile">CellRangerMatrixFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.ExcFile">ExcFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.FoldSeekOutputFile">FoldSeekOutputFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.GeneListFile">GeneListFile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.GeneListFile.get_uniprot_ids">get_uniprot_ids()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.GeneListFile.get_uniprot_ids_by_genename">get_uniprot_ids_by_genename()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.GeneListFile.make_file">make_file()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.GenomeFastaFile">GenomeFastaFile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.GenomeFastaFile.get_transdecoder_cdna_gtf">get_transdecoder_cdna_gtf()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.GenomeFastaFile.rename_RefSeq_chromosomes">rename_RefSeq_chromosomes()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.GenomeGffFile">GenomeGffFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.GenomeGtfFile">GenomeGtfFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.GxcFile">GxcFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.IdmmFile">IdmmFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.JointExcFile">JointExcFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.LoomFile">LoomFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket">MultiSpeciesBioFileDocket</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket.dill_filename">dill_filename()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket.get_BioFileDockets">get_BioFileDockets()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket.local_to_s3">local_to_s3()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket.s3_to_local">s3_to_local()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket.sampledict">sampledict()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket.species_concat">species_concat()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesFile">MultiSpeciesFile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesFile.sampledict">sampledict()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesFile.species_concat">species_concat()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.OrthoFinderOutputFile">OrthoFinderOutputFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.SampleDict">SampleDict</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.TransdecoderCdnaFile">TransdecoderCdnaFile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.TransdecoderCdnaFile.to_pep_files">to_pep_files()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.TransdecoderOutFile">TransdecoderOutFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.UniProtTaxidListFile">UniProtTaxidListFile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.UniProtTaxidListFile.get_proteins">get_proteins()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.UniprotIDMapperFile">UniprotIDMapperFile</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.metadata_object">metadata_object</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.metadata_object.add">add()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.gxc_to_exc">gxc_to_exc()</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.make_output_directory">make_output_directory()</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.s3_transfer">s3_transfer()</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../string_functions_doc/">String Functions Usage</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../scanpy_wrappers_doc/">Scanpy Wrappers Usage</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Glial Origins</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>BioFile Usage</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="biofile-documentation">BioFile Documentation</h1>
+<p>This page describes BioFile objects and their usage.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+<a id="utils.biofile_handling"></a>
+  <div class="doc doc-contents first">
+  
+      <p>BioFile objects and functions for managing collections of biological data.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.BioFile" class="doc doc-heading">
+        <code>BioFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>BioFile objects collect metadata about biological filetypes.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sampledict</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.SampleDict" href="#utils.biofile_handling.SampleDict">SampleDict</a></code>
+          </td>
+          <td><p>a SampleDict object from the BioFileDocket.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>filename</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the name of the file.</p></td>
+          <td>
+                <code>&#39;&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>url</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>when downloading a file on object creation, pass a string url along with a protocol.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>protocol</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>passed along with a url for automatic download on object creation.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>s3uri</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the s3uri of the file, if downloading from s3 upon object creation.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unzip</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether or not to unzip a file on download. Defaults to True.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.add_s3uri" class="doc doc-heading">
+<code class="highlight language-python">add_s3uri(s3uri)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds an s3uri to the BioFile object if it doesn't already exist.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.exists" class="doc doc-heading">
+<code class="highlight language-python">exists()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>bool: checks whether the file currently exists.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.filetype" class="doc doc-heading">
+<code class="highlight language-python">filetype()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: infers filetype using the string after the final <code>.</code> in filename.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.get_from_s3" class="doc doc-heading">
+<code class="highlight language-python">get_from_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads the BioFile from AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.get_from_url" class="doc doc-heading">
+<code class="highlight language-python">get_from_url(url, protocol, filename='', unzip=True)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads the BioFile from a URL using a chosen protocol, unzipping optionally.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>url</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>url of the file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>protocol</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>protocol to be used for download.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>filename</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>name of file to be saved. If empty, will generate name from URL.</p></td>
+          <td>
+                <code>&#39;&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unzip</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to unzip if it is a zipped file. Defaults to True.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.path" class="doc doc-heading">
+<code class="highlight language-python">path()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: path to the file, including the filename.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.push_to_s3" class="doc doc-heading">
+<code class="highlight language-python">push_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Uploads the BioFile to AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>SampleDict: a SampleDict object for the file.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.species_prefix" class="doc doc-heading">
+<code class="highlight language-python">species_prefix()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: runs prefixify(species).</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.unzip" class="doc doc-heading">
+<code class="highlight language-python">unzip()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Unzips files ending in .gz, .gzip, or .zip.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.BioFileDocket" class="doc doc-heading">
+        <code>BioFileDocket</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>BioFileDocket objects collect BioFiles and relate them to one another.</p>
+<p>Important files called <code>keyfiles</code> get their own uniquely-named attribute.<br />
+These files can be accessed using a dot operator.
+For example, <code>BFD.genome_fasta</code> would return a GenomeFastaFile object.
+<code>BFD.genome_fasta.path</code> would return the path to that GenomeFastaFile object.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>species name in 'Genus_species' format.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>unique conditions identitier for dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>directory</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>output directory for files in the dataset.</p></td>
+        </tr>
+        <tr>
+          <td><code>metadata</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.metadata_object" href="#utils.biofile_handling.metadata_object">metadata_object</a></code>
+          </td>
+          <td><p>a collector for miscellaneous metadata.</p></td>
+        </tr>
+        <tr>
+          <td><code>files</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td><p>a dictionary of assorted files associated with the data.</p></td>
+        </tr>
+        <tr>
+          <td><code>keyfiles</code></td>
+          <td>
+                <code>attr</code>
+          </td>
+          <td><p>unique key-identified attributes representing key files.
+You can add these using BioFileDocket.add_keyfile() or .add_keyfiles().</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_file" class="doc doc-heading">
+<code class="highlight language-python">add_file(BioFile)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Places a BioFile object into the <code>files</code> attribute.</p>
+<p>The objects can be accessed using their filename.</p>
+
+<details class="note">
+  <summary>Note</summary>
+  <p>The actual files of BioFile objects in this list are not automatically uploaded.</p>
+</details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_files" class="doc doc-heading">
+<code class="highlight language-python">add_files(list)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Places a list of files into the <code>files</code> attribute.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_keyfile" class="doc doc-heading">
+<code class="highlight language-python">add_keyfile(key, BioFile, overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a BioFile object using a unique key identifier.</p>
+<p>Checks to make sure that key does not already exist.
+Also makes sure key is only alphanumeric or underscores.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>key</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a unique key</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>BioFile</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code>
+          </td>
+          <td><p>a BioFile object</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_keyfiles" class="doc doc-heading">
+<code class="highlight language-python">add_keyfiles(dictionary, overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a dictionary of BioFile objects using key:BioFile object pairs.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.dill_filename" class="doc doc-heading">
+<code class="highlight language-python">dill_filename()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the unique filename of the BioFileDocket .pkl file.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.dill_filepath" class="doc doc-heading">
+<code class="highlight language-python">dill_filepath()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the path of the BioFileDocket .pkl file.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.get_from_s3" class="doc doc-heading">
+<code class="highlight language-python">get_from_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads the .pkl file for the BioFileDocket from AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.local_to_s3" class="doc doc-heading">
+<code class="highlight language-python">local_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Uploads all keyfiles that are BioFiles to S3 using their s3uri attributes.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.pickle" class="doc doc-heading">
+<code class="highlight language-python">pickle()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates a .pkl file for the BioFileDocket object.</p>
+<p>The filename and path are automatically generated.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.push_to_s3" class="doc doc-heading">
+<code class="highlight language-python">push_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Uploads the .pkl file for the BioFileDocket to AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.remove_file" class="doc doc-heading">
+<code class="highlight language-python">remove_file(filename)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Removes a file based on filename from the files attribute.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.remove_keyfile" class="doc doc-heading">
+<code class="highlight language-python">remove_keyfile(key, warn=True)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Deletes a keyfile from the BioFileDocket if warn == False.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.s3_to_local" class="doc doc-heading">
+<code class="highlight language-python">s3_to_local(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads all keyfiles that are BioFiles from S3 using their s3uri attributes.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.s3uri" class="doc doc-heading">
+<code class="highlight language-python">s3uri()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the S3 URI of the BioFileDocket.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>SampleDict: the full SampleDict of the BioFileDocket.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.set_taxid" class="doc doc-heading">
+<code class="highlight language-python">set_taxid(taxid)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a taxid attribute to the BioFileDocket.</p>
+<p>Tolerates either <code>int</code> or <code>str</code> input.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.species_prefix" class="doc doc-heading">
+<code class="highlight language-python">species_prefix()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: runs prefixify(species).</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.unpickle" class="doc doc-heading">
+<code class="highlight language-python">unpickle()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Unpickles a .pkl file for the BioFileDocket object.</p>
+<p>The filename and path are automatically generated.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>self</code></td>          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFileDocket" href="#utils.biofile_handling.BioFileDocket">BioFileDocket</a></code>
+          </td>
+          <td><p>returns the unpickled BioFileDocket object.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>FileNotFoundError</code>
+          </td>
+          <td><p>if the .pkl file doesn't exist yet.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellAnnotFile" class="doc doc-heading">
+        <code>CellAnnotFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A cell annotation matrix file with two columns: 'cell_barcode' and 'celltype'.</p>
+<p>Each cell should have a cell barcode exactly matching its name in the Gxc or Exc embedding.  </p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sources</code></td>
+          <td>
+                <code>list of BioFile objects</code>
+          </td>
+          <td><p>a list of the source BioFile objects.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerBarcodesFile" class="doc doc-heading">
+        <code>CellRangerBarcodesFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for the barcodes file of a CellRanger file.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerFeaturesFile" class="doc doc-heading">
+        <code>CellRangerFeaturesFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for the features file of a CellRanger file.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerFileGroup" class="doc doc-heading">
+        <code>CellRangerFileGroup</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A special object that collects the multiple files of a CellRanger file.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sampledict</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.SampleDict" href="#utils.biofile_handling.SampleDict">SampleDict</a></code>
+          </td>
+          <td><p>a SampleDict object from the BioFileDocket.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>barcodes_address</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the address of the barcodes file as either url or s3uri.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>features_address</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the address of the features file as either url or s3uri.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>matrix_address</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the address of the matrix file as either url or s3uri.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>how</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>'url' or 's3uri' to choose a method of download.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>protocol</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>when using url, the protocol to use. Defaults to 'curl'.</p></td>
+          <td>
+                <code>&#39;curl&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.CellRangerFileGroup.to_gxc" class="doc doc-heading">
+<code class="highlight language-python">to_gxc(reference_genome, reference_annot, filename, overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Converts the group of cell ranger files to a GxcFile and returns the file object.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerMatrixFile" class="doc doc-heading">
+        <code>CellRangerMatrixFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for the matrix file of a CellRanger file.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.ExcFile" class="doc doc-heading">
+        <code>ExcFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for an embedding x cells matrix.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>gxcfile</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GxcFile" href="#utils.biofile_handling.GxcFile">GxcFile</a></code>
+          </td>
+          <td><p>the original <code>GxcFile</code> object used to generate the new embedding.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>embedding</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a description of the new embedding.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.FoldSeekOutputFile" class="doc doc-heading">
+        <code>FoldSeekOutputFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.MultiSpeciesFile" href="#utils.biofile_handling.MultiSpeciesFile">MultiSpeciesFile</a></code></p>
+
+  
+      <p>A MultiSpeciesFile for FoldSeek output.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GeneListFile" class="doc doc-heading">
+        <code>GeneListFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>An BioFile object for a gene list file, which is a .txt file with a gene on each line.</p>
+<p>Defaults to creating a file based on a list of genes passed on object creation.  </p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sources</code></td>
+          <td>
+                <code>list of BioFile objects</code>
+          </td>
+          <td><p>a list of the source BioFile objects.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>identifier</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a description of the identifier type for this gene list.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>make</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether or not to make the file upon object creation. defaults to True.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GeneListFile.get_uniprot_ids" class="doc doc-heading">
+<code class="highlight language-python">get_uniprot_ids(ID_MAPPER_LOC, from_type, to_type)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Queries the Uniprot API to get ID mapping based on from_type and to_type, returning an UniprotIDMapperFile object.</p>
+<p>If the number of genes in the file exceeds 100k, generates temporary files to query the API multiple times.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ID_MAPPER_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path to the ID mapping script, usually at ID_MAPPER_LOC.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>from_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the source datatype (e.g. 'Ensembl')</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>to_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the destination datatype (e.g. 'UniprotKB')</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GeneListFile.get_uniprot_ids_by_genename" class="doc doc-heading">
+<code class="highlight language-python">get_uniprot_ids_by_genename(ID_MAPPER_LOC, from_type, to_type, taxid)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Don't use this, it's not built out yet.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GeneListFile.make_file" class="doc doc-heading">
+<code class="highlight language-python">make_file(genes)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Makes a gene list file at a given location when passed a list object.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GenomeFastaFile" class="doc doc-heading">
+        <code>GenomeFastaFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for genome fasta files.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>version</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the specific version number of the genome.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GenomeFastaFile.get_transdecoder_cdna_gtf" class="doc doc-heading">
+<code class="highlight language-python">get_transdecoder_cdna_gtf(GenomeGtfFile, TRANSDECODER_LOC, **kwargs)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates a TransdecoderCdnaFile given a GenomeGtfFile.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>GenomeGtfFile</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGtfFile" href="#utils.biofile_handling.GenomeGtfFile">GenomeGtfFile</a></code>
+          </td>
+          <td><p>a GenomeGtfFile object that is compatible with the GenomeFastaFile.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>TRANSDECODER_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the path to the parent directory of Transdecoder.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>cdna_output</code></td>          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.TransdecoderCdnaFile" href="#utils.biofile_handling.TransdecoderCdnaFile">TransdecoderCdnaFile</a></code>
+          </td>
+          <td><p>a TransdecoderCdnaFile object.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GenomeFastaFile.rename_RefSeq_chromosomes" class="doc doc-heading">
+<code class="highlight language-python">rename_RefSeq_chromosomes(replace=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Renames the chromosomes of a RefSeq genome to numerical chromosomes.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GenomeGffFile" class="doc doc-heading">
+        <code>GenomeGffFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a genome reference in GFF format.</p>
+<p>If a file ends in <code>.gff3</code>, renames it to end in <code>.gff</code> instead.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>reference_genome</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeFastaFile" href="#utils.biofile_handling.GenomeFastaFile">GenomeFastaFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated genome fasta file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GenomeGtfFile" class="doc doc-heading">
+        <code>GenomeGtfFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a genome reference in GTF format.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>reference_genome</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeFastaFile" href="#utils.biofile_handling.GenomeFastaFile">GenomeFastaFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated genome fasta file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GxcFile" class="doc doc-heading">
+        <code>GxcFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a genes x cells matrix.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>reference_genome</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeFastaFile" href="#utils.biofile_handling.GenomeFastaFile">GenomeFastaFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated genome fasta file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>reference_annot</code></td>
+          <td>
+                <code>GenomeGffFile or GenomeGtfFile</code>
+          </td>
+          <td><p>the BioFile object of the associated genome annotation file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.IdmmFile" class="doc doc-heading">
+        <code>IdmmFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>An ID-mapping matrix file. Each row represents a feature and each column represents a name of that feature in a namespace.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sources</code></td>
+          <td>
+                <code>list of BioFile objects</code>
+          </td>
+          <td><p>a list of the source BioFile objects.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>kind</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a one-word description of the kind of idmm.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.JointExcFile" class="doc doc-heading">
+        <code>JointExcFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.MultiSpeciesFile" href="#utils.biofile_handling.MultiSpeciesFile">MultiSpeciesFile</a></code></p>
+
+  
+      <p>A MultiSpeciesFile for collecting an ExcFile with multiple species.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sources</code></td>
+          <td>
+                <code>list of GxcFile</code>
+          </td>
+          <td><p>the original <code>GxcFile</code> object used to generate the new embedding.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>embedding</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a description of the new embedding.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.LoomFile" class="doc doc-heading">
+        <code>LoomFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a Loom file.</p>
+<p>Not built out yet!</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.MultiSpeciesBioFileDocket" class="doc doc-heading">
+        <code>MultiSpeciesBioFileDocket</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFileDocket" href="#utils.biofile_handling.BioFileDocket">BioFileDocket</a></code></p>
+
+  
+      <p>MultiSpeciesBioFileDocket objects collect BioFileDockets and relate them to one another.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species_dict</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td><p>key is species name in 'Genus_species' format; value is conditions.
+These must be exact matches, or it will not work.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>global_conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a summary identifier for this collection of species' datasets.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>analysis_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>one-word description of the analysis type.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>directory</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>output directory for files in the dataset.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.dill_filename" class="doc doc-heading">
+<code class="highlight language-python">dill_filename()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the unique filename of the BioFileDocket .pkl file.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.get_BioFileDockets" class="doc doc-heading">
+<code class="highlight language-python">get_BioFileDockets()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Gets species BioFileDocket .pkl files from S3 for each species in the species_dict.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.local_to_s3" class="doc doc-heading">
+<code class="highlight language-python">local_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Iteratively calls local_to_s3 on all BioFileDockets in the group.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.s3_to_local" class="doc doc-heading">
+<code class="highlight language-python">s3_to_local(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Iteratively calls s3_to_local on all BioFileDockets in the group.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>SampleDict: a MultiSpeciesBioFileDocket-formatted sampledict.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.species_concat" class="doc doc-heading">
+<code class="highlight language-python">species_concat()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: concatenation of species prefixes in alphabetical order.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.MultiSpeciesFile" class="doc doc-heading">
+        <code>MultiSpeciesFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A special class of BioFile objects for files with multiple associated species.</p>
+<p>This subclass uses species_concat as its species and its conditions is a '_' concatenation of its global_conditions and analysis_type.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species_dict</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td><p>species dictionary from the MultiSpeciesBioFileDocket.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesFile.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>SampleDict: a MultiSpeciesBioFileDocket-formatted sampledict.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesFile.species_concat" class="doc doc-heading">
+<code class="highlight language-python">species_concat()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: concatenation of species prefixes in alphabetical order.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.OrthoFinderOutputFile" class="doc doc-heading">
+        <code>OrthoFinderOutputFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.MultiSpeciesFile" href="#utils.biofile_handling.MultiSpeciesFile">MultiSpeciesFile</a></code></p>
+
+  
+      <p>A MultiSpeciesFile for OrthoFinder output.</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.SampleDict" class="doc doc-heading">
+        <code>SampleDict</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A dictionary containing dataset-specific fields: species, conditions, and directory.</p>
+<p>This class is used to uniquely associate BioFile objects with specific datasets.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>species name in 'Genus_species' format.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>unique conditions identitier for dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>directory</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>output directory for files in the dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.TransdecoderCdnaFile" class="doc doc-heading">
+        <code>TransdecoderCdnaFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for Transdecoder cDNA files.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>reference_genome</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeFastaFile" href="#utils.biofile_handling.GenomeFastaFile">GenomeFastaFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated genome fasta file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>reference_annot</code></td>
+          <td>
+                <code>GenomeGffFile or GenomeGtfFile</code>
+          </td>
+          <td><p>the BioFile object of the associated genome annotation file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.TransdecoderCdnaFile.to_pep_files" class="doc doc-heading">
+<code class="highlight language-python">to_pep_files(TDLONGORF_LOC, TDPREDICT_LOC)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates a peptide file from a Transdecoder cDNA file.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>TDLONGORF_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path to the TransDecoder.LongOrfs binary.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>TDPREDICT_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path to the TransDecoder.Predict binary.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>output_dict</code></td>          <td>
+                <code>dict of TransdecoderOutFile</code>
+          </td>
+          <td><p>a dictionary of Transdecoder output files.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.TransdecoderOutFile" class="doc doc-heading">
+        <code>TransdecoderOutFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for Transdecoder cDNA files.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>reference_genome</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeFastaFile" href="#utils.biofile_handling.GenomeFastaFile">GenomeFastaFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated genome fasta file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>reference_annot</code></td>
+          <td>
+                <code>GenomeGffFile or GenomeGtfFile</code>
+          </td>
+          <td><p>the BioFile object of the associated genome annotation file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>reference_cDNA</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.TransdecoderCdnaFile" href="#utils.biofile_handling.TransdecoderCdnaFile">TransdecoderCdnaFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated Transdecoder cDNA file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.UniProtTaxidListFile" class="doc doc-heading">
+        <code>UniProtTaxidListFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>An BioFile object for pulling files from Uniprot based on input taxid.</p>
+<p>Defaults to creating a file based on a taxid passed on object creation.  </p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>taxid</code></td>
+          <td>
+                <code>str or int</code>
+          </td>
+          <td><p>the taxid of the species of interest.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>make</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether or not to make the file upon object creation. defaults to True.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.UniProtTaxidListFile.get_proteins" class="doc doc-heading">
+<code class="highlight language-python">get_proteins()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Queries the Uniprot API to extract all proteins for the taxid associated with this object.</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.UniprotIDMapperFile" class="doc doc-heading">
+        <code>UniprotIDMapperFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.IdmmFile" href="#utils.biofile_handling.IdmmFile">IdmmFile</a></code></p>
+
+  
+      <p>An BioFile object for the output file generated by calling the UNIPROT ID mapping API.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>from_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the source datatype (e.g. 'Ensembl')</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>to_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the destination datatype (e.g. 'UniprotKB')</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.metadata_object" class="doc doc-heading">
+        <code>metadata_object</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code>object</code></p>
+
+  
+      <p>simple dummy object to enable dot access to keys</p>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.metadata_object.add" class="doc doc-heading">
+<code class="highlight language-python">add(key, value, replace=True)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a metadata feature using a unique key identifier.</p>
+<p>Checks to make sure that key does not already exist.
+Also makes sure key is only alphanumeric or underscores.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>key</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a unique key</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>value</code></td>
+          <td>
+                <code>obj</code>
+          </td>
+          <td><p>any field you want to record</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="utils.biofile_handling.gxc_to_exc" class="doc doc-heading">
+<code class="highlight language-python">gxc_to_exc(sample_MSD, embedding_df, exc_file)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Converts an GxcFile into an ExcFile, returning the new file object.</p>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="utils.biofile_handling.make_output_directory" class="doc doc-heading">
+<code class="highlight language-python">make_output_directory(species, conditions, stringonly=False)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates an output directory based on species and condition parameters.  </p>
+<p>Does not create a directory if it already exists.<br />
+Output directory is placed in the <code>GLOBAL_OUTPUT_DIRECTORY</code>, as defined by <code>env/install_locs.py</code>.
+Default <code>GLOBAL_OUTPUT_DIRECTORY</code> is <code>output/</code>.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>species name in <code>Genus_species</code> format.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>unique conditions identifier for dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>stringonly</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether to only output the string without creating a directory</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>output_directory</code></td>          <td>
+                <code>str</code>
+          </td>
+          <td><p>path of the output directory, in format <code>Gspe_conditions</code>.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="utils.biofile_handling.s3_transfer" class="doc doc-heading">
+<code class="highlight language-python">s3_transfer(to_loc, from_loc)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Transfers files to and from AWS S3 and local.  </p>
+<p>One of the two parameters must be an AWS S3 URI in string format.  </p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>to_loc</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path of the destination file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>from_loc</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path of the origin file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../BioFile_README/" class="btn btn-neutral float-left" title="About BioFile Handling"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../string_functions_doc/" class="btn btn-neutral float-right" title="String Functions Usage">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../BioFile_README/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../string_functions_doc/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme_extra.js" defer></script>
+    <script src="../js/theme.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
