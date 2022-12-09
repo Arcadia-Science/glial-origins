@@ -1,5 +1,5 @@
 # mkdocs.yml
-site_name: BioFile Handling
+site_name: Glial Origins
 
 theme:
   name: "readthedocs"
@@ -7,3 +7,8 @@ theme:
 plugins:
   - mkdocstrings:
       default_handler: python
+
+nav:
+  - index.md
+  - BioFile_README.md
+  - 
