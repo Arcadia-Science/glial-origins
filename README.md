@@ -1,15 +1,19 @@
 # glial-origins
 Evolutionary origins and relationships of glial cell types
 
+To get started, check out the documentation at the [GitHub Pages website](https://arcadia-science.github.io/glial-origins/).
+
 ## Directory Structure
 
 ### Files:
 - this [README.md](README.md) file containing description of directories and their functions
 - [.gitignore](.gitignore) file containing patterns such as `output/` and `.ipynb_checkpoints/` to be ignored by git
-- [BioFile_README.md](BioFile_README.md) file describing BioFile and BioFileDocket classes and their uses
+- [BioFile_README.md](docs/BioFile_README.md) file describing BioFile and BioFileDocket classes and their uses
 - MIT [LICENSE](LICENSE) file 
 
 ### Directories:
+- `docs/` folder containing documents for mkdocs
+- `site/` folder containing automatically generated .html from mkdocstrings
 - `env/` folder containing conda install `.yml` files
 - `utils/` general scripts, tools, and functions for all processes
 - `notebooks/` working notebooks describing the exploratory analyses and linking together functions
