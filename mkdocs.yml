@@ -1,14 +1,15 @@
 # mkdocs.yml
 site_name: Glial Origins
 
+watch:
+- utils/biofile_handling.py
+- utils/string_functions.py
+
 theme:
   name: "readthedocs"
 
 plugins:
   - mkdocstrings:
-      watch:
-        - utils/biofile_handling.py
-        - utils/string_functions.py
       default_handler: python
       handlers:
         python:
