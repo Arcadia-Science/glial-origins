@@ -1,0 +1,5027 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>BioFile Handling</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> BioFile Handling
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">BioFile Handling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+<a id="utils.biofile_handling"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.BioFile" class="doc doc-heading">
+        <code>BioFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>BioFile objects collect metadata about biological filetypes.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sampledict</code></td>
+          <td>
+          </td>
+          <td><p>obj:<code>SampleDict</code>): a SampleDict object from the BioFileDocket.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>filename</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the name of the file.</p></td>
+          <td>
+                <code>&#39;&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>url</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>when downloading a file on object creation, pass a string url along with a protocol.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>protocol</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>passed along with a url for automatic download on object creation.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>s3uri</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the s3uri of the file, if downloading from s3 upon object creation.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unzip</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether or not to unzip a file on download. Defaults to True.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class BioFile:
+    """BioFile objects collect metadata about biological filetypes.
+
+    Args:
+        sampledict (:obj:`SampleDict`): a SampleDict object from the BioFileDocket.
+        filename (str, optional): the name of the file.
+        url (str, optional): when downloading a file on object creation, pass a string url along with a protocol.
+        protocol (str, optional): passed along with a url for automatic download on object creation.
+        s3uri (str, optional): the s3uri of the file, if downloading from s3 upon object creation.
+        unzip (bool, optional): whether or not to unzip a file on download. Defaults to True.
+    """
+    def __init__(self, sampledict: SampleDict, filename = '', url = None, protocol = None, s3uri = None, unzip = True):
+        self.filename = filename
+        self.species = sampledict.species
+        self.conditions = sampledict.conditions
+        self.directory = sampledict.directory
+        self.s3uri = s3uri
+        self.metadata = metadata_object()
+
+        if url != None and protocol != None:
+            self.get_from_url(url = url, protocol = protocol, filename = filename, unzip = unzip)
+        elif s3uri != None:
+            self.get_from_s3(s3uri)
+        elif filename == '':
+            raise Exception('File must minimally have a filename.\nTo download from url, pass both a url and protocol.\nTo download from s3uri, pass s3uri.')
+
+    @property
+    def exists(self):
+        """bool: checks whether the file currently exists."""
+        return os.path.exists(self.path)
+
+    @property
+    def path(self):
+        """str: path to the file, including the filename."""
+        return self.directory + self.filename
+
+    @property
+    def species_prefix(self):
+        """str: runs prefixify(species)."""
+        return prefixify(self.species)
+
+    @property
+    def sampledict(self):
+        """:obj:`SampleDict`: a SampleDict object for the file."""
+        return SampleDict(self.species, self.conditions, self.directory)
+
+    @property
+    def filetype(self):
+        """str: infers filetype using the string after the final `.` in filename."""
+        return self.filename.split('.')[-1]
+
+    def add_s3uri(self, s3uri: str):
+        """Adds an s3uri to the BioFile object if it doesn't already exist."""
+        if self.s3uri == None:
+            self.s3uri = s3uri
+        else:
+            raise Exception('This file already has an S3 URI at ' + self.s3uri)
+        return None
+
+    def get_from_s3(self, overwrite = False):
+        """Downloads the BioFile from AWS S3.
+
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
+        import os
+        import subprocess
+
+        if self.filename == '':
+            self.filename = self.s3uri.split('/')[-1]
+            print('inferring file name as', self.filename)
+
+        if not self.exists:
+            s3_transfer(self.s3uri, self.path)
+            return self
+        elif overwrite:
+            s3_transfer(self.s3uri, self.path)
+            return self
+        else:
+            print('file', self.filename, 'already exists at', self.path)
+            return self
+
+    def push_to_s3(self, overwrite = False):
+        """Uploads the BioFile to AWS S3.
+
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
+        import subprocess
+
+        if self.s3uri is None:
+            raise Exception(self.path, 'has no s3uri. Use add_s3uri() to add a URI.')
+
+        bucket = self.s3uri.lstrip('s3://').split('/')[0]
+        file_key = self.s3uri.split(bucket)[1].lstrip('/')
+
+        # check if file exists in S3 already
+        # suppress stdout and save stderr as file to detect non-existing files
+        output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+        if 'Not Found' in str(output.stderr):
+            s3_transfer(self.path, self.s3uri)
+        elif overwrite:
+            print(self.filename, 'already exists in S3 bucket; overwriting.')
+            s3_transfer(self.path, self.s3uri)
+        else:
+            print(self.filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
+
+        return None
+
+    def get_from_url(self, url: str, protocol: str, filename = '', unzip = True):
+        """Downloads the BioFile from a URL using a chosen protocol, unzipping optionally.
+
+        Args:
+            url (str): url of the file.
+            protocol (str): protocol to be used for download.
+            filename (str, optional): name of file to be saved. If empty, will generate name from URL.
+            unzip (bool): decide whether to unzip if it is a zipped file. Defaults to True.
+        """
+        import os, subprocess
+
+        self.url = url
+
+        protocols = ['curl', 'wget']
+        if protocol not in protocols:
+            raise ValueError("Invalid protocol. Expected one of: %s" % protocols)   
+
+        if filename == '':
+            filename = self.url.split('/')[-1]
+            print('inferring file name as', filename)
+            self.filename = filename
+
+        if self.exists:
+            print('file', self.filename, 'already exists at', self.path)
+
+            if unzip:
+                self.unzip()
+
+            return self
+        else:
+            if protocol == 'curl':
+                subprocess.run([protocol, url, '--output', self.path])
+            elif protocol == 'wget':
+                subprocess.run([protocol, '-O', self.path, self.url])
+            print('downloaded file', self.path)
+
+            if unzip:
+                self.unzip()
+
+            return self
+
+    def unzip(self):
+        """Unzips files ending in .gz, .gzip, or .zip."""
+        compressions = ['gz', 'gzip', 'zip']
+        compression = self.filename.split('.')[-1]
+
+        if compression not in compressions:
+            return self
+        else:
+            output_name = self.filename.replace('.' + compression, '')
+            output_loc = self.directory + output_name
+
+        if compression == 'gz' or 'gzip':
+            subprocess.run(['gunzip', output_loc])
+        if compression == 'zip':
+            subprocess.run(['unzip', output_loc])
+
+        print('file', self.filename, 'unzipped and object renamed to', output_name)
+        self.filename = output_name
+
+        return self</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.add_s3uri" class="doc doc-heading">
+<code class="highlight language-python">add_s3uri(s3uri)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds an s3uri to the BioFile object if it doesn't already exist.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add_s3uri(self, s3uri: str):
+    """Adds an s3uri to the BioFile object if it doesn't already exist."""
+    if self.s3uri == None:
+        self.s3uri = s3uri
+    else:
+        raise Exception('This file already has an S3 URI at ' + self.s3uri)
+    return None</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.exists" class="doc doc-heading">
+<code class="highlight language-python">exists()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>bool: checks whether the file currently exists.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def exists(self):
+    """bool: checks whether the file currently exists."""
+    return os.path.exists(self.path)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.filetype" class="doc doc-heading">
+<code class="highlight language-python">filetype()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: infers filetype using the string after the final <code>.</code> in filename.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def filetype(self):
+    """str: infers filetype using the string after the final `.` in filename."""
+    return self.filename.split('.')[-1]</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.get_from_s3" class="doc doc-heading">
+<code class="highlight language-python">get_from_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads the BioFile from AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_from_s3(self, overwrite = False):
+    """Downloads the BioFile from AWS S3.
+
+    Args:
+        overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+    """
+    import os
+    import subprocess
+
+    if self.filename == '':
+        self.filename = self.s3uri.split('/')[-1]
+        print('inferring file name as', self.filename)
+
+    if not self.exists:
+        s3_transfer(self.s3uri, self.path)
+        return self
+    elif overwrite:
+        s3_transfer(self.s3uri, self.path)
+        return self
+    else:
+        print('file', self.filename, 'already exists at', self.path)
+        return self</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.get_from_url" class="doc doc-heading">
+<code class="highlight language-python">get_from_url(url, protocol, filename='', unzip=True)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads the BioFile from a URL using a chosen protocol, unzipping optionally.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>url</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>url of the file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>protocol</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>protocol to be used for download.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>filename</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>name of file to be saved. If empty, will generate name from URL.</p></td>
+          <td>
+                <code>&#39;&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>unzip</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to unzip if it is a zipped file. Defaults to True.</p></td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_from_url(self, url: str, protocol: str, filename = '', unzip = True):
+    """Downloads the BioFile from a URL using a chosen protocol, unzipping optionally.
+
+    Args:
+        url (str): url of the file.
+        protocol (str): protocol to be used for download.
+        filename (str, optional): name of file to be saved. If empty, will generate name from URL.
+        unzip (bool): decide whether to unzip if it is a zipped file. Defaults to True.
+    """
+    import os, subprocess
+
+    self.url = url
+
+    protocols = ['curl', 'wget']
+    if protocol not in protocols:
+        raise ValueError("Invalid protocol. Expected one of: %s" % protocols)   
+
+    if filename == '':
+        filename = self.url.split('/')[-1]
+        print('inferring file name as', filename)
+        self.filename = filename
+
+    if self.exists:
+        print('file', self.filename, 'already exists at', self.path)
+
+        if unzip:
+            self.unzip()
+
+        return self
+    else:
+        if protocol == 'curl':
+            subprocess.run([protocol, url, '--output', self.path])
+        elif protocol == 'wget':
+            subprocess.run([protocol, '-O', self.path, self.url])
+        print('downloaded file', self.path)
+
+        if unzip:
+            self.unzip()
+
+        return self</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.path" class="doc doc-heading">
+<code class="highlight language-python">path()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: path to the file, including the filename.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def path(self):
+    """str: path to the file, including the filename."""
+    return self.directory + self.filename</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.push_to_s3" class="doc doc-heading">
+<code class="highlight language-python">push_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Uploads the BioFile to AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def push_to_s3(self, overwrite = False):
+    """Uploads the BioFile to AWS S3.
+
+    Args:
+        overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+    """
+    import subprocess
+
+    if self.s3uri is None:
+        raise Exception(self.path, 'has no s3uri. Use add_s3uri() to add a URI.')
+
+    bucket = self.s3uri.lstrip('s3://').split('/')[0]
+    file_key = self.s3uri.split(bucket)[1].lstrip('/')
+
+    # check if file exists in S3 already
+    # suppress stdout and save stderr as file to detect non-existing files
+    output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+    if 'Not Found' in str(output.stderr):
+        s3_transfer(self.path, self.s3uri)
+    elif overwrite:
+        print(self.filename, 'already exists in S3 bucket; overwriting.')
+        s3_transfer(self.path, self.s3uri)
+    else:
+        print(self.filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
+
+    return None</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>:obj:<code>SampleDict</code>: a SampleDict object for the file.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def sampledict(self):
+    """:obj:`SampleDict`: a SampleDict object for the file."""
+    return SampleDict(self.species, self.conditions, self.directory)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.species_prefix" class="doc doc-heading">
+<code class="highlight language-python">species_prefix()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: runs prefixify(species).</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def species_prefix(self):
+    """str: runs prefixify(species)."""
+    return prefixify(self.species)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFile.unzip" class="doc doc-heading">
+<code class="highlight language-python">unzip()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Unzips files ending in .gz, .gzip, or .zip.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def unzip(self):
+    """Unzips files ending in .gz, .gzip, or .zip."""
+    compressions = ['gz', 'gzip', 'zip']
+    compression = self.filename.split('.')[-1]
+
+    if compression not in compressions:
+        return self
+    else:
+        output_name = self.filename.replace('.' + compression, '')
+        output_loc = self.directory + output_name
+
+    if compression == 'gz' or 'gzip':
+        subprocess.run(['gunzip', output_loc])
+    if compression == 'zip':
+        subprocess.run(['unzip', output_loc])
+
+    print('file', self.filename, 'unzipped and object renamed to', output_name)
+    self.filename = output_name
+
+    return self</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.BioFileDocket" class="doc doc-heading">
+        <code>BioFileDocket</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>BioFileDocket objects collect BioFiles and relate them to one another.</p>
+<p>Important files called <code>keyfiles</code> get their own uniquely-named attribute.<br />
+These files can be accessed using a dot operator.
+For example, <code>BFD.genome_fasta</code> would return a GenomeFastaFile object.
+<code>BFD.genome_fasta.path</code> would return the path to that GenomeFastaFile object.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>species name in 'Genus_species' format.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>unique conditions identitier for dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>directory</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>output directory for files in the dataset.</p></td>
+        </tr>
+        <tr>
+          <td><code>metadata</code></td>
+          <td>
+          </td>
+          <td><p>obj:<code>metadata_object</code>): a collector for miscellaneous metadata.</p></td>
+        </tr>
+        <tr>
+          <td><code>files</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td><p>a dictionary of assorted files associated with the data.</p></td>
+        </tr>
+        <tr>
+          <td><code>keyfiles</code></td>
+          <td>
+                <code>attr</code>
+          </td>
+          <td><p>unique key-identified attributes representing key files.
+You can add these using BioFileDocket.add_keyfile() or .add_keyfiles().</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class BioFileDocket:
+    """BioFileDocket objects collect BioFiles and relate them to one another.
+
+    Important files called `keyfiles` get their own uniquely-named attribute.  
+    These files can be accessed using a dot operator.
+    For example, `BFD.genome_fasta` would return a GenomeFastaFile object.
+    `BFD.genome_fasta.path` would return the path to that GenomeFastaFile object.
+
+    Args:
+        species (str): species name in 'Genus_species' format.
+        conditions (str): unique conditions identitier for dataset.
+
+    Attributes:
+        directory (str): output directory for files in the dataset.
+        metadata (:obj:`metadata_object`): a collector for miscellaneous metadata.
+        files (dict): a dictionary of assorted files associated with the data.
+        keyfiles (attr): unique key-identified attributes representing key files.
+            You can add these using BioFileDocket.add_keyfile() or .add_keyfiles().
+    """
+    def __init__(self, species: int, conditions: int):
+        if '_' not in species:
+            raise Exception('Please include an underscore in the species name with format:\nGenus_species')
+        self.species = species
+
+        if any(not c.isalnum() for c in conditions):
+            raise Exception('Conditions can only include alphanumeric characters')
+        self.conditions = conditions
+
+        directory = make_output_directory(self.species, self.conditions)
+        self.directory = directory
+        print('Files will be saved into', self.directory)
+
+        self.files = dict()
+        self.metadata = metadata_object()
+
+    @property
+    def species_prefix(self):
+        """str: runs prefixify(species)."""
+        return prefixify(self.species)
+
+    @property
+    def s3uri(self):
+        """str: the S3 URI of the BioFileDocket."""
+        return 's3://arcadia-reference-datasets/glial-origins-pkl/' + self.dill_filename
+
+    @property
+    def dill_filename(self):
+        """str: the unique filename of the BioFileDocket .pkl file."""
+        return '_'.join([prefixify(self.species), self.conditions, 'BioFileDocket.pkl'])
+
+    @property
+    def dill_filepath(self):
+        """str: the path of the BioFileDocket .pkl file."""
+        return self.directory + self.dill_filename
+
+    @property
+    def sampledict(self):
+        """:obj:`SampleDict` the full SampleDict of the BioFileDocket."""
+        return SampleDict(self.species, self.conditions, self.directory)
+
+    def set_taxid(self, taxid: Union[str, int]):
+        """Adds a taxid attribute to the BioFileDocket.
+
+        Tolerates either `int` or `str` input.
+        """
+        self.metadata.add('taxid', str(taxid))
+
+    def add_file(self, BioFile):
+        """Places a BioFile object into the `files` attribute.
+
+        The objects can be accessed using their filename.
+
+        Note:
+            The actual files of BioFile objects in this list are not automatically uploaded.
+        """
+        self.files[BioFile.filename] = BioFile
+
+    def add_files(self, list):
+        """Places a list of files into the `files` attribute."""
+        for BioFile in list:
+            self.add_file(BioFile)
+
+    def remove_file(self, filename):
+        """Removes a file based on filename from the files attribute."""
+        del self.files[filename]
+
+    def add_keyfile(self, key: str, BioFile, overwrite = False):
+        """Adds a BioFile object using a unique key identifier.
+
+        Checks to make sure that key does not already exist.
+        Also makes sure key is only alphanumeric or underscores.
+
+        Args:
+            key (str): a unique key
+            BioFile (:obj:`BioFile`): a BioFile object
+        """
+        if not re.match(r'^\w+$', key):
+            raise Exception('key can only include alphanumeric characters and underscores')
+        if hasattr(self, key) and not overwrite:
+            print('key "' + key + '" already exists, ignoring')
+        else:
+            setattr(self, key, BioFile)
+
+    def add_keyfiles(self, dictionary: dict, overwrite = False):
+        """Adds a dictionary of BioFile objects using key:BioFile object pairs."""
+        for key in dictionary:
+            self.add_keyfile(key, dictionary[key], overwrite)
+
+    def remove_keyfile(self, key, warn = True):
+        """Deletes a keyfile from the BioFileDocket if warn == False."""
+        if not warn:
+            delattr(self, key)
+        else:
+            raise Warning('If you want to delete this keyfile, set warn = False.')
+
+    def pickle(self):
+        """Creates a .pkl file for the BioFileDocket object.
+
+        The filename and path are automatically generated.
+        """
+        import dill
+
+        with open(self.dill_filepath, 'wb') as file:
+            dill.dump(self, file)
+
+    def unpickle(self):
+        """Unpickles a .pkl file for the BioFileDocket object.
+
+        The filename and path are automatically generated.
+
+        Returns:
+            self :obj:`BioFileDocket`: returns the unpickled BioFileDocket object.
+
+        Raises:
+            FileNotFoundError: if the .pkl file doesn't exist yet.
+        """
+
+        import dill
+        import os
+
+        if not os.path.exists(self.dill_filepath):
+            raise FileNotFoundError("Can't unpickle file; .pkl file doesn't exist yet at " + self.dill_filepath)
+
+        with open(self.dill_filepath, 'rb') as file:
+            self = dill.load(file)
+
+        return self
+
+    def local_to_s3(self, overwrite = False):
+        """Uploads all keyfiles that are BioFiles to S3 using their s3uri attributes.
+
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
+        files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
+
+        for file in files.values():
+            file.push_to_s3(overwrite)
+
+    def s3_to_local(self, overwrite = False):
+        """Downloads all keyfiles that are BioFiles from S3 using their s3uri attributes.
+
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
+        files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
+
+        for file in files.values():
+            file.get_from_s3(overwrite)
+
+    def get_from_s3(self, overwrite = False):
+        """Downloads the .pkl file for the BioFileDocket from AWS S3.
+
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
+        import os
+        import subprocess
+
+        if not os.path.exists(self.dill_filepath):
+            s3_transfer(self.s3uri, self.dill_filepath)
+            return self
+        elif overwrite:
+            s3_transfer(self.s3uri, self.dill_filepath)
+            return self
+        else:
+            print('file', self.dill_filename, 'already exists at', self.dill_filepath)
+            return self
+
+    def push_to_s3(self, overwrite = False):
+        """Uploads the .pkl file for the BioFileDocket to AWS S3.
+
+        Args:
+            overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+        """
+        import subprocess
+
+        bucket = self.s3uri.lstrip('s3://').split('/')[0]
+        file_key = self.s3uri.split(bucket)[1].lstrip('/')
+
+        # check if file exists in S3 already
+        output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+        if 'Not Found' in str(output.stderr):
+            s3_transfer(self.dill_filepath, self.s3uri)
+        elif overwrite:
+            print(self.dill_filename, 'already exists in S3 bucket; overwriting.')
+            s3_transfer(self.dill_filepath, self.s3uri)
+        else:
+            print(self.dill_filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
+        return None</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_file" class="doc doc-heading">
+<code class="highlight language-python">add_file(BioFile)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Places a BioFile object into the <code>files</code> attribute.</p>
+<p>The objects can be accessed using their filename.</p>
+
+<details class="note">
+  <summary>Note</summary>
+  <p>The actual files of BioFile objects in this list are not automatically uploaded.</p>
+</details>
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add_file(self, BioFile):
+    """Places a BioFile object into the `files` attribute.
+
+    The objects can be accessed using their filename.
+
+    Note:
+        The actual files of BioFile objects in this list are not automatically uploaded.
+    """
+    self.files[BioFile.filename] = BioFile</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_files" class="doc doc-heading">
+<code class="highlight language-python">add_files(list)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Places a list of files into the <code>files</code> attribute.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add_files(self, list):
+    """Places a list of files into the `files` attribute."""
+    for BioFile in list:
+        self.add_file(BioFile)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_keyfile" class="doc doc-heading">
+<code class="highlight language-python">add_keyfile(key, BioFile, overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a BioFile object using a unique key identifier.</p>
+<p>Checks to make sure that key does not already exist.
+Also makes sure key is only alphanumeric or underscores.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>key</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a unique key</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>BioFile</code></td>
+          <td>
+          </td>
+          <td><p>obj:<code>BioFile</code>): a BioFile object</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add_keyfile(self, key: str, BioFile, overwrite = False):
+    """Adds a BioFile object using a unique key identifier.
+
+    Checks to make sure that key does not already exist.
+    Also makes sure key is only alphanumeric or underscores.
+
+    Args:
+        key (str): a unique key
+        BioFile (:obj:`BioFile`): a BioFile object
+    """
+    if not re.match(r'^\w+$', key):
+        raise Exception('key can only include alphanumeric characters and underscores')
+    if hasattr(self, key) and not overwrite:
+        print('key "' + key + '" already exists, ignoring')
+    else:
+        setattr(self, key, BioFile)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.add_keyfiles" class="doc doc-heading">
+<code class="highlight language-python">add_keyfiles(dictionary, overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a dictionary of BioFile objects using key:BioFile object pairs.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add_keyfiles(self, dictionary: dict, overwrite = False):
+    """Adds a dictionary of BioFile objects using key:BioFile object pairs."""
+    for key in dictionary:
+        self.add_keyfile(key, dictionary[key], overwrite)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.dill_filename" class="doc doc-heading">
+<code class="highlight language-python">dill_filename()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the unique filename of the BioFileDocket .pkl file.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def dill_filename(self):
+    """str: the unique filename of the BioFileDocket .pkl file."""
+    return '_'.join([prefixify(self.species), self.conditions, 'BioFileDocket.pkl'])</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.dill_filepath" class="doc doc-heading">
+<code class="highlight language-python">dill_filepath()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the path of the BioFileDocket .pkl file.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def dill_filepath(self):
+    """str: the path of the BioFileDocket .pkl file."""
+    return self.directory + self.dill_filename</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.get_from_s3" class="doc doc-heading">
+<code class="highlight language-python">get_from_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads the .pkl file for the BioFileDocket from AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_from_s3(self, overwrite = False):
+    """Downloads the .pkl file for the BioFileDocket from AWS S3.
+
+    Args:
+        overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+    """
+    import os
+    import subprocess
+
+    if not os.path.exists(self.dill_filepath):
+        s3_transfer(self.s3uri, self.dill_filepath)
+        return self
+    elif overwrite:
+        s3_transfer(self.s3uri, self.dill_filepath)
+        return self
+    else:
+        print('file', self.dill_filename, 'already exists at', self.dill_filepath)
+        return self</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.local_to_s3" class="doc doc-heading">
+<code class="highlight language-python">local_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Uploads all keyfiles that are BioFiles to S3 using their s3uri attributes.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def local_to_s3(self, overwrite = False):
+    """Uploads all keyfiles that are BioFiles to S3 using their s3uri attributes.
+
+    Args:
+        overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+    """
+    files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
+
+    for file in files.values():
+        file.push_to_s3(overwrite)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.pickle" class="doc doc-heading">
+<code class="highlight language-python">pickle()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates a .pkl file for the BioFileDocket object.</p>
+<p>The filename and path are automatically generated.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def pickle(self):
+    """Creates a .pkl file for the BioFileDocket object.
+
+    The filename and path are automatically generated.
+    """
+    import dill
+
+    with open(self.dill_filepath, 'wb') as file:
+        dill.dump(self, file)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.push_to_s3" class="doc doc-heading">
+<code class="highlight language-python">push_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Uploads the .pkl file for the BioFileDocket to AWS S3.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def push_to_s3(self, overwrite = False):
+    """Uploads the .pkl file for the BioFileDocket to AWS S3.
+
+    Args:
+        overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+    """
+    import subprocess
+
+    bucket = self.s3uri.lstrip('s3://').split('/')[0]
+    file_key = self.s3uri.split(bucket)[1].lstrip('/')
+
+    # check if file exists in S3 already
+    output = subprocess.run(['aws', 's3api', 'head-object', '--bucket', bucket, '--key', file_key], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+    if 'Not Found' in str(output.stderr):
+        s3_transfer(self.dill_filepath, self.s3uri)
+    elif overwrite:
+        print(self.dill_filename, 'already exists in S3 bucket; overwriting.')
+        s3_transfer(self.dill_filepath, self.s3uri)
+    else:
+        print(self.dill_filename, 'already exists in S3 bucket, skipping upload. set overwrite = True to overwrite the existing file.')
+    return None</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.remove_file" class="doc doc-heading">
+<code class="highlight language-python">remove_file(filename)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Removes a file based on filename from the files attribute.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def remove_file(self, filename):
+    """Removes a file based on filename from the files attribute."""
+    del self.files[filename]</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.remove_keyfile" class="doc doc-heading">
+<code class="highlight language-python">remove_keyfile(key, warn=True)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Deletes a keyfile from the BioFileDocket if warn == False.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def remove_keyfile(self, key, warn = True):
+    """Deletes a keyfile from the BioFileDocket if warn == False."""
+    if not warn:
+        delattr(self, key)
+    else:
+        raise Warning('If you want to delete this keyfile, set warn = False.')</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.s3_to_local" class="doc doc-heading">
+<code class="highlight language-python">s3_to_local(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads all keyfiles that are BioFiles from S3 using their s3uri attributes.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>decide whether to overwrite existing files. Defaults to False.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def s3_to_local(self, overwrite = False):
+    """Downloads all keyfiles that are BioFiles from S3 using their s3uri attributes.
+
+    Args:
+        overwrite (bool): decide whether to overwrite existing files. Defaults to False.
+    """
+    files = {i:j for i,j in dict(vars(self)).items() if isinstance(j, BioFile)}
+
+    for file in files.values():
+        file.get_from_s3(overwrite)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.s3uri" class="doc doc-heading">
+<code class="highlight language-python">s3uri()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the S3 URI of the BioFileDocket.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def s3uri(self):
+    """str: the S3 URI of the BioFileDocket."""
+    return 's3://arcadia-reference-datasets/glial-origins-pkl/' + self.dill_filename</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>:obj:<code>SampleDict</code> the full SampleDict of the BioFileDocket.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def sampledict(self):
+    """:obj:`SampleDict` the full SampleDict of the BioFileDocket."""
+    return SampleDict(self.species, self.conditions, self.directory)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.set_taxid" class="doc doc-heading">
+<code class="highlight language-python">set_taxid(taxid)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a taxid attribute to the BioFileDocket.</p>
+<p>Tolerates either <code>int</code> or <code>str</code> input.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def set_taxid(self, taxid: Union[str, int]):
+    """Adds a taxid attribute to the BioFileDocket.
+
+    Tolerates either `int` or `str` input.
+    """
+    self.metadata.add('taxid', str(taxid))</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.species_prefix" class="doc doc-heading">
+<code class="highlight language-python">species_prefix()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: runs prefixify(species).</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def species_prefix(self):
+    """str: runs prefixify(species)."""
+    return prefixify(self.species)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.BioFileDocket.unpickle" class="doc doc-heading">
+<code class="highlight language-python">unpickle()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Unpickles a .pkl file for the BioFileDocket object.</p>
+<p>The filename and path are automatically generated.</p>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>self</code></td>          <td>
+          </td>
+          <td><p>obj:<code>BioFileDocket</code>: returns the unpickled BioFileDocket object.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>FileNotFoundError</code>
+          </td>
+          <td><p>if the .pkl file doesn't exist yet.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def unpickle(self):
+    """Unpickles a .pkl file for the BioFileDocket object.
+
+    The filename and path are automatically generated.
+
+    Returns:
+        self :obj:`BioFileDocket`: returns the unpickled BioFileDocket object.
+
+    Raises:
+        FileNotFoundError: if the .pkl file doesn't exist yet.
+    """
+
+    import dill
+    import os
+
+    if not os.path.exists(self.dill_filepath):
+        raise FileNotFoundError("Can't unpickle file; .pkl file doesn't exist yet at " + self.dill_filepath)
+
+    with open(self.dill_filepath, 'rb') as file:
+        self = dill.load(file)
+
+    return self</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellAnnotFile" class="doc doc-heading">
+        <code>CellAnnotFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A cell annotation matrix file with two columns: 'cell_barcode' and 'celltype'.</p>
+<p>Each cell should have a cell barcode exactly matching its name in the Gxc or Exc embedding.  </p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>sources (list of :obj:<code>BioFile</code> objects): a list of the source BioFile objects.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class CellAnnotFile(BioFile):
+    """A cell annotation matrix file with two columns: 'cell_barcode' and 'celltype'.
+
+    Each cell should have a cell barcode exactly matching its name in the Gxc or Exc embedding.  
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        sources (list of :obj:`BioFile` objects): a list of the source BioFile objects.
+    """
+    def __init__(self, sources: list, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.sources = sources</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerBarcodesFile" class="doc doc-heading">
+        <code>CellRangerBarcodesFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for the barcodes file of a CellRanger file.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class CellRangerBarcodesFile(BioFile):
+    """A BioFile object for the barcodes file of a CellRanger file.
+
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerFeaturesFile" class="doc doc-heading">
+        <code>CellRangerFeaturesFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for the features file of a CellRanger file.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class CellRangerFeaturesFile(BioFile):
+    """A BioFile object for the features file of a CellRanger file.
+
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerFileGroup" class="doc doc-heading">
+        <code>CellRangerFileGroup</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A special object that collects the multiple files of a CellRanger file.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>sampledict</code></td>
+          <td>
+          </td>
+          <td><p>obj:<code>SampleDict</code>): a SampleDict object from the BioFileDocket.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>barcodes_address</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the address of the barcodes file as either url or s3uri.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>features_address</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the address of the features file as either url or s3uri.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>matrix_address</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the address of the matrix file as either url or s3uri.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>how</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>'url' or 's3uri' to choose a method of download.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>protocol</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>when using url, the protocol to use. Defaults to 'curl'.</p></td>
+          <td>
+                <code>&#39;curl&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class CellRangerFileGroup:
+    """A special object that collects the multiple files of a CellRanger file.
+
+    Args:
+        sampledict (:obj:`SampleDict`): a SampleDict object from the BioFileDocket.
+        barcodes_address (str): the address of the barcodes file as either url or s3uri.
+        features_address (str): the address of the features file as either url or s3uri.
+        matrix_address (str): the address of the matrix file as either url or s3uri.
+        how (str): 'url' or 's3uri' to choose a method of download.
+        protocol (str): when using url, the protocol to use. Defaults to 'curl'.
+    """
+    def __init__(self, sampledict: SampleDict, barcodes_url: str, features_url: str, matrix_url: str, how = None, protocol = 'curl'):
+        self.sampledict = sampledict
+
+        if how == 'url':
+            self.barcodes = CellRangerBarcodesFile(sampledict = sampledict, url = barcodes_address, protocol = protocol)
+            self.matrix = CellRangerMatrixFile(sampledict = sampledict, url = matrix_address, protocol = protocol)
+            self.features = CellRangerFeaturesFile(sampledict = sampledict, url = features_address, protocol = protocol)
+        elif how == 's3uri':
+            self.barcodes = CellRangerBarcodesFile(sampledict = sampledict, s3uri = barcodes_address)
+            self.matrix = CellRangerMatrixFile(sampledict = sampledict, s3uri = matrix_address)
+            self.features = CellRangerFeaturesFile(sampledict = sampledict, s3uri = features_address)
+        else:
+            raise Exception('Must specify how = "url" or "s3uri".')
+
+    # Converts a group of CellRanger files into a single dense csv matrix
+    def to_gxc(self, reference_genome, reference_annot, filename: str, overwrite = False):
+        """Converts the group of cell ranger files to a GxcFile and returns the file object."""
+        import csv, gzip, os
+        import scipy.io
+        import pandas as pd
+
+        # read in MEX format matrix as table
+        mat = scipy.io.mmread(self.matrix.path)
+
+        # list of transcript ids, e.g. 'ENSG00000243485'
+        feature_ids = [row[0] for row in csv.reader(open(self.features.path), delimiter="\t")]
+
+        # list of gene names, e.g. 'MIR1302-2HG'
+        gene_names = [row[1] for row in csv.reader(open(self.features.path), delimiter="\t")]
+
+        barcodes = [row[0] for row in csv.reader(open(self.barcodes.path), delimiter="\t")]
+
+        # transform table to pandas dataframe and label rows and columns
+        matrix = pd.DataFrame.sparse.from_spmatrix(mat)
+        matrix.columns = barcodes
+        matrix.insert(loc=0, column="gene_name", value=gene_names)
+
+        # display matrix
+        display(matrix.head(10))
+
+        # save the table as a CSV (note the CSV will be a very large file)
+        output = GxcFile(reference_genome = reference_genome, reference_annot = reference_annot, sampledict = self.sampledict, filename = filename)
+
+        if not output.exists:
+            matrix.to_csv(output.path, index=False, sep = '\t')
+        else:
+            print('File already exists at', output.path, '. Set overwrite = True to overwrite.')
+
+        return output</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.CellRangerFileGroup.to_gxc" class="doc doc-heading">
+<code class="highlight language-python">to_gxc(reference_genome, reference_annot, filename, overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Converts the group of cell ranger files to a GxcFile and returns the file object.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def to_gxc(self, reference_genome, reference_annot, filename: str, overwrite = False):
+    """Converts the group of cell ranger files to a GxcFile and returns the file object."""
+    import csv, gzip, os
+    import scipy.io
+    import pandas as pd
+
+    # read in MEX format matrix as table
+    mat = scipy.io.mmread(self.matrix.path)
+
+    # list of transcript ids, e.g. 'ENSG00000243485'
+    feature_ids = [row[0] for row in csv.reader(open(self.features.path), delimiter="\t")]
+
+    # list of gene names, e.g. 'MIR1302-2HG'
+    gene_names = [row[1] for row in csv.reader(open(self.features.path), delimiter="\t")]
+
+    barcodes = [row[0] for row in csv.reader(open(self.barcodes.path), delimiter="\t")]
+
+    # transform table to pandas dataframe and label rows and columns
+    matrix = pd.DataFrame.sparse.from_spmatrix(mat)
+    matrix.columns = barcodes
+    matrix.insert(loc=0, column="gene_name", value=gene_names)
+
+    # display matrix
+    display(matrix.head(10))
+
+    # save the table as a CSV (note the CSV will be a very large file)
+    output = GxcFile(reference_genome = reference_genome, reference_annot = reference_annot, sampledict = self.sampledict, filename = filename)
+
+    if not output.exists:
+        matrix.to_csv(output.path, index=False, sep = '\t')
+    else:
+        print('File already exists at', output.path, '. Set overwrite = True to overwrite.')
+
+    return output</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.CellRangerMatrixFile" class="doc doc-heading">
+        <code>CellRangerMatrixFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for the matrix file of a CellRanger file.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class CellRangerMatrixFile(BioFile):
+    """A BioFile object for the matrix file of a CellRanger file.
+
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.ExcFile" class="doc doc-heading">
+        <code>ExcFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for an embedding x cells matrix.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>gxcfile (:obj:<code>GxcFile</code>): the original <code>GxcFile</code> object used to generate the new embedding.
+embedding (str): a description of the new embedding.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class ExcFile(BioFile):
+    """A BioFile object for an embedding x cells matrix.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        gxcfile (:obj:`GxcFile`): the original `GxcFile` object used to generate the new embedding.
+        embedding (str): a description of the new embedding.
+    """
+    def __init__(self, gxcfile, embedding: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.original = gxcfile
+        self.embedding = embedding</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.FoldSeekOutputFile" class="doc doc-heading">
+        <code>FoldSeekOutputFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.MultiSpeciesFile" href="#utils.biofile_handling.MultiSpeciesFile">MultiSpeciesFile</a></code></p>
+
+  
+      <p>A MultiSpeciesFile for FoldSeek output.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class FoldSeekOutputFile(MultiSpeciesFile):
+    """A MultiSpeciesFile for FoldSeek output.
+
+    Args:
+        see MultiSpeciesFile and BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/FoldSeek_output/' + self.filename</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GeneListFile" class="doc doc-heading">
+        <code>GeneListFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>An BioFile object for a gene list file, which is a .txt file with a gene on each line.</p>
+<p>Defaults to creating a file based on a list of genes passed on object creation.  </p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>sources (list of :obj:<code>BioFile</code> objects): a list of the source BioFile objects.
+identifier (str): a description of the identifier type for this gene list.
+make (bool): whether or not to make the file upon object creation. defaults to True.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class GeneListFile(BioFile):
+    """An BioFile object for a gene list file, which is a .txt file with a gene on each line.
+
+    Defaults to creating a file based on a list of genes passed on object creation.  
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        sources (list of :obj:`BioFile` objects): a list of the source BioFile objects.
+        identifier (str): a description of the identifier type for this gene list.
+        make (bool): whether or not to make the file upon object creation. defaults to True.
+    """
+    def __init__(self, sources: list, genes: list, identifier: str, filename = '', autoname = True, make = True, *args, **kwargs):
+        if filename == '':
+            filename = 'placeholder.txt'
+        super().__init__(filename = filename, *args, **kwargs)
+
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+        self.sources = sources
+        self.identifier = identifier
+
+        if autoname:
+            self.filename = '_'.join([prefixify(self.sampledict.species), self.sampledict.conditions, self.identifier, 'ids.txt'])
+
+        if make:
+            self.make_file(genes)
+        else:
+            print('make set to False; skipping file creation. Use .make_file(genes) to create the file separately.')
+
+    def make_file(self, genes: list):
+        """Makes a gene list file at a given location when passed a list object."""
+        make_gene_list(genes, self.path)
+
+    def get_uniprot_ids(self, ID_MAPPER_LOC: str, from_type: str, to_type: str):
+        """Queries the Uniprot API to get ID mapping based on from_type and to_type, returning an UniprotIDMapperFile object.
+
+        If the number of genes in the file exceeds 100k, generates temporary files to query the API multiple times.
+
+        Args:
+            ID_MAPPER_LOC (str): path to the ID mapping script, usually at ID_MAPPER_LOC.
+            from_type (str): the source datatype (e.g. 'Ensembl')
+            to_type (str): the destination datatype (e.g. 'UniprotKB')
+        """
+        import subprocess
+
+        num_lines = sum(1 for line in open(self.path))
+
+        if num_lines &gt; 100000:
+            subprocess.run(['split', '-l', '100000', '-d', '--additional-suffix=_split_ids.txt', 
+                            self.path, self.path.replace('_ids.txt', '')])
+            for file in [i for i in os.listdir(self.directory) if 'split_ids' in i]:
+                subprocess.run([ID_MAPPER_LOC, file, from_type, to_type])
+
+        else:
+            filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
+
+            subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type])
+            output = UniprotIDMapperFile(
+                filename = filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+                sources = self.sources, from_type = from_type, to_type = to_type)
+
+            return output
+
+    def get_uniprot_ids_by_genename(self, ID_MAPPER_LOC, from_type, to_type, taxid):
+        """Don't use this, it's not built out yet."""
+        import subprocess
+
+        filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
+
+        subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type, taxid])
+        output = UniprotIDMapperFile(
+            filename = filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+            sources = self.sources, from_type = from_type, to_type = to_type)
+
+        return output</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GeneListFile.get_uniprot_ids" class="doc doc-heading">
+<code class="highlight language-python">get_uniprot_ids(ID_MAPPER_LOC, from_type, to_type)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Queries the Uniprot API to get ID mapping based on from_type and to_type, returning an UniprotIDMapperFile object.</p>
+<p>If the number of genes in the file exceeds 100k, generates temporary files to query the API multiple times.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ID_MAPPER_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path to the ID mapping script, usually at ID_MAPPER_LOC.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>from_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the source datatype (e.g. 'Ensembl')</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>to_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the destination datatype (e.g. 'UniprotKB')</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_uniprot_ids(self, ID_MAPPER_LOC: str, from_type: str, to_type: str):
+    """Queries the Uniprot API to get ID mapping based on from_type and to_type, returning an UniprotIDMapperFile object.
+
+    If the number of genes in the file exceeds 100k, generates temporary files to query the API multiple times.
+
+    Args:
+        ID_MAPPER_LOC (str): path to the ID mapping script, usually at ID_MAPPER_LOC.
+        from_type (str): the source datatype (e.g. 'Ensembl')
+        to_type (str): the destination datatype (e.g. 'UniprotKB')
+    """
+    import subprocess
+
+    num_lines = sum(1 for line in open(self.path))
+
+    if num_lines &gt; 100000:
+        subprocess.run(['split', '-l', '100000', '-d', '--additional-suffix=_split_ids.txt', 
+                        self.path, self.path.replace('_ids.txt', '')])
+        for file in [i for i in os.listdir(self.directory) if 'split_ids' in i]:
+            subprocess.run([ID_MAPPER_LOC, file, from_type, to_type])
+
+    else:
+        filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
+
+        subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type])
+        output = UniprotIDMapperFile(
+            filename = filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+            sources = self.sources, from_type = from_type, to_type = to_type)
+
+        return output</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GeneListFile.get_uniprot_ids_by_genename" class="doc doc-heading">
+<code class="highlight language-python">get_uniprot_ids_by_genename(ID_MAPPER_LOC, from_type, to_type, taxid)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Don't use this, it's not built out yet.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_uniprot_ids_by_genename(self, ID_MAPPER_LOC, from_type, to_type, taxid):
+    """Don't use this, it's not built out yet."""
+    import subprocess
+
+    filename = self.filename.replace('_ids.txt', '_UniProtIDs.txt')
+
+    subprocess.run([ID_MAPPER_LOC, self.path, from_type, to_type, taxid])
+    output = UniprotIDMapperFile(
+        filename = filename, sampledict = self.sampledict, kind = 'UniprotIDMapper', 
+        sources = self.sources, from_type = from_type, to_type = to_type)
+
+    return output</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GeneListFile.make_file" class="doc doc-heading">
+<code class="highlight language-python">make_file(genes)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Makes a gene list file at a given location when passed a list object.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def make_file(self, genes: list):
+    """Makes a gene list file at a given location when passed a list object."""
+    make_gene_list(genes, self.path)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GenomeFastaFile" class="doc doc-heading">
+        <code>GenomeFastaFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for genome fasta files.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>version (str): the specific version number of the genome.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class GenomeFastaFile(BioFile):
+    """A BioFile object for genome fasta files.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        version (str): the specific version number of the genome.
+    """
+    def __init__(self, version: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.version = version
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
+
+    def rename_RefSeq_chromosomes(self, replace = False):
+        """Renames the chromosomes of a RefSeq genome to numerical chromosomes."""
+        from Bio import SeqIO
+
+        new_filename = self.filename + '.renamed.fa'
+        new_filepath = self.directory + new_filename
+
+        with open(self.path) as original, open(new_filepath, 'w') as corrected:
+            records = SeqIO.parse(self.path, 'fasta')
+            for record in records:      
+                if 'chromosome' in record.description:
+                    print('starting name:', record.description)
+                    new_id = str(record.description).split('chromosome')[1].split(',')[0].strip(' ')
+                    record.id = new_id
+                    record.description = new_id
+                    print('new name:', record.id)
+                SeqIO.write(record, corrected, 'fasta')
+
+        if replace:
+            self.filename = new_filename
+
+            return None
+
+        else:
+            new_file = GenomeFastaFile(
+                filename = new_filename,
+                sampledict = self.sampledict,
+                version = self.version
+            )
+            return new_file
+
+    def get_transdecoder_cdna_gtf(self, GenomeGtfFile, TRANSDECODER_LOC, **kwargs):
+        """Generates a TransdecoderCdnaFile given a GenomeGtfFile.
+
+        Args:
+            GenomeGtfFile (:obj:`GenomeGtfFile`): a GenomeGtfFile object that is compatible with the GenomeFastaFile.
+            TRANSDECODER_LOC (str): the path to the parent directory of Transdecoder.
+
+        Returns:
+            cdna_output (:obj:`TransdecoderCdnaFile`): a TransdecoderCdnaFile object.
+        """
+        PERL_SCRIPT_LOC = TRANSDECODER_LOC + 'util/gtf_genome_to_cdna_fasta.pl'
+
+        import os
+        import subprocess
+
+        cdna_name = self.filename.replace('.' + self.filetype, '_cDNA.' + self.filetype)
+        cdna_output = TransdecoderCdnaFile(
+            sampledict = self.sampledict,
+            filename = cdna_name,
+            reference_genome = self,
+            reference_annot = GenomeGtfFile
+        )
+        if cdna_output.exists:
+            return cdna_output
+        else:
+            output_file = open(cdna_output.path, "w")
+
+            subprocess.call([PERL_SCRIPT_LOC, GenomeGtfFile.path, self.path], stdout=output_file)
+            return cdna_output</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GenomeFastaFile.get_transdecoder_cdna_gtf" class="doc doc-heading">
+<code class="highlight language-python">get_transdecoder_cdna_gtf(GenomeGtfFile, TRANSDECODER_LOC, **kwargs)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates a TransdecoderCdnaFile given a GenomeGtfFile.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>GenomeGtfFile</code></td>
+          <td>
+          </td>
+          <td><p>obj:<code>GenomeGtfFile</code>): a GenomeGtfFile object that is compatible with the GenomeFastaFile.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>TRANSDECODER_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the path to the parent directory of Transdecoder.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>cdna_output</code></td>          <td>
+                <code>:obj:`TransdecoderCdnaFile`</code>
+          </td>
+          <td><p>a TransdecoderCdnaFile object.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_transdecoder_cdna_gtf(self, GenomeGtfFile, TRANSDECODER_LOC, **kwargs):
+    """Generates a TransdecoderCdnaFile given a GenomeGtfFile.
+
+    Args:
+        GenomeGtfFile (:obj:`GenomeGtfFile`): a GenomeGtfFile object that is compatible with the GenomeFastaFile.
+        TRANSDECODER_LOC (str): the path to the parent directory of Transdecoder.
+
+    Returns:
+        cdna_output (:obj:`TransdecoderCdnaFile`): a TransdecoderCdnaFile object.
+    """
+    PERL_SCRIPT_LOC = TRANSDECODER_LOC + 'util/gtf_genome_to_cdna_fasta.pl'
+
+    import os
+    import subprocess
+
+    cdna_name = self.filename.replace('.' + self.filetype, '_cDNA.' + self.filetype)
+    cdna_output = TransdecoderCdnaFile(
+        sampledict = self.sampledict,
+        filename = cdna_name,
+        reference_genome = self,
+        reference_annot = GenomeGtfFile
+    )
+    if cdna_output.exists:
+        return cdna_output
+    else:
+        output_file = open(cdna_output.path, "w")
+
+        subprocess.call([PERL_SCRIPT_LOC, GenomeGtfFile.path, self.path], stdout=output_file)
+        return cdna_output</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.GenomeFastaFile.rename_RefSeq_chromosomes" class="doc doc-heading">
+<code class="highlight language-python">rename_RefSeq_chromosomes(replace=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Renames the chromosomes of a RefSeq genome to numerical chromosomes.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def rename_RefSeq_chromosomes(self, replace = False):
+    """Renames the chromosomes of a RefSeq genome to numerical chromosomes."""
+    from Bio import SeqIO
+
+    new_filename = self.filename + '.renamed.fa'
+    new_filepath = self.directory + new_filename
+
+    with open(self.path) as original, open(new_filepath, 'w') as corrected:
+        records = SeqIO.parse(self.path, 'fasta')
+        for record in records:      
+            if 'chromosome' in record.description:
+                print('starting name:', record.description)
+                new_id = str(record.description).split('chromosome')[1].split(',')[0].strip(' ')
+                record.id = new_id
+                record.description = new_id
+                print('new name:', record.id)
+            SeqIO.write(record, corrected, 'fasta')
+
+    if replace:
+        self.filename = new_filename
+
+        return None
+
+    else:
+        new_file = GenomeFastaFile(
+            filename = new_filename,
+            sampledict = self.sampledict,
+            version = self.version
+        )
+        return new_file</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GenomeGffFile" class="doc doc-heading">
+        <code>GenomeGffFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a genome reference in GFF format.</p>
+<p>If a file ends in <code>.gff3</code>, renames it to end in <code>.gff</code> instead.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>reference_genome (:obj:<code>GenomeFastaFile</code>): the BioFile object of the associated genome fasta file.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class GenomeGffFile(BioFile):
+    """A BioFile object for a genome reference in GFF format.
+
+    If a file ends in `.gff3`, renames it to end in `.gff` instead.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+    """
+    def __init__(self, reference_genome, *args, **kwargs):
+        import subprocess, os
+
+        super().__init__(*args, **kwargs)
+
+        if self.filename.split('.')[-1] == 'gff3':
+            new_filename = self.filename.replace('gff3', 'gff')
+            new_path = self.directory + new_filename
+            subprocess.run(['mv', self.path, new_path])
+
+            print('Renaming GFF3 file', self.filename, 'to', new_filename)
+            self.filename = new_filename
+
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
+        self.reference_genome = reference_genome
+
+    def to_gtf(self, GFFREAD_LOC, keep_all = False):
+        import subprocess
+        import os
+
+        filename = self.filename.replace('.gff', '.gtf')
+        output = GenomeGtfFile(filename = filename, sampledict = self.sampledict, reference_genome = self.reference_genome)
+
+        if output.exists:
+            print('Converted file', output.filename, 'already exists at:\n', output.path)
+            return output
+
+        subprocess.run([GFFREAD_LOC, self.path, '-T', '-o', output.path])
+        return output</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GenomeGtfFile" class="doc doc-heading">
+        <code>GenomeGtfFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a genome reference in GTF format.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>reference_genome (:obj:<code>GenomeFastaFile</code>): the BioFile object of the associated genome fasta file.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class GenomeGtfFile(BioFile):
+    """A BioFile object for a genome reference in GTF format.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+    """
+    def __init__(self, reference_genome, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
+        self.reference_genome = reference_genome</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.GxcFile" class="doc doc-heading">
+        <code>GxcFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a genes x cells matrix.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>reference_genome (:obj:<code>GenomeFastaFile</code>): the BioFile object of the associated genome fasta file.
+reference_annot (:obj:<code>GenomeGffFile</code> or :obj:<code>GenomeGtfFile</code>): the BioFile object of the associated genome annotation file.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class GxcFile(BioFile):
+    """A BioFile object for a genes x cells matrix.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+        reference_annot (:obj:`GenomeGffFile` or :obj:`GenomeGtfFile`): the BioFile object of the associated genome annotation file.
+    """
+    def __init__(self, reference_genome, reference_annot, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.reference_genome = reference_genome
+        self.reference_annot = reference_annot</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.IdmmFile" class="doc doc-heading">
+        <code>IdmmFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>An ID-mapping matrix file. Each row represents a feature and each column represents a name of that feature in a namespace.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>sources (list of :obj:<code>BioFile</code> objects): a list of the source BioFile objects.
+kind (str): a one-word description of the kind of idmm.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class IdmmFile(BioFile):
+    """An ID-mapping matrix file. Each row represents a feature and each column represents a name of that feature in a namespace.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        sources (list of :obj:`BioFile` objects): a list of the source BioFile objects.
+        kind (str): a one-word description of the kind of idmm.
+    """
+    def __init__(self, kind: str, sources: list, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+        self.sources = sources
+        self.kind = kind</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.JointExcFile" class="doc doc-heading">
+        <code>JointExcFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.MultiSpeciesFile" href="#utils.biofile_handling.MultiSpeciesFile">MultiSpeciesFile</a></code></p>
+
+  
+      <p>A MultiSpeciesFile for collecting an ExcFile with multiple species.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>gxcfile (:obj:<code>GxcFile</code>): the original <code>GxcFile</code> object used to generate the new embedding.
+embedding (str): a description of the new embedding.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class JointExcFile(MultiSpeciesFile):
+    """A MultiSpeciesFile for collecting an ExcFile with multiple species.
+
+    Args:
+        see MultiSpeciesFile and BioFile
+
+    Unique Args:
+        gxcfile (:obj:`GxcFile`): the original `GxcFile` object used to generate the new embedding.
+        embedding (str): a description of the new embedding.
+    """
+    def __init__(self, sources: list, embedding: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.sources = sources
+        self.embedding = embedding
+        self.s3uri = 's3://arcadia-reference-datasets/' + self.embedding + '_JointExc/' + self.filename</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.LoomFile" class="doc doc-heading">
+        <code>LoomFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for a Loom file.</p>
+<p>Not built out yet!</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class LoomFile(BioFile):
+    """A BioFile object for a Loom file.
+
+    Not built out yet!
+
+    Args:
+        see BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+
+    def to_gxc(self, filename, reference_genome, reference_annot, overwrite = False):
+        print('This is not built yet!')</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.MultiSpeciesBioFileDocket" class="doc doc-heading">
+        <code>MultiSpeciesBioFileDocket</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFileDocket" href="#utils.biofile_handling.BioFileDocket">BioFileDocket</a></code></p>
+
+  
+      <p>MultiSpeciesBioFileDocket objects collect BioFileDockets and relate them to one another.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species_dict</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td><p>key is species name in 'Genus_species' format; value is conditions.
+These must be exact matches, or it will not work.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>global_conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a summary identifier for this collection of species' datasets.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>analysis_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>one-word description of the analysis type.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>directory</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>output directory for files in the dataset.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class MultiSpeciesBioFileDocket(BioFileDocket):
+    """MultiSpeciesBioFileDocket objects collect BioFileDockets and relate them to one another.
+
+    Args:
+        species_dict (dict): key is species name in 'Genus_species' format; value is conditions.
+            These must be exact matches, or it will not work.
+        global_conditions (str): a summary identifier for this collection of species' datasets.
+        analysis_type (str): one-word description of the analysis type.
+
+    Attributes:
+        directory (str): output directory for files in the dataset.
+    """
+    def __init__(self, species_dict: dict, global_conditions: str, analysis_type: str):
+        self.species_dict = species_dict
+        self.global_conditions = global_conditions
+        self.analysis_type = analysis_type
+
+        # Dummy variables to be backwards-compatible with BioFileDocket
+        self.species = self.species_concat
+        self.conditions = '_'.join([self.global_conditions, self.analysis_type])
+
+        self.metadata = metadata_object()
+
+        directory = make_output_directory(self.species_concat, self.conditions)
+        self.directory = directory
+
+    @property
+    def species_concat(self):
+        """str: concatenation of species prefixes in alphabetical order."""
+        return ''.join(sorted([prefixify(species) for species in self.species_dict]))
+
+    @property
+    def sampledict(self):
+        """:obj:`SampleDict`: a MultiSpeciesBioFileDocket-formatted sampledict."""
+        return SampleDict(self.species_concat, self.conditions, self.directory)
+
+    @property
+    def dill_filename(self):
+        """str: the unique filename of the BioFileDocket .pkl file."""
+        return '_'.join([self.species_concat, self.global_conditions, self.analysis_type, 'MultiSpeciesBioFileDocket.pkl'])
+
+    def get_BioFileDockets(self):
+        """Gets species BioFileDocket .pkl files from S3 for each species in the species_dict."""
+        import dill
+
+        self.species_BioFileDockets = {}
+
+        for species in self.species_dicts:
+            conditions = self.species_dicts[species]
+            species_prefix = prefixify(species)
+            species_directory = make_output_directory(species, conditions, stringonly = True)
+
+            dill_filename = '_'.join([species_prefix, conditions, 'BioFileDocket.pkl'])
+            dill_filepath = species_directory + dill_filename
+            dill_s3uri = 's3://arcadia-reference-datasets/glial-origins-pkl/' + dill_filename
+
+            if not os.path.exists(dill_filepath):
+                s3_transfer(dill_s3uri, dill_filepath)
+
+            with open(dill_filepath, 'rb') as file:
+                self.species_BioFileDockets[species_prefix] = dill.load(file)
+
+        return self
+
+    def s3_to_local(self, overwrite = False):
+        """Iteratively calls s3_to_local on all BioFileDockets in the group."""
+        for species_prefix in self.species_BioFileDockets:
+            self.species_BioFileDockets[species_prefix].s3_to_local(overwrite)
+
+    def local_to_s3(self, overwrite = False):
+        """Iteratively calls local_to_s3 on all BioFileDockets in the group."""
+        for species_prefix in self.species_BioFileDockets:
+            self.species_BioFileDockets[species_prefix].local_to_s3(overwrite)</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.dill_filename" class="doc doc-heading">
+<code class="highlight language-python">dill_filename()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: the unique filename of the BioFileDocket .pkl file.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def dill_filename(self):
+    """str: the unique filename of the BioFileDocket .pkl file."""
+    return '_'.join([self.species_concat, self.global_conditions, self.analysis_type, 'MultiSpeciesBioFileDocket.pkl'])</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.get_BioFileDockets" class="doc doc-heading">
+<code class="highlight language-python">get_BioFileDockets()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Gets species BioFileDocket .pkl files from S3 for each species in the species_dict.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_BioFileDockets(self):
+    """Gets species BioFileDocket .pkl files from S3 for each species in the species_dict."""
+    import dill
+
+    self.species_BioFileDockets = {}
+
+    for species in self.species_dicts:
+        conditions = self.species_dicts[species]
+        species_prefix = prefixify(species)
+        species_directory = make_output_directory(species, conditions, stringonly = True)
+
+        dill_filename = '_'.join([species_prefix, conditions, 'BioFileDocket.pkl'])
+        dill_filepath = species_directory + dill_filename
+        dill_s3uri = 's3://arcadia-reference-datasets/glial-origins-pkl/' + dill_filename
+
+        if not os.path.exists(dill_filepath):
+            s3_transfer(dill_s3uri, dill_filepath)
+
+        with open(dill_filepath, 'rb') as file:
+            self.species_BioFileDockets[species_prefix] = dill.load(file)
+
+    return self</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.local_to_s3" class="doc doc-heading">
+<code class="highlight language-python">local_to_s3(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Iteratively calls local_to_s3 on all BioFileDockets in the group.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def local_to_s3(self, overwrite = False):
+    """Iteratively calls local_to_s3 on all BioFileDockets in the group."""
+    for species_prefix in self.species_BioFileDockets:
+        self.species_BioFileDockets[species_prefix].local_to_s3(overwrite)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.s3_to_local" class="doc doc-heading">
+<code class="highlight language-python">s3_to_local(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Iteratively calls s3_to_local on all BioFileDockets in the group.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def s3_to_local(self, overwrite = False):
+    """Iteratively calls s3_to_local on all BioFileDockets in the group."""
+    for species_prefix in self.species_BioFileDockets:
+        self.species_BioFileDockets[species_prefix].s3_to_local(overwrite)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>:obj:<code>SampleDict</code>: a MultiSpeciesBioFileDocket-formatted sampledict.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def sampledict(self):
+    """:obj:`SampleDict`: a MultiSpeciesBioFileDocket-formatted sampledict."""
+    return SampleDict(self.species_concat, self.conditions, self.directory)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesBioFileDocket.species_concat" class="doc doc-heading">
+<code class="highlight language-python">species_concat()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: concatenation of species prefixes in alphabetical order.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def species_concat(self):
+    """str: concatenation of species prefixes in alphabetical order."""
+    return ''.join(sorted([prefixify(species) for species in self.species_dict]))</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.MultiSpeciesFile" class="doc doc-heading">
+        <code>MultiSpeciesFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A special class of BioFile objects for files with multiple associated species.</p>
+<p>This subclass uses species_concat as its species and its conditions is a '_' concatenation of its global_conditions and analysis_type.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>species_dict (dict): species dictionary from the MultiSpeciesBioFileDocket.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class MultiSpeciesFile(BioFile):
+    """A special class of BioFile objects for files with multiple associated species.
+
+    This subclass uses species_concat as its species and its conditions is a '_' concatenation of its global_conditions and analysis_type.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        species_dict (dict): species dictionary from the MultiSpeciesBioFileDocket.
+    """
+    def __init__(self, species_dict: dict, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.species_dict = species_dict
+        self.global_conditions = sampledict.conditions.split('_')[0]
+        self.analysis_type = sampledict.conditions.split('_')[1]
+
+    @property
+    def species_concat(self):
+        """str: concatenation of species prefixes in alphabetical order."""
+        return ''.join(sorted([prefixify(species) for species in self.species_dict]))
+
+    @property
+    def sampledict(self):
+        """:obj:`SampleDict`: a MultiSpeciesBioFileDocket-formatted sampledict."""
+        return SampleDict(self.species_concat, self.conditions, self.directory)</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesFile.sampledict" class="doc doc-heading">
+<code class="highlight language-python">sampledict()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>:obj:<code>SampleDict</code>: a MultiSpeciesBioFileDocket-formatted sampledict.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def sampledict(self):
+    """:obj:`SampleDict`: a MultiSpeciesBioFileDocket-formatted sampledict."""
+    return SampleDict(self.species_concat, self.conditions, self.directory)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.MultiSpeciesFile.species_concat" class="doc doc-heading">
+<code class="highlight language-python">species_concat()</code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>str: concatenation of species prefixes in alphabetical order.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">@property
+def species_concat(self):
+    """str: concatenation of species prefixes in alphabetical order."""
+    return ''.join(sorted([prefixify(species) for species in self.species_dict]))</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.OrthoFinderOutputFile" class="doc doc-heading">
+        <code>OrthoFinderOutputFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.MultiSpeciesFile" href="#utils.biofile_handling.MultiSpeciesFile">MultiSpeciesFile</a></code></p>
+
+  
+      <p>A MultiSpeciesFile for OrthoFinder output.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class OrthoFinderOutputFile(MultiSpeciesFile):
+    """A MultiSpeciesFile for OrthoFinder output.
+
+    Args:
+        see MultiSpeciesFile and BioFile
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/OrthoFinder_output/' + self.filename</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.SampleDict" class="doc doc-heading">
+        <code>SampleDict</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A dictionary containing dataset-specific fields: species, conditions, and directory.</p>
+<p>This class is used to uniquely associate BioFile objects with specific datasets.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>species name in 'Genus_species' format.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>unique conditions identitier for dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>directory</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>output directory for files in the dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class SampleDict:
+    """A dictionary containing dataset-specific fields: species, conditions, and directory.
+
+    This class is used to uniquely associate BioFile objects with specific datasets.
+
+    Args:
+        species (str): species name in 'Genus_species' format.
+        conditions (str): unique conditions identitier for dataset.
+        directory (str): output directory for files in the dataset.
+    """
+    def __init__(self, species: str, conditions: str, directory: str):
+        self.species = species
+        self.conditions = conditions
+        self.directory = directory</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.TransdecoderCdnaFile" class="doc doc-heading">
+        <code>TransdecoderCdnaFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for Transdecoder cDNA files.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>reference_genome (:obj:<code>GenomeFastaFile</code>): the BioFile object of the associated genome fasta file.
+reference_annot (:obj:<code>GenomeGffFile</code> or :obj:<code>GenomeGtfFile</code>): the BioFile object of the associated genome annotation file.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class TransdecoderCdnaFile(BioFile):
+    """A BioFile object for Transdecoder cDNA files.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+        reference_annot (:obj:`GenomeGffFile` or :obj:`GenomeGtfFile`): the BioFile object of the associated genome annotation file.
+    """
+    def __init__(self, reference_genome, reference_annot, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/transcriptome/' + self.filename
+        self.reference_genome = reference_genome
+        self.reference_annot = reference_annot
+
+    def to_pep_files(self, TDLONGORF_LOC, TDPREDICT_LOC):
+        """ Generates a peptide file from a Transdecoder cDNA file.
+
+        Args:
+            TDLONGORF_LOC (str): path to the TransDecoder.LongOrfs binary.
+            TDPREDICT_LOC (str): path to the TransDecoder.Predict binary.
+
+        Returns:
+            output_dict (:obj:`dict` of :obj:`TransdecoderOutFile`): a dictionary of Transdecoder output files.
+        """
+        import subprocess
+
+        suffixes = ['.bed', '.cds', '.gff3', '.pep']
+        temp_dir = self.directory + ('_'.join([self.species, self.conditions])) + '.transdecoder_dir/'
+
+        subprocess.run([TDLONGORF_LOC, '-t', self.path, '-O', temp_dir])
+        subprocess.run([TDPREDICT_LOC, '-t', self.path, '-O', temp_dir])
+
+        output_dict = {}
+
+        for suffix in suffixes:
+            output_filename = self.filename + '.transdecoder' + suffix
+            output_file = TransdecoderOutFile(
+                filename = output_filename, 
+                sampledict = self.sampledict, 
+                GenomeFastaFile = self.reference_genome, 
+                GenomeAnnotFile = self.reference_annot,
+                TransdecoderCdnaFile = self
+            )
+            subprocess.run(['mv', output_file.filename, output_file.path])
+            output_dict['transdecoder_' + suffix.replace('.', '')] = output_file
+
+        return output_dict</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.TransdecoderCdnaFile.to_pep_files" class="doc doc-heading">
+<code class="highlight language-python">to_pep_files(TDLONGORF_LOC, TDPREDICT_LOC)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates a peptide file from a Transdecoder cDNA file.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>TDLONGORF_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path to the TransDecoder.LongOrfs binary.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>TDPREDICT_LOC</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path to the TransDecoder.Predict binary.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>output_dict</code></td>          <td>
+                <code>:obj:`dict` of :obj:`TransdecoderOutFile`</code>
+          </td>
+          <td><p>a dictionary of Transdecoder output files.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def to_pep_files(self, TDLONGORF_LOC, TDPREDICT_LOC):
+    """ Generates a peptide file from a Transdecoder cDNA file.
+
+    Args:
+        TDLONGORF_LOC (str): path to the TransDecoder.LongOrfs binary.
+        TDPREDICT_LOC (str): path to the TransDecoder.Predict binary.
+
+    Returns:
+        output_dict (:obj:`dict` of :obj:`TransdecoderOutFile`): a dictionary of Transdecoder output files.
+    """
+    import subprocess
+
+    suffixes = ['.bed', '.cds', '.gff3', '.pep']
+    temp_dir = self.directory + ('_'.join([self.species, self.conditions])) + '.transdecoder_dir/'
+
+    subprocess.run([TDLONGORF_LOC, '-t', self.path, '-O', temp_dir])
+    subprocess.run([TDPREDICT_LOC, '-t', self.path, '-O', temp_dir])
+
+    output_dict = {}
+
+    for suffix in suffixes:
+        output_filename = self.filename + '.transdecoder' + suffix
+        output_file = TransdecoderOutFile(
+            filename = output_filename, 
+            sampledict = self.sampledict, 
+            GenomeFastaFile = self.reference_genome, 
+            GenomeAnnotFile = self.reference_annot,
+            TransdecoderCdnaFile = self
+        )
+        subprocess.run(['mv', output_file.filename, output_file.path])
+        output_dict['transdecoder_' + suffix.replace('.', '')] = output_file
+
+    return output_dict</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.TransdecoderOutFile" class="doc doc-heading">
+        <code>TransdecoderOutFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>A BioFile object for Transdecoder cDNA files.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>reference_genome (:obj:<code>GenomeFastaFile</code>): the BioFile object of the associated genome fasta file.
+reference_annot (:obj:<code>GenomeGffFile</code> or :obj:<code>GenomeGtfFile</code>): the BioFile object of the associated genome annotation file.
+reference_cDNA (:obj:<code>TransdecoderCdnaFile</code>): the BioFile object of the associated Transdecoder cDNA file.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class TransdecoderOutFile(BioFile):
+    """A BioFile object for Transdecoder cDNA files.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        reference_genome (:obj:`GenomeFastaFile`): the BioFile object of the associated genome fasta file.
+        reference_annot (:obj:`GenomeGffFile` or :obj:`GenomeGtfFile`): the BioFile object of the associated genome annotation file.
+        reference_cDNA (:obj:`TransdecoderCdnaFile`): the BioFile object of the associated Transdecoder cDNA file.
+    """
+    def __init__(self, GenomeFastaFile, GenomeAnnotFile, TransdecoderCdnaFile, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/proteome/' + self.filename
+        self.reference_genome = GenomeFastaFile
+        self.reference_annot = GenomeAnnotFile
+        self.reference_cDNA = TransdecoderCdnaFile</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.UniProtTaxidListFile" class="doc doc-heading">
+        <code>UniProtTaxidListFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.BioFile" href="#utils.biofile_handling.BioFile">BioFile</a></code></p>
+
+  
+      <p>An BioFile object for pulling files from Uniprot based on input taxid.</p>
+<p>Defaults to creating a file based on a taxid passed on object creation.  </p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>taxid (str or int): the taxid of the species of interest.
+make (bool): whether or not to make the file upon object creation. defaults to True.</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class UniProtTaxidListFile(BioFile):
+    """An BioFile object for pulling files from Uniprot based on input taxid.
+
+    Defaults to creating a file based on a taxid passed on object creation.  
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        taxid (str or int): the taxid of the species of interest.
+        make (bool): whether or not to make the file upon object creation. defaults to True.
+    """
+    def __init__(self, taxid: Union[str, int], make = True, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.taxid = str(taxid)
+
+        if filename == '':
+            self.filename = '_'.join([self.species_prefix, 'uniprot-taxid', self.taxid, 'genes.tsv'])
+
+        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+
+        if make:
+            self.get_proteins()
+        else:
+            print('make set to False; skipping file creation. Use .get_proteins() to create the file separately.')
+
+    def get_proteins(self):
+        """Queries the Uniprot API to extract all proteins for the taxid associated with this object."""
+        if not self.exists:
+            with open(self.path, "w") as outfile:
+                subprocess.run(['curl', 
+                  'https://rest.uniprot.org/uniprotkb/stream?fields=accession%2Corganism_id%2Corganism_name&amp;format=tsv&amp;query=%28%28taxonomy_id%3A' + self.taxid + '%29%29'],
+                  stdout = outfile)
+        return self</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.UniProtTaxidListFile.get_proteins" class="doc doc-heading">
+<code class="highlight language-python">get_proteins()</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Queries the Uniprot API to extract all proteins for the taxid associated with this object.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def get_proteins(self):
+    """Queries the Uniprot API to extract all proteins for the taxid associated with this object."""
+    if not self.exists:
+        with open(self.path, "w") as outfile:
+            subprocess.run(['curl', 
+              'https://rest.uniprot.org/uniprotkb/stream?fields=accession%2Corganism_id%2Corganism_name&amp;format=tsv&amp;query=%28%28taxonomy_id%3A' + self.taxid + '%29%29'],
+              stdout = outfile)
+    return self</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.UniprotIDMapperFile" class="doc doc-heading">
+        <code>UniprotIDMapperFile</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.IdmmFile" href="#utils.biofile_handling.IdmmFile">IdmmFile</a></code></p>
+
+  
+      <p>An BioFile object for the output file generated by calling the UNIPROT ID mapping API.</p>
+
+<details class="unique-args">
+  <summary>Unique Args</summary>
+  <p>from_type (str): the source datatype (e.g. 'Ensembl')
+to_type (str): the destination datatype (e.g. 'UniprotKB')</p>
+</details>
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class UniprotIDMapperFile(IdmmFile):
+    """An BioFile object for the output file generated by calling the UNIPROT ID mapping API.
+
+    Args:
+        see BioFile
+
+    Unique Args:
+        from_type (str): the source datatype (e.g. 'Ensembl')
+        to_type (str): the destination datatype (e.g. 'UniprotKB')
+    """
+    def __init__(self, from_type: str, to_type: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.from_type = from_type
+        self.to_type = to_type</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="utils.biofile_handling.metadata_object" class="doc doc-heading">
+        <code>metadata_object</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code>object</code></p>
+
+  
+      <p>simple dummy object to enable dot access to keys</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+          <pre class="highlight"><code class="language-python">class metadata_object(object):
+    """simple dummy object to enable dot access to keys"""
+    def add(self, key: str, value: any, replace = True):
+        """Adds a metadata feature using a unique key identifier.
+
+        Checks to make sure that key does not already exist.
+        Also makes sure key is only alphanumeric or underscores.
+
+        Args:
+            key (str): a unique key
+            value (obj): any field you want to record
+        """
+        if not re.match(r'^\w+$', key):
+            raise Exception('key can only include alphanumeric characters and underscores')
+        if hasattr(self, key):
+            if replace:
+                print('overwriting ' + key)
+            else:
+                print('key "' + key + '" already exists, ignoring')
+                return
+        setattr(self, key, value)</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.metadata_object.add" class="doc doc-heading">
+<code class="highlight language-python">add(key, value, replace=True)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds a metadata feature using a unique key identifier.</p>
+<p>Checks to make sure that key does not already exist.
+Also makes sure key is only alphanumeric or underscores.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>key</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>a unique key</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>value</code></td>
+          <td>
+                <code>obj</code>
+          </td>
+          <td><p>any field you want to record</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add(self, key: str, value: any, replace = True):
+    """Adds a metadata feature using a unique key identifier.
+
+    Checks to make sure that key does not already exist.
+    Also makes sure key is only alphanumeric or underscores.
+
+    Args:
+        key (str): a unique key
+        value (obj): any field you want to record
+    """
+    if not re.match(r'^\w+$', key):
+        raise Exception('key can only include alphanumeric characters and underscores')
+    if hasattr(self, key):
+        if replace:
+            print('overwriting ' + key)
+        else:
+            print('key "' + key + '" already exists, ignoring')
+            return
+    setattr(self, key, value)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="utils.biofile_handling.gxc_to_exc" class="doc doc-heading">
+<code class="highlight language-python">gxc_to_exc(sample_MSD, embedding_df, exc_file)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Converts an GxcFile into an ExcFile, returning the new file object.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def gxc_to_exc(sample_MSD, embedding_df, exc_file):
+    """Converts an GxcFile into an ExcFile, returning the new file object."""
+
+    import pandas as pd
+    import os
+
+    embedding = embedding_df.columns[0]
+
+    if embedding == 'Orthogroup':
+        print('Using Orthogroup embeddings as expected from OrthoFinder')
+    elif embedding == 'StruCluster':
+        print('Using StruCluster embeddings as expected from FoldSeek')
+    else:
+        raise Exception('Dataframe must have "Orthogroup" or "StruCluster" as embedding')
+
+    # Iterates through all of the species in the Species BioFileDocket
+    for pre in sample_MSD.species_BioFileDockets.keys():
+
+        # Generates filename automatically
+        exc_filename = sample_MSD.species_BioFileDockets[pre].gxc.filename.replace('.' + sample_MSD.species_BioFileDockets[pre].gxc.filetype, '_as' + embedding + '.' + sample_MSD.species_BioFileDockets[pre].gxc.filetype)
+
+        # Generates file object
+        exc = ExcFile(
+            filename = exc_filename,
+            sampledict = sample_MSD.SampleDicts[pre],
+            gxcfile = sample_MSD.species_BioFileDockets[pre].gxc,
+            embedding = embedding
+            )
+        embedding_exc = embedding + '_exc'
+
+        # Checks whether an Embedding_exc file already exists; avoid re-generating if it does
+        if exc.exists:
+            print(embedding_exc + 'file already exists at', exc.path, 'skipping')
+            sample_MSD.species_BioFileDockets[pre].add_keyfile(exc, embedding_exc)
+
+            continue
+
+        # Copies orthogroups dataframe to do transformations without modifying original
+        embedding_df_copy = embedding_df.copy(deep = True)
+
+        if embedding == 'Orthogroup':
+            # Automatically gets the expected column name of the OrthoFinder file
+            species_column = sample_MSD.species_BioFileDockets[pre].cdna.filename + '.transdecoder'
+            print('Expanding column', species_column)
+
+            # Expands orthogroups column for species-specific dataset
+            embedding_df_copy['protein_id'] = embedding_df_copy[species_column].str.split(', ')
+            embedding_df_copy = embedding_df_copy.explode('protein_id')
+            embedding_df_copy['transcript_id'] = embedding_df_copy['protein_id'].str.split('.', expand = True)[0]
+
+            # Gets id mapping between transcript, protein, and Orthogroup ids
+            keys = embedding_df_copy[['transcript_id', 'protein_id', embedding]].drop_duplicates()
+            keys.dropna(inplace = True)
+
+            print('Extracting keys for', embedding)
+
+            idmm_kind = 'og_idmm'
+            fileouttype = 'OGfile'
+
+            original_idmm = sample_MSD.species_BioFileDockets[pre].gtf_idmm
+
+            # Loads the gtf id mapping matrix                                                                    
+            original_idmm_df = pd.read_csv(original_idmm.path, index_col = 0, sep = '\t')
+
+            # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
+            exc_idmm_df = original_idmm_df.merge(keys, on = 'transcript_id')  
+            exc_idmm_filename = pre + '_' + sample_MSD.SampleDicts[pre].conditions + '_' + idmm_kind + '.tsv'
+
+        elif embedding == 'StruCluster':
+            # Automatically gets the expected column name of the FoldSeek output file
+            species_column = pre
+
+            # Expands struclusters column for species-specific dataset
+            embedding_df_copy['uniprot_id'] = embedding_df_copy[species_column].str.split(',')
+            embedding_df_copy = embedding_df_copy.explode('uniprot_id')
+
+            # Gets id mapping between transcript and FoldSeek ids
+            keys = embedding_df_copy[['uniprot_id', embedding]].drop_duplicates()
+            keys.dropna(inplace = True)
+
+            idmm_kind = 'sc_idmm'
+            fileouttype = 'SCfile'
+
+            original_idmm = sample_MSD.species_BioFileDockets[pre].uniprot_idmm
+
+            # Loads the gtf id mapping matrix                                                                    
+            original_idmm_df = pd.read_csv(original_idmm.path, index_col = 0, sep = '\t')
+
+            # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
+            exc_idmm_df = original_idmm_df.merge(keys, on = 'uniprot_id')  
+            exc_idmm_filename = pre + '_' + sample_MSD.SampleDicts[pre].conditions + '_' + idmm_kind + '.tsv'
+
+        exc_idmm = IdmmFile(
+            filename = exc_idmm_filename,
+            sampledict = sample_MSD.SampleDicts[pre],
+            kind = idmm_kind,
+            sources = [exc_file, original_idmm]
+            )
+        print('Saving keys to', exc_idmm_filename)
+        exc_idmm_df.to_csv(exc_idmm.path, sep = '\t', index = None)
+        print('Done saving', exc_idmm_filename)
+
+        # Adds the new og_idmm to the BioFileDocket for the species
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc_idmm, idmm_kind)
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc_file, sample_MSD.species_concat + '_' + fileouttype)
+
+        # Extracts gene_name to embedding mapping keys
+        gene_keys = exc_idmm_df[['gene_name', embedding]].drop_duplicates()
+
+        print('Generating exc file at', exc.path)
+        # Reads in original gxc matrix file
+        gxc_df = pd.read_csv(sample_MSD.species_BioFileDockets[pre].gxc.path, sep = '\t')
+        # Automatically gets the first column name of file for later use
+        gxc_original_dataname = gxc_df.columns[0]
+        # Renames that column to 'gene_name' for easier merging
+        gxc_df.rename(columns = {gxc_original_dataname: 'gene_name'}, inplace = True)
+        # Merges gxc with orthogroup gene keys to generate exc dataframe
+        exc_df = gene_keys.merge(gxc_df, on = 'gene_name')
+
+        # Removes 'gene_name' column
+        exc_df = exc_df.drop(columns = 'gene_name')
+        # Aggregates read counts per cell by Orthogroup ID
+        exc_df = exc_df.groupby(embedding).agg({i: ('first' if i == embedding else 'sum') for i in exc_df.columns}).reset_index(drop = True)
+        exc_df = exc_df.drop_duplicates(keep = 'first', subset = exc_df.columns[1:])
+
+        print('Preview of exc file:', exc.path)
+        display(exc_df)
+
+        # Saves new exc matrix to file and puts it into the species BioFileDocket
+        exc_df.to_csv(exc.path, sep = '\t', index = None)
+        print('Exc file saved at', exc.path)
+
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc, embedding_exc)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="utils.biofile_handling.make_output_directory" class="doc doc-heading">
+<code class="highlight language-python">make_output_directory(species, conditions, stringonly=False)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates an output directory based on species and condition parameters.  </p>
+<p>Does not create a directory if it already exists.<br />
+Output directory is placed in the <code>GLOBAL_OUTPUT_DIRECTORY</code>, as defined by <code>env/install_locs.py</code>.
+Default <code>GLOBAL_OUTPUT_DIRECTORY</code> is <code>output/</code>.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>species</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>species name in <code>Genus_species</code> format.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>conditions</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>unique conditions identifier for dataset.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>stringonly</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether to only output the string without creating a directory</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>output_directory</code></td>          <td>
+                <code>str</code>
+          </td>
+          <td><p>path of the output directory, in format <code>Gspe_conditions</code>.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def make_output_directory(species: str, conditions: str, stringonly = False):
+    """Creates an output directory based on species and condition parameters.  
+
+    Does not create a directory if it already exists.  
+    Output directory is placed in the `GLOBAL_OUTPUT_DIRECTORY`, as defined by `env/install_locs.py`.
+    Default `GLOBAL_OUTPUT_DIRECTORY` is `output/`.
+
+    Args:
+        species (str): species name in `Genus_species` format.
+        conditions (str): unique conditions identifier for dataset.
+        stringonly (bool, optional): whether to only output the string without creating a directory
+
+    Returns:
+        output_directory (str): path of the output directory, in format `Gspe_conditions`.
+    """
+    from string_functions import prefixify
+
+    species_prefix = prefixify(species)
+
+    # Specify folder as destination for file downloads
+    output_directory = GLOBAL_OUTPUT_DIRECTORY + prefixify(species) + '_' + conditions + '/'
+
+    if stringonly:
+        return output_directory
+
+    if not os.path.exists(output_directory):
+        print('creating', output_directory)
+        os.mkdir(output_directory)
+    else:
+        print(output_directory, 'already exists')
+
+    return output_directory</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="utils.biofile_handling.s3_transfer" class="doc doc-heading">
+<code class="highlight language-python">s3_transfer(to_loc, from_loc)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Transfers files to and from AWS S3 and local.  </p>
+<p>One of the two parameters must be an AWS S3 URI in string format.  </p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>to_loc</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path of the destination file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>from_loc</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path of the origin file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>utils/biofile_handling.py</code></summary>
+        <pre class="highlight"><code class="language-python">def s3_transfer(to_loc: str, from_loc: str):
+    """Transfers files to and from AWS S3 and local.  
+
+    One of the two parameters must be an AWS S3 URI in string format.  
+
+    Args:
+        to_loc (str): path of the destination file.
+        from_loc (str): path of the origin file.
+    """
+    subprocess.run(['aws', 's3', 'cp', to_loc, from_loc])</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.4.2
+Build Date UTC : 2022-12-09 00:09:21.508387+00:00
+-->
