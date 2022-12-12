@@ -8,6 +8,9 @@ watch:
 theme:
   name: "readthedocs"
 
+extra_css:
+  - css/extra.css
+
 plugins:
   - mkdocstrings:
       default_handler: python
