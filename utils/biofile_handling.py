@@ -13,7 +13,7 @@ if not os.path.exists(GLOBAL_OUTPUT_DIRECTORY):
 
 def s3_transfer(to_loc: str, from_loc: str):
     """Transfers files to and from AWS S3 and local.  
-    
+
     One of the two parameters must be an AWS S3 URI in string format.  
     
     Args:
@@ -58,12 +58,12 @@ def make_output_directory(species: str, conditions: str, stringonly = False):
     return output_directory
 
 class metadata_object(object):
-    """simple dummy object to enable dot access to keys"""
+    """Simple dummy object to enable dot access to keys."""
     def add(self, key: str, value: any, replace = True):
         """Adds a metadata feature using a unique key identifier.
-        
-        Checks to make sure that key does not already exist.
-        Also makes sure key is only alphanumeric or underscores.
+
+        >- Checks to make sure that key does not already exist.  
+        >- Also makes sure key is only alphanumeric or underscores.  
         
         Args:
             key (str): a unique key
@@ -81,8 +81,8 @@ class metadata_object(object):
 
 # Class definitions to handle BioFiles between scripts
 class SampleDict:
-    """A dictionary containing dataset-specific fields: species, conditions, and directory.
-    
+    """A dictionary containing dataset-specific fields: species, conditions, and directory.  
+
     This class is used to uniquely associate BioFile objects with specific datasets.
     
     Args:
@@ -132,38 +132,38 @@ class BioFileDocket:
        
     @property
     def species_prefix(self):
-        """str: runs prefixify(species)."""
+        """`str`: runs prefixify(species)."""
         return prefixify(self.species)
     
     @property
     def s3uri(self):
-        """str: the S3 URI of the BioFileDocket."""
+        """`str`: the S3 URI of the BioFileDocket."""
         return 's3://arcadia-reference-datasets/glial-origins-pkl/' + self.dill_filename
     
     @property
     def dill_filename(self):
-        """str: the unique filename of the BioFileDocket .pkl file."""
+        """`str`: the unique filename of the BioFileDocket .pkl file."""
         return '_'.join([prefixify(self.species), self.conditions, 'BioFileDocket.pkl'])
     
     @property
     def dill_filepath(self):
-        """str: the path of the BioFileDocket .pkl file."""
+        """`str`: the path of the BioFileDocket .pkl file."""
         return self.directory + self.dill_filename
     
     @property
     def sampledict(self):
-        """SampleDict: the full SampleDict of the BioFileDocket."""
+        """`SampleDict`: the full SampleDict of the BioFileDocket."""
         return SampleDict(self.species, self.conditions, self.directory)
        
     def set_taxid(self, taxid: Union[str, int]):
-        """Adds a taxid attribute to the BioFileDocket.
+        """Adds a taxid attribute to the BioFileDocket.  
         
         Tolerates either `int` or `str` input.
         """
         self.metadata.add('taxid', str(taxid))
         
     def add_file(self, BioFile):
-        """Places a BioFile object into the `files` attribute.
+        """Places a BioFile object into the `files` attribute.  
         
         The objects can be accessed using their filename.
         
@@ -182,7 +182,7 @@ class BioFileDocket:
         del self.files[filename]
             
     def add_keyfile(self, key: str, BioFile, overwrite = False):
-        """Adds a BioFile object using a unique key identifier.
+        """Adds a BioFile object using a unique key identifier.  
         
         Checks to make sure that key does not already exist.
         Also makes sure key is only alphanumeric or underscores.
@@ -204,14 +204,14 @@ class BioFileDocket:
             self.add_keyfile(key, dictionary[key], overwrite)
     
     def remove_keyfile(self, key, warn = True):
-        """Deletes a keyfile from the BioFileDocket if warn == False."""
+        """Deletes a keyfile from the BioFileDocket if warn == `False`."""
         if not warn:
             delattr(self, key)
         else:
             raise Warning('If you want to delete this keyfile, set warn = False.')
     
     def pickle(self):
-        """Creates a .pkl file for the BioFileDocket object.
+        """Creates a .pkl file for the BioFileDocket object.  
         
         The filename and path are automatically generated.
         """
@@ -221,7 +221,7 @@ class BioFileDocket:
             dill.dump(self, file)
     
     def unpickle(self):
-        """Unpickles a .pkl file for the BioFileDocket object.
+        """Unpickles a .pkl file for the BioFileDocket object.  
         
         The filename and path are automatically generated.
         
@@ -244,7 +244,7 @@ class BioFileDocket:
         return self
     
     def local_to_s3(self, overwrite = False):
-        """Uploads all keyfiles that are BioFiles to S3 using their s3uri attributes.
+        """Uploads all keyfiles that are BioFiles to S3 using their s3uri attributes.  
         
         Args:
             overwrite (bool): decide whether to overwrite existing files. Defaults to False.
@@ -255,7 +255,7 @@ class BioFileDocket:
             file.push_to_s3(overwrite)
     
     def s3_to_local(self, overwrite = False):
-        """Downloads all keyfiles that are BioFiles from S3 using their s3uri attributes.
+        """Downloads all keyfiles that are BioFiles from S3 using their s3uri attributes.  
         
         Args:
             overwrite (bool): decide whether to overwrite existing files. Defaults to False.
@@ -266,7 +266,7 @@ class BioFileDocket:
             file.get_from_s3(overwrite)
     
     def get_from_s3(self, overwrite = False):
-        """Downloads the .pkl file for the BioFileDocket from AWS S3.
+        """Downloads the .pkl file for the BioFileDocket from AWS S3.  
         
         Args:
             overwrite (bool): decide whether to overwrite existing files. Defaults to False.
@@ -335,17 +335,17 @@ class MultiSpeciesBioFileDocket(BioFileDocket):
     
     @property
     def species_concat(self):
-        """str: concatenation of species prefixes in alphabetical order."""
+        """`str`: concatenation of species prefixes in alphabetical order."""
         return ''.join(sorted([prefixify(species) for species in self.species_dict]))
     
     @property
     def sampledict(self):
-        """SampleDict: a MultiSpeciesBioFileDocket-formatted sampledict."""
+        """`SampleDict`: a MultiSpeciesBioFileDocket-formatted sampledict."""
         return SampleDict(self.species_concat, self.conditions, self.directory)
     
     @property
     def dill_filename(self):
-        """str: the unique filename of the BioFileDocket .pkl file."""
+        """`str`: the unique filename of the BioFileDocket .pkl file."""
         return '_'.join([self.species_concat, self.global_conditions, self.analysis_type, 'MultiSpeciesBioFileDocket.pkl'])
     
     def get_BioFileDockets(self):
@@ -410,27 +410,27 @@ class BioFile:
             
     @property
     def exists(self):
-        """bool: checks whether the file currently exists."""
+        """`bool`: checks whether the file currently exists."""
         return os.path.exists(self.path)
     
     @property
     def path(self):
-        """str: path to the file, including the filename."""
+        """`str`: path to the file, including the filename."""
         return self.directory + self.filename
     
     @property
     def species_prefix(self):
-        """str: runs prefixify(species)."""
+        """`str`: runs `prefixify(species)`."""
         return prefixify(self.species)
     
     @property
     def sampledict(self):
-        """SampleDict: a SampleDict object for the file."""
+        """`SampleDict`: a SampleDict object for the file."""
         return SampleDict(self.species, self.conditions, self.directory)
     
     @property
     def filetype(self):
-        """str: infers filetype using the string after the final `.` in filename."""
+        """`str`: infers filetype using the string after the final `.` in filename."""
         return self.filename.split('.')[-1]
     
     def add_s3uri(self, s3uri: str):
@@ -1001,7 +1001,7 @@ class GeneListFile(BioFile):
 class MultiSpeciesFile(BioFile):
     """A special class of BioFile objects for files with multiple associated species.
     
-    This subclass uses species_concat as its species and its conditions is a '_' concatenation of its global_conditions and analysis_type.
+    This subclass uses `species_concat` as its species and its conditions is a '_' concatenation of its `global_conditions` and `analysis_type`.
     
     Args:
         species_dict (dict): species dictionary from the MultiSpeciesBioFileDocket.
