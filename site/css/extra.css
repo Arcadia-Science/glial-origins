@@ -3,7 +3,7 @@ h2 {
 }
 
 h3, h4, h5, h6 {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .doc-class{
@@ -24,14 +24,6 @@ code{
 
 .doc-label-property code{
   color: #5088C5;
-}
-
-.wy-body-for-nav{
-  background-color: #5088C5;
-}
-
-.wy-grid-for-nav{
-  background-color: #5088C5;
 }
 
 .wy-side-nav-search{
