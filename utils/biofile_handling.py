@@ -571,6 +571,14 @@ class GenomeFastaFile(BioFile):
 
         new_filename = self.filename + '.renamed.fa'
         new_filepath = self.directory + new_filename
+        
+        new_file = GenomeFastaFile(
+                filename = new_filename,
+                sampledict = self.sampledict,
+                version = self.version
+            )
+        if new_file.exists:
+            return new_file
 
         with open(self.path) as original, open(new_filepath, 'w') as corrected:
             records = SeqIO.parse(self.path, 'fasta')
@@ -587,13 +595,7 @@ class GenomeFastaFile(BioFile):
             self.filename = new_filename
             
             return None
-        
         else:
-            new_file = GenomeFastaFile(
-                filename = new_filename,
-                sampledict = self.sampledict,
-                version = self.version
-            )
             return new_file
         
     def get_transdecoder_cdna_gtf(self, GenomeGtfFile, TRANSDECODER_LOC, **kwargs):
@@ -664,9 +666,9 @@ class TransdecoderCdnaFile(BioFile):
             output_file = TransdecoderOutFile(
                 filename = output_filename, 
                 sampledict = self.sampledict, 
-                GenomeFastaFile = self.reference_genome, 
-                GenomeAnnotFile = self.reference_annot,
-                TransdecoderCdnaFile = self
+                reference_genome = self.reference_genome, 
+                reference_annot = self.reference_annot,
+                reference_cdna = self
             )
             subprocess.run(['mv', output_file.filename, output_file.path])
             output_dict['transdecoder_' + suffix.replace('.', '')] = output_file
