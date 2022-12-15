@@ -18,10 +18,14 @@ plugins:
         python:
           options:
             show_source: False
+  - mkdocs-jupyter:
+      include: ["*ipynb"]
+      ignore_h1_titles: True
 
 nav:
   - Home: index.md
   - About BioFile Handling: BioFile_README.md
+  - BioFile Tutorial: BioFile_tutorial.ipynb
   - BioFile Usage: biofile_doc.md
   - String Functions Usage: string_functions_doc.md
   - Scanpy Wrappers Usage: scanpy_wrappers_doc.md
