@@ -6,3 +6,4 @@ notebooks/**/cache
 notebooks/**/figures
 nohup.out
 .vscode/
+**/__pycache__/
