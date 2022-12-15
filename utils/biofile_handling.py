@@ -668,7 +668,7 @@ class TransdecoderCdnaFile(BioFile):
                 sampledict = self.sampledict, 
                 reference_genome = self.reference_genome, 
                 reference_annot = self.reference_annot,
-                reference_cdna = self
+                reference_cDNA = self
             )
             subprocess.run(['mv', output_file.filename, output_file.path])
             output_dict['transdecoder_' + suffix.replace('.', '')] = output_file
