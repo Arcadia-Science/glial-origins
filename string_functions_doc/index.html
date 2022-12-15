@@ -47,6 +47,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../BioFile_tutorial/">BioFile Tutorial</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../biofile_doc/">BioFile Usage</a>
                 </li>
               </ul>
@@ -126,7 +130,7 @@
 
 
 <h2 id="utils.string_functions.convert_dbxref_to_dict" class="doc doc-heading">
-<code class="highlight language-python">convert_dbxref_to_dict(string)</code>
+<code class="highlight language-python"><span class="n">convert_dbxref_to_dict</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></code>
 
 </h2>
 
@@ -180,8 +184,9 @@
   </table>
 
 <p><strong>Examples:</strong></p>
-    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; convert_dbxref_to_dict('Ensembl:123104,UniProtKB:Q7D56')
-{'Ensembl': '123104', 'UniProtKB': 'Q7D56'}</code></pre>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_dbxref_to_dict</span><span class="p">(</span><span class="s1">&#39;Ensembl:123104,UniProtKB:Q7D56&#39;</span><span class="p">)</span>
+<span class="go">{&#39;Ensembl&#39;: &#39;123104&#39;, &#39;UniProtKB&#39;: &#39;Q7D56&#39;}</span>
+</code></pre></div>
 
   </div>
 
@@ -192,7 +197,7 @@
 
 
 <h2 id="utils.string_functions.convert_dict_to_fields_gff" class="doc doc-heading">
-<code class="highlight language-python">convert_dict_to_fields_gff(dictionary)</code>
+<code class="highlight language-python"><span class="n">convert_dict_to_fields_gff</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span></code>
 
 </h2>
 
@@ -246,8 +251,9 @@
   </table>
 
 <p><strong>Examples:</strong></p>
-    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; convert_dict_to_fields_gff({'gene_name': 'Hh', 'gene_id': '123'})
-'gene_name=Hh;gene_id=123'</code></pre>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_dict_to_fields_gff</span><span class="p">({</span><span class="s1">&#39;gene_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Hh&#39;</span><span class="p">,</span> <span class="s1">&#39;gene_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123&#39;</span><span class="p">})</span>
+<span class="go">&#39;gene_name=Hh;gene_id=123&#39;</span>
+</code></pre></div>
 
   </div>
 
@@ -258,7 +264,7 @@
 
 
 <h2 id="utils.string_functions.convert_dict_to_fields_gtf" class="doc doc-heading">
-<code class="highlight language-python">convert_dict_to_fields_gtf(dictionary)</code>
+<code class="highlight language-python"><span class="n">convert_dict_to_fields_gtf</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span></code>
 
 </h2>
 
@@ -312,8 +318,9 @@
   </table>
 
 <p><strong>Examples:</strong></p>
-    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; convert_dict_to_fields_gtf({'gene_name': 'Hh', 'gene_id': '123'})
-'gene_name "Hh"; gene_id "123"'</code></pre>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_dict_to_fields_gtf</span><span class="p">({</span><span class="s1">&#39;gene_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Hh&#39;</span><span class="p">,</span> <span class="s1">&#39;gene_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123&#39;</span><span class="p">})</span>
+<span class="go">&#39;gene_name &quot;Hh&quot;; gene_id &quot;123&quot;&#39;</span>
+</code></pre></div>
 
   </div>
 
@@ -324,7 +331,7 @@
 
 
 <h2 id="utils.string_functions.convert_fields_to_dict_gff" class="doc doc-heading">
-<code class="highlight language-python">convert_fields_to_dict_gff(string)</code>
+<code class="highlight language-python"><span class="n">convert_fields_to_dict_gff</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></code>
 
 </h2>
 
@@ -378,8 +385,9 @@
   </table>
 
 <p><strong>Examples:</strong></p>
-    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; convert_fields_to_dict_gff('gene_name=Hh;gene_id=123')
-{'gene_name': 'Hh', 'gene_id': '123'}</code></pre>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_fields_to_dict_gff</span><span class="p">(</span><span class="s1">&#39;gene_name=Hh;gene_id=123&#39;</span><span class="p">)</span>
+<span class="go">{&#39;gene_name&#39;: &#39;Hh&#39;, &#39;gene_id&#39;: &#39;123&#39;}</span>
+</code></pre></div>
 
   </div>
 
@@ -390,7 +398,7 @@
 
 
 <h2 id="utils.string_functions.convert_fields_to_dict_gtf" class="doc doc-heading">
-<code class="highlight language-python">convert_fields_to_dict_gtf(string)</code>
+<code class="highlight language-python"><span class="n">convert_fields_to_dict_gtf</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></code>
 
 </h2>
 
@@ -445,8 +453,9 @@ Tolerates strings with and without a terminal ';' separator.</p>
   </table>
 
 <p><strong>Examples:</strong></p>
-    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; convert_fields_to_dict_gtf('gene_name "Hh"; gene_id "123"')
-{'gene_name': 'Hh', 'gene_id': '123'}</code></pre>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_fields_to_dict_gtf</span><span class="p">(</span><span class="s1">&#39;gene_name &quot;Hh&quot;; gene_id &quot;123&quot;&#39;</span><span class="p">)</span>
+<span class="go">{&#39;gene_name&#39;: &#39;Hh&#39;, &#39;gene_id&#39;: &#39;123&#39;}</span>
+</code></pre></div>
 
   </div>
 
@@ -457,7 +466,7 @@ Tolerates strings with and without a terminal ';' separator.</p>
 
 
 <h2 id="utils.string_functions.make_gene_list" class="doc doc-heading">
-<code class="highlight language-python">make_gene_list(lst, filename)</code>
+<code class="highlight language-python"><span class="n">make_gene_list</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></code>
 
 </h2>
 
@@ -502,13 +511,14 @@ File will display a list of genes, one per line.</p>
   </table>
 
 <p><strong>Examples:</strong></p>
-    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; make_gene_list(['Hh', 'bcd', 'nos'], 'fly_genes.txt')
-&gt;&gt;&gt; with open('fly_genes.txt', 'r') as file:
-&gt;&gt;&gt;     for line in file:
-&gt;&gt;&gt;         print(line)
-'Hh'
-'bcd'
-'nos'</code></pre>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">make_gene_list</span><span class="p">([</span><span class="s1">&#39;Hh&#39;</span><span class="p">,</span> <span class="s1">&#39;bcd&#39;</span><span class="p">,</span> <span class="s1">&#39;nos&#39;</span><span class="p">],</span> <span class="s1">&#39;fly_genes.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;fly_genes.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="go">&#39;Hh&#39;</span>
+<span class="go">&#39;bcd&#39;</span>
+<span class="go">&#39;nos&#39;</span>
+</code></pre></div>
 
   </div>
 
@@ -519,7 +529,7 @@ File will display a list of genes, one per line.</p>
 
 
 <h2 id="utils.string_functions.prefixify" class="doc doc-heading">
-<code class="highlight language-python">prefixify(species)</code>
+<code class="highlight language-python"><span class="n">prefixify</span><span class="p">(</span><span class="n">species</span><span class="p">)</span></code>
 
 </h2>
 
@@ -575,10 +585,11 @@ File will display a list of genes, one per line.</p>
   </table>
 
 <p><strong>Examples:</strong></p>
-    <pre class="highlight"><code class="language-pycon">&gt;&gt;&gt; prefixify('Genus_species')
-'Gspe'
-&gt;&gt;&gt; prefixify('MmusDrerXlae')
-'MmusDrerXlae'</code></pre>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">prefixify</span><span class="p">(</span><span class="s1">&#39;Genus_species&#39;</span><span class="p">)</span>
+<span class="go">&#39;Gspe&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prefixify</span><span class="p">(</span><span class="s1">&#39;MmusDrerXlae&#39;</span><span class="p">)</span>
+<span class="go">&#39;MmusDrerXlae&#39;</span>
+</code></pre></div>
 
   </div>
 
