@@ -34,7 +34,7 @@ def make_output_directory(species: str, conditions: str, stringonly = False):
     Args:
         species (str): species name in `Genus_species` format.
         conditions (str): unique conditions identifier for dataset.
-        stringonly (bool, optional): whether to only output the string without creating a directory
+        stringonly (bool): whether to only output the string without creating a directory
     
     Returns:
         output_directory (str): path of the output directory, in format `Gspe_conditions`.
@@ -633,7 +633,7 @@ class TransdecoderCdnaFile(BioFile):
     
     Args:
         reference_genome (GenomeFastaFile): the BioFile object of the associated genome fasta file.
-        reference_annot (GenomeGffFile or GenomeGtfFile): the BioFile object of the associated genome annotation file.
+        reference_annot (GenomeGffFile | GenomeGtfFile): the BioFile object of the associated genome annotation file.
     """
     def __init__(self, reference_genome, reference_annot, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -680,7 +680,7 @@ class TransdecoderOutFile(BioFile):
     
     Args:
         reference_genome (GenomeFastaFile): the BioFile object of the associated genome fasta file.
-        reference_annot (GenomeGffFile or GenomeGtfFile): the BioFile object of the associated genome annotation file.
+        reference_annot (GenomeGffFile | GenomeGtfFile): the BioFile object of the associated genome annotation file.
         reference_cDNA (TransdecoderCdnaFile): the BioFile object of the associated Transdecoder cDNA file.
     """
     def __init__(self, reference_genome, reference_annot, reference_cDNA, *args, **kwargs):
@@ -831,7 +831,7 @@ class LoomFile(BioFile):
     
         Args:
             reference_genome (GenomeFastaFile): the BioFile object of the associated genome fasta file.
-            reference_annot (GenomeGtfFile or GenomeGffFile): the BioFile object of the associated genome GTF/GFF file.
+            reference_annot (GenomeGtfFile | GenomeGffFile): the BioFile object of the associated genome GTF/GFF file.
     """
     def __init__(self, reference_genome, reference_annot, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -946,7 +946,7 @@ class GxcFile(BioFile):
     
     Args:
         reference_genome (GenomeFastaFile): the BioFile object of the associated genome fasta file.
-        reference_annot (GenomeGffFile or GenomeGtfFile): the BioFile object of the associated genome annotation file.
+        reference_annot (GenomeGffFile | GenomeGtfFile): the BioFile object of the associated genome annotation file.
     """
     def __init__(self, reference_genome, reference_annot, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1011,7 +1011,7 @@ class UniProtTaxidListFile(BioFile):
     Defaults to creating a file based on a taxid passed on object creation.  
     
     Args:
-        taxid (str or int): the taxid of the species of interest.
+        taxid (str | int): the taxid of the species of interest.
         make (bool): whether or not to make the file upon object creation. defaults to True.
     """
     def __init__(self, taxid: Union[str, int], make = True, *args, **kwargs):
