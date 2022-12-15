@@ -1,3 +1,7 @@
 **/.ipynb_checkpoints
 output/**
 input/**
+notebooks/**/pipeliner.**.cmds
+notebooks/**/cache
+notebooks/**/figures
+nohup.out
