@@ -162,6 +162,14 @@
     <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.JointExcFile">JointExcFile</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.LoomFile">LoomFile</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.LoomFile.get_cellannot">get_cellannot()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.LoomFile.get_idmm">get_idmm()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#utils.biofile_handling.LoomFile.to_gxc">to_gxc()</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#utils.biofile_handling.MultiSpeciesBioFileDocket">MultiSpeciesBioFileDocket</a>
         <ul>
@@ -1582,7 +1590,7 @@ Also makes sure key is only alphanumeric or underscores.</p>
 
 
 <h3 id="utils.biofile_handling.CellRangerFileGroup.to_gxc" class="doc doc-heading">
-<code class="highlight language-python">to_gxc(reference_genome, reference_annot, filename, overwrite=False)</code>
+<code class="highlight language-python">to_gxc(reference_genome, reference_annot, filename='', overwrite=False)</code>
 
 </h3>
 
@@ -2264,7 +2272,7 @@ Also makes sure key is only alphanumeric or underscores.</p>
         <tr>
           <td><code>reference_annot</code></td>
           <td>
-                <code>GenomeGffFile or GenomeGtfFile</code>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGffFile" href="#utils.biofile_handling.GenomeGffFile">GenomeGffFile</a> | <a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGtfFile" href="#utils.biofile_handling.GenomeGtfFile">GenomeGtfFile</a></code>
           </td>
           <td><p>the BioFile object of the associated genome annotation file.</p></td>
           <td>
@@ -2461,7 +2469,40 @@ Also makes sure key is only alphanumeric or underscores.</p>
 
   
       <p>A BioFile object for a Loom file.</p>
-<p>Not built out yet!</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>reference_genome</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeFastaFile" href="#utils.biofile_handling.GenomeFastaFile">GenomeFastaFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated genome fasta file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>reference_annot</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGtfFile" href="#utils.biofile_handling.GenomeGtfFile">GenomeGtfFile</a> | <a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGffFile" href="#utils.biofile_handling.GenomeGffFile">GenomeGffFile</a></code>
+          </td>
+          <td><p>the BioFile object of the associated genome GTF/GFF file.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
 
 
@@ -2476,6 +2517,206 @@ Also makes sure key is only alphanumeric or underscores.</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.LoomFile.get_cellannot" class="doc doc-heading">
+<code class="highlight language-python">get_cellannot(overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates a cellannot file from the LOOM file.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether or not to overwrite the file if it already exists.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.CellAnnotFile" href="#utils.biofile_handling.CellAnnotFile">CellAnnotFile</a></code>
+          </td>
+          <td><p>a <code>CellAnnotFile</code> object for the created file.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.LoomFile.get_idmm" class="doc doc-heading">
+<code class="highlight language-python">get_idmm(id_type, overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates an idmm file from the LOOM file.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>id_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>the name of the ID type extracted from the file, e.g. <code>'ensembl_id'</code>.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether or not to overwrite the file if it already exists.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.IdmmFile" href="#utils.biofile_handling.IdmmFile">IdmmFile</a></code>
+          </td>
+          <td><p>an <code>IdmmFile</code> object for the created file.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="utils.biofile_handling.LoomFile.to_gxc" class="doc doc-heading">
+<code class="highlight language-python">to_gxc(filename='', overwrite=False)</code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Generates a gxc file from the LOOM file.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>filename</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>automatically generated by appending <code>'.asgxc.tsv'</code> if not provided.</p></td>
+          <td>
+                <code>&#39;&#39;</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>overwrite</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>whether or not to overwrite the file if it already exists.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GxcFile" href="#utils.biofile_handling.GxcFile">GxcFile</a></code>
+          </td>
+          <td><p>a <code>GxcFile</code> object for the created file.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
 
 
 
@@ -2984,7 +3225,7 @@ These must be exact matches, or it will not work.</p></td>
         <tr>
           <td><code>reference_annot</code></td>
           <td>
-                <code>GenomeGffFile or GenomeGtfFile</code>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGffFile" href="#utils.biofile_handling.GenomeGffFile">GenomeGffFile</a> | <a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGtfFile" href="#utils.biofile_handling.GenomeGtfFile">GenomeGtfFile</a></code>
           </td>
           <td><p>the BioFile object of the associated genome annotation file.</p></td>
           <td>
@@ -3128,7 +3369,7 @@ These must be exact matches, or it will not work.</p></td>
         <tr>
           <td><code>reference_annot</code></td>
           <td>
-                <code>GenomeGffFile or GenomeGtfFile</code>
+                <code><a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGffFile" href="#utils.biofile_handling.GenomeGffFile">GenomeGffFile</a> | <a class="autorefs autorefs-internal" title="utils.biofile_handling.GenomeGtfFile" href="#utils.biofile_handling.GenomeGtfFile">GenomeGtfFile</a></code>
           </td>
           <td><p>the BioFile object of the associated genome annotation file.</p></td>
           <td>
@@ -3203,7 +3444,7 @@ These must be exact matches, or it will not work.</p></td>
         <tr>
           <td><code>taxid</code></td>
           <td>
-                <code>str or int</code>
+                <code>str | int</code>
           </td>
           <td><p>the taxid of the species of interest.</p></td>
           <td>
