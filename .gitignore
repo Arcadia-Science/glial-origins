@@ -5,3 +5,4 @@ notebooks/**/pipeliner.**.cmds
 notebooks/**/cache
 notebooks/**/figures
 nohup.out
+.vscode/
