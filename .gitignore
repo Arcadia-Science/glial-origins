@@ -8,3 +8,5 @@ nohup.out
 .vscode/
 **/__pycache__/
 **.h5ad
+notebooks/debug/**
+**.pdf
