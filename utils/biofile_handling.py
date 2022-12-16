@@ -354,8 +354,8 @@ class MultiSpeciesBioFileDocket(BioFileDocket):
         
         self.species_BioFileDockets = {}
         
-        for species in self.species_dicts:
-            conditions = self.species_dicts[species]
+        for species in self.species_dict:
+            conditions = self.species_dict[species]
             species_prefix = prefixify(species)
             species_directory = make_output_directory(species, conditions, stringonly = True)
             
