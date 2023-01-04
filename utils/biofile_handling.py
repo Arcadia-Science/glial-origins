@@ -689,6 +689,35 @@ class TransdecoderOutFile(BioFile):
         self.reference_genome = reference_genome
         self.reference_annot = reference_annot
         self.reference_cDNA = reference_cDNA
+        
+    def longest_orfs_only(self, TDLONGESTORF_LOC, overwrite = False):
+        """Gets the longest ORFs for each transcript from a `.pep` file using `get_longest_ORF_per_transcript.pl`."""
+        
+        if self.filetype != 'pep':
+            raise TypeError('You must use a .pep file.')
+        
+        output_filename = self.filename.replace('.pep', '.longestORFs.pep')
+        
+        output_file = TransdecoderOutFile(
+            filename = output_filename, 
+            sampledict = self.sampledict, 
+            reference_genome = self.reference_genome, 
+            reference_annot = self.reference_annot,
+            reference_cDNA = self.reference_cDNA
+        )
+        
+        if output_file.exists and not overwrite:
+            print(output_file.path, 'already exists')
+            
+            return output_file
+        else:
+            f = open(output_file.path, "w")
+            subprocess.call([TDLONGESTORF_LOC, self.path], stdout = f)
+            
+            print('Making', output_file.path)
+            
+            return output_file
+            
 
 class GenomeGffFile(BioFile):
     """A BioFile object for a genome reference in GFF format.
