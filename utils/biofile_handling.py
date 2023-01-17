@@ -1152,8 +1152,8 @@ class MultiSpeciesFile(BioFile):
     def __init__(self, species_dict: dict, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.species_dict = species_dict
-        self.global_conditions = sampledict.conditions.split('_')[0]
-        self.analysis_type = sampledict.conditions.split('_')[1]
+        self.global_conditions = self.sampledict.conditions.split('_')[0]
+        self.analysis_type = self.sampledict.conditions.split('_')[1]
     
     @property
     def species_concat(self):
@@ -1190,7 +1190,7 @@ class JointExcFile(MultiSpeciesFile):
         self.embedding = embedding
         self.s3uri = 's3://arcadia-reference-datasets/' + self.embedding + '_JointExc/' + self.filename
 
-def gxc_to_exc(sample_MSD, embedding_df, exc_file):
+def gxc_to_exc(sample_MSD, embedding_df, exc_file, overwrite = False):
     """Converts an GxcFile into an ExcFile, returning the new file object."""
     
     import pandas as pd
@@ -1214,16 +1214,16 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file):
         # Generates file object
         exc = ExcFile(
             filename = exc_filename,
-            sampledict = sample_MSD.SampleDicts[pre],
+            sampledict = sample_MSD.species_BioFileDockets[pre].sampledict,
             gxcfile = sample_MSD.species_BioFileDockets[pre].gxc,
             embedding = embedding
             )
         embedding_exc = embedding + '_exc'
     
         # Checks whether an Embedding_exc file already exists; avoid re-generating if it does
-        if exc.exists:
+        if exc.exists and not overwrite:
             print(embedding_exc + 'file already exists at', exc.path, 'skipping')
-            sample_MSD.species_BioFileDockets[pre].add_keyfile(exc, embedding_exc)
+            sample_MSD.species_BioFileDockets[pre].add_keyfile(embedding_exc, exc)
         
             continue
         
@@ -1256,7 +1256,7 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file):
             
             # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
             exc_idmm_df = original_idmm_df.merge(keys, on = 'transcript_id')  
-            exc_idmm_filename = pre + '_' + sample_MSD.SampleDicts[pre].conditions + '_' + idmm_kind + '.tsv'
+            exc_idmm_filename = pre + '_' + sample_MSD.species_BioFileDockets[pre].sampledict.conditions + '_' + idmm_kind + '.tsv'
             
         elif embedding == 'StruCluster':
             # Automatically gets the expected column name of the FoldSeek output file
@@ -1280,11 +1280,11 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file):
     
             # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
             exc_idmm_df = original_idmm_df.merge(keys, on = 'uniprot_id')  
-            exc_idmm_filename = pre + '_' + sample_MSD.SampleDicts[pre].conditions + '_' + idmm_kind + '.tsv'
+            exc_idmm_filename = pre + '_' + sample_MSD.species_BioFileDockets[pre].sampledict.conditions + '_' + idmm_kind + '.tsv'
     
         exc_idmm = IdmmFile(
             filename = exc_idmm_filename,
-            sampledict = sample_MSD.SampleDicts[pre],
+            sampledict = sample_MSD.species_BioFileDockets[pre].sampledict,
             kind = idmm_kind,
             sources = [exc_file, original_idmm]
             )
@@ -1293,8 +1293,8 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file):
         print('Done saving', exc_idmm_filename)
     
         # Adds the new og_idmm to the BioFileDocket for the species
-        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc_idmm, idmm_kind)
-        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc_file, sample_MSD.species_concat + '_' + fileouttype)
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(idmm_kind, exc_idmm)
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(sample_MSD.species_concat + '_' + fileouttype, exc_file)
         
         # Extracts gene_name to embedding mapping keys
         gene_keys = exc_idmm_df[['gene_name', embedding]].drop_duplicates()
@@ -1322,4 +1322,4 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file):
         exc_df.to_csv(exc.path, sep = '\t', index = None)
         print('Exc file saved at', exc.path)
         
-        sample_MSD.species_BioFileDockets[pre].add_keyfile(exc, embedding_exc)
+        sample_MSD.species_BioFileDockets[pre].add_keyfile(embedding_exc, exc)
