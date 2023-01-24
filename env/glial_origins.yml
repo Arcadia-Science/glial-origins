@@ -661,4 +661,8 @@ dependencies:
   - zipp=3.8.1=pyhd8ed1ab_0
   - zlib=1.2.13=h166bdaf_4
   - zstd=1.5.2=h6239696_4
+  ## manually added this to add arcadia-pycolor support
+  ## conda env update -f glial_origins.yml
+  - pip:
+     - "--editable=git+https://github.com/Arcadia-Science/arcadia-pycolor.git#egg=arcadia_pycolor"
 prefix: /home/ec2-user/miniconda3/envs/glial_origins
