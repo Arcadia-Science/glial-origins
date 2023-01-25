@@ -4,6 +4,7 @@ site_name: Glial Origins
 watch:
 - utils/biofile_handling.py
 - utils/string_functions.py
+- utils/scanpy_wrappers.py
 
 theme:
   name: "readthedocs"
