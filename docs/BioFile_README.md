@@ -2,7 +2,7 @@
 
 ## BioFile objects
 
-Files in this project are managed using BioFile handling.
+Files in this project are handled using the BioFile class. See image below for a summary.
 
 ![BioFile Basics](https://user-images.githubusercontent.com/6531296/206793321-537f9254-0c73-48b3-9c6d-949d4aa44799.png)
 
