@@ -1252,7 +1252,7 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file, overwrite = False):
             original_idmm = sample_MSD.species_BioFileDockets[pre].gtf_idmm
             
             # Loads the gtf id mapping matrix                                                                    
-            original_idmm_df = pd.read_csv(original_idmm.path, index_col = 0, sep = '\t')
+            original_idmm_df = pd.read_csv(original_idmm.path, sep = '\t')
             
             # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
             exc_idmm_df = original_idmm_df.merge(keys, on = 'transcript_id')  
@@ -1276,7 +1276,7 @@ def gxc_to_exc(sample_MSD, embedding_df, exc_file, overwrite = False):
             original_idmm = sample_MSD.species_BioFileDockets[pre].uniprot_idmm
             
             # Loads the gtf id mapping matrix                                                                    
-            original_idmm_df = pd.read_csv(original_idmm.path, index_col = 0, sep = '\t')
+            original_idmm_df = pd.read_csv(original_idmm.path, sep = '\t')
     
             # Merges original idmm with orthogroup info, generating a new idmm to be used in downstream analysis
             exc_idmm_df = original_idmm_df.merge(keys, on = 'uniprot_id')  
