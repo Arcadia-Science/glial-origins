@@ -1,0 +1,12 @@
+name: mkdocs
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - mkdocs
+  - mkdocstrings
+  - mkdocstrings-python
+  - ca-certificates
+  - openssl
+prefix: /Users/dennis/miniconda3/envs/mkdocs

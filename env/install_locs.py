@@ -7,3 +7,7 @@ TDPREDICT_LOC = HOME_DIR + 'pkgs/transdecoder-5.5.0-pl526_1/opt/transdecoder/Tra
 ID_MAPPER_LOC = '../../utils/id_mapper.sh'
 ID_MAPPER_GENENAME_LOC = '../../utils/id_mapper_genename.sh'
 ORTHOFINDER_LOC = HOME_DIR + 'bin/orthofinder'
+
+import subprocess
+GIT_HOME = subprocess.run(['git', 'rev-parse', '--show-toplevel'], stdout=subprocess.PIPE).stdout.decode("utf-8").strip('\n')
+GLOBAL_OUTPUT_DIRECTORY = GIT_HOME + '/output/'

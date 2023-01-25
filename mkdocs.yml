@@ -1,0 +1,27 @@
+# mkdocs.yml
+site_name: Glial Origins
+
+watch:
+- utils/biofile_handling.py
+- utils/string_functions.py
+
+theme:
+  name: "readthedocs"
+
+extra_css:
+  - css/extra.css
+
+plugins:
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: False
+
+nav:
+  - Home: index.md
+  - About BioFile Handling: BioFile_README.md
+  - BioFile Usage: biofile_doc.md
+  - String Functions Usage: string_functions_doc.md
+  - Scanpy Wrappers Usage: scanpy_wrappers_doc.md
