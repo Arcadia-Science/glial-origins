@@ -1047,10 +1047,6 @@ class UniProtTaxidListFile(BioFile):
         super().__init__(*args, **kwargs)
         
         self.taxid = str(taxid)
-        
-        if filename == '':
-            self.filename = '_'.join([self.species_prefix, 'uniprot-taxid', self.taxid, 'genes.tsv'])
-        
         self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         
         if make:
