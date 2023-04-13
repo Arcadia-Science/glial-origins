@@ -183,7 +183,7 @@ class ScanpyMetaObject():
         cell_ids.fillna('Unlabeled', inplace = True)
         self.adata.obs['celltype'] = cell_ids['celltype'].values
     
-    def pca_basic(self, svd_solver='arpack', color = [], plot = True):
+    def pca_basic(self, svd_solver='arpack', color = [], plot = True, **kwargs):
         """Runs a simple PCA, displaying the first two components and variance plot.
         
         Args:
@@ -197,12 +197,12 @@ class ScanpyMetaObject():
             return None
         
         if color != []:
-            sc.pl.pca(self.adata, color = color, save = self.species_prefix + self.datatype + '_pca.pdf')
+            sc.pl.pca(self.adata, color = color, save = self.species_prefix + self.datatype + '_pca.pdf', **kwargs)
         else:
-            sc.pl.pca(self.adata, save = self.species_prefix + self.datatype + '_pca.pdf')
+            sc.pl.pca(self.adata, save = self.species_prefix + self.datatype + '_pca.pdf', **kwargs)
             sc.pl.pca_variance_ratio(self.adata, log=True)
     
-    def umap_leiden(self, n_neighbors=50, n_pcs = 40, legend_loc='on data', save = True, plot = True):
+    def umap_leiden(self, n_neighbors=50, n_pcs = 40, legend_loc='on data', save = True, plot = True, **kwargs):
         """Runs Leiden clustering, followed by UMAP, on the data.
         
         Args:
@@ -220,9 +220,9 @@ class ScanpyMetaObject():
             return None
         
         if save:
-            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, save = '_'.join([self.species_prefix, self.datatype, 'leiden.pdf']))
+            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, save = '_'.join([self.species_prefix, self.datatype, 'leiden.pdf']), **kwargs)
         else:
-            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc)
+            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, **kwargs)
     
     def rank_genes(self, on = 'leiden', method = 't-test', plot = True, n_genes = 25, sharey = False):
         """Runs `sc.tl.rank_genes_groups` based on passed parameters.
