@@ -21,7 +21,6 @@ Our results are summarized in a [Pub](https://arcadia-research.pubpub.org/pub/id
 ### Files:
 - this [README.md](README.md) file containing description of directories and their functions
 - [.gitignore](.gitignore) file containing patterns such as `output/` and `.ipynb_checkpoints/` to be ignored by git
-- [BioFile_README.md](docs/BioFile_README.md) file describing BioFile and BioFileDocket classes and their uses
 - MIT [LICENSE](LICENSE) file 
 
 
