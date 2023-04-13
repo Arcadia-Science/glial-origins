@@ -3,7 +3,7 @@
 ### General naming conventions
 Notebooks for running analyses are prefixed with a number based on their function, as described below.
 
-`1_` – notebooks for downloading genome sequences, annotations, and genes x cells matrices 
+`1_` – notebooks for downloading genome sequences, annotations, and genes x cells matrices  
     `a_` – notebooks for downloading cell type annotation data  
 `2_` – notebooks for performing embedding of datasets  
 `3_` – notebooks for analyzing cells of a single species and comparing to the same cells in a new embedding  
