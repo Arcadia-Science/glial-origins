@@ -138,7 +138,7 @@ class BioFileDocket:
     @property
     def s3uri(self):
         """`str`: the S3 URI of the BioFileDocket."""
-        return 's3://arcadia-reference-datasets/glial-origins-pkl/' + self.dill_filename
+        return S3_BUCKET_ADDRESS + 'glial-origins-pkl/' + self.dill_filename
     
     @property
     def dill_filename(self):
@@ -361,7 +361,7 @@ class MultiSpeciesBioFileDocket(BioFileDocket):
             
             dill_filename = '_'.join([species_prefix, conditions, 'BioFileDocket.pkl'])
             dill_filepath = species_directory + dill_filename
-            dill_s3uri = 's3://arcadia-reference-datasets/glial-origins-pkl/' + dill_filename
+            dill_s3uri = S3_BUCKET_ADDRESS + 'glial-origins-pkl/' + dill_filename
             
             if not os.path.exists(dill_filepath):
                 s3_transfer(dill_s3uri, dill_filepath)
@@ -563,7 +563,7 @@ class GenomeFastaFile(BioFile):
     def __init__(self, version: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.version = version
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/genome/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/genome/' + self.filename
     
     def rename_RefSeq_chromosomes(self, replace = False):
         """Renames the chromosomes of a RefSeq genome to numerical chromosomes."""
@@ -637,7 +637,7 @@ class TransdecoderCdnaFile(BioFile):
     """
     def __init__(self, reference_genome, reference_annot, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/transcriptome/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/transcriptome/' + self.filename
         self.reference_genome = reference_genome
         self.reference_annot = reference_annot
 
@@ -685,7 +685,7 @@ class TransdecoderOutFile(BioFile):
     """
     def __init__(self, reference_genome, reference_annot, reference_cDNA, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/proteome/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/proteome/' + self.filename
         self.reference_genome = reference_genome
         self.reference_annot = reference_annot
         self.reference_cDNA = reference_cDNA
@@ -740,7 +740,7 @@ class GenomeGffFile(BioFile):
             print('Renaming GFF3 file', self.filename, 'to', new_filename)
             self.filename = new_filename
         
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference_genome = reference_genome
     
     def to_gtf(self, GFFREAD_LOC, keep_all = False):
@@ -765,7 +765,7 @@ class GenomeGtfFile(BioFile):
     """
     def __init__(self, reference_genome, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/annotation/' + self.filename
         self.reference_genome = reference_genome
 
 class CellRangerFileGroup:
@@ -841,19 +841,19 @@ class CellRangerBarcodesFile(BioFile):
     """A BioFile object for the barcodes file of a CellRanger file."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         
 class CellRangerMatrixFile(BioFile):
     """A BioFile object for the matrix file of a CellRanger file."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
 
 class CellRangerFeaturesFile(BioFile):
     """A BioFile object for the features file of a CellRanger file."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
 
 class LoomFile(BioFile):
     """A BioFile object for a Loom file.
@@ -864,7 +864,7 @@ class LoomFile(BioFile):
     """
     def __init__(self, reference_genome, reference_annot, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.reference_genome = reference_genome
         self.reference_annot = reference_annot
     
@@ -979,7 +979,7 @@ class GxcFile(BioFile):
     """
     def __init__(self, reference_genome, reference_annot, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.reference_genome = reference_genome
         self.reference_annot = reference_annot
 
@@ -992,7 +992,7 @@ class ExcFile(BioFile):
     """
     def __init__(self, gxcfile, embedding: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.original = gxcfile
         self.embedding = embedding
 
@@ -1005,7 +1005,7 @@ class IdmmFile(BioFile):
     """
     def __init__(self, kind: str, sources: list, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.sources = sources
         self.kind = kind
         
@@ -1019,7 +1019,7 @@ class CellAnnotFile(BioFile):
     """
     def __init__(self, sources: list, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/functional_sequencing/scRNA-Seq/' + self.filename
         self.sources = sources
 
 class UniprotIDMapperFile(IdmmFile):
@@ -1047,7 +1047,7 @@ class UniProtTaxidListFile(BioFile):
         super().__init__(*args, **kwargs)
         
         self.taxid = str(taxid)
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         
         if make:
             self.get_proteins()
@@ -1078,7 +1078,7 @@ class GeneListFile(BioFile):
             filename = 'placeholder.txt'
         super().__init__(filename = filename, *args, **kwargs)
         
-        self.s3uri = 's3://arcadia-reference-datasets/organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'organisms/' + self.species + '/genomics_reference/mapping_file/' + self.filename
         self.sources = sources
         self.identifier = identifier
         
@@ -1165,13 +1165,13 @@ class OrthoFinderOutputFile(MultiSpeciesFile):
     """A MultiSpeciesFile for OrthoFinder output."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/OrthoFinder_output/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'OrthoFinder_output/' + self.filename
 
 class FoldSeekOutputFile(MultiSpeciesFile):
     """A MultiSpeciesFile for FoldSeek output."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.s3uri = 's3://arcadia-reference-datasets/FoldSeek_output/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + 'FoldSeek_output/' + self.filename
 
 class JointExcFile(MultiSpeciesFile):
     """A MultiSpeciesFile for collecting an ExcFile with multiple species.
@@ -1184,7 +1184,7 @@ class JointExcFile(MultiSpeciesFile):
         super().__init__(*args, **kwargs)
         self.sources = sources
         self.embedding = embedding
-        self.s3uri = 's3://arcadia-reference-datasets/' + self.embedding + '_JointExc/' + self.filename
+        self.s3uri = S3_BUCKET_ADDRESS + '' + self.embedding + '_JointExc/' + self.filename
 
 def gxc_to_exc(sample_MSD, embedding_df, exc_file, overwrite = False):
     """Converts an GxcFile into an ExcFile, returning the new file object."""
