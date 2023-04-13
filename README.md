@@ -68,21 +68,18 @@ The following instructions would allow you to reproduce the results of our analy
 - Choose a configuration that gives you ~64GB of RAM (e.g. m4.4xlarge).  
 - Use a Amazon Linux 2 machine.
 
-2. After starting up the instance, git clone this repository using HTTPS and authenticate.  
+2. After starting up the instance, git clone this repository using SSH and authenticate.  
 On the command line, use:  
-`git clone https://github.com/Arcadia-Science/glial-origins.git`. 
-> Temporarily, you'll want to use the latest branch.  
-> `git checkout das/orthofinder-dev`  
-> In the next PR, you can do this install from `main`.
+`git clone git@github.com:Arcadia-Science/glial-origins.git`. 
 
 3. Move into the GitHub repo.  
 `cd glial-origins/`
 
 4. Resize the local volume to enable more storage.  
-Set the number of GB of storage you want to have as an integer (e.g. 100GB below).  
+Set the number of GB of storage you want to have as an integer (e.g. 250GB below).  
 The resize script is from [this tutorial](https://docs.aws.amazon.com/cloud9/latest/user-guide/move-environment.html#move-environment-resize).   
 `bash env/resize.sh 100`
-> You probably want at least 100GB for a base analysis.  
+> You probably want at least 250GB for a base analysis.  
 > Up to 1000GB is not unreasonable if you're running a variety of analyses. 
 
 5. Download and install Miniconda.  
@@ -147,8 +144,6 @@ On the command line, use:
 
 14. Start working on analyses!
 
-> A good place to start is by downloading datasets, e.g. [1_Drer_adultbrain_downloading.ipynb](https://github.com/Arcadia-Science/glial-origins/blob/das/orthofinder-dev/notebooks/Drer_adultbrain/1_Drer_adultbrain_downloading.ipynb).
-
 ### On an existing Cloud9 Instance
 
 1. After starting up the instance, git clone this repository using HTTPS and authenticate.  
@@ -162,8 +157,6 @@ On the command line, use:
 4. Run Jupyter lab and set up the server using steps 11-13 above. If you have already set security group rules, you may not need to do this again.
 
 5. Start working on analyses!
-
-> A good place to start is by downloading datasets, e.g. [1_Drer_adultbrain_downloading.ipynb](https://github.com/Arcadia-Science/glial-origins/blob/das/orthofinder-dev/notebooks/Drer_adultbrain/1_Drer_adultbrain_downloading.ipynb).
 
 ---
 
