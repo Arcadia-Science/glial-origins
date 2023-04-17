@@ -173,6 +173,19 @@ Notebooks for running analyses are prefixed with a number based on their functio
 `4_` – notebooks for analyzing cells of multiple species in the same joint embedding  
     `b_` – notebooks for generating interactive plots of joint embedding spaces using Plotly  
 
+## Pipeline organization
+
+### General naming conventions
+Notebooks for running analyses are prefixed with a number based on their function, as described below.
+
+`1_` – notebooks for downloading genome sequences, annotations, and genes x cells matrices  
+    `a_` – notebooks for downloading cell type annotation data  
+`2_` – notebooks for performing embedding of datasets  
+`3_` – notebooks for analyzing cells of a single species and comparing to the same cells in a new embedding  
+    `c_` – notebooks for generating plots of gene expression vs. feature abundance  
+`4_` – notebooks for analyzing cells of multiple species in the same joint embedding  
+    `b_` – notebooks for generating interactive plots of joint embedding spaces using Plotly  
+
 ### Vertebrate adult brain analysis (Drer, Mmus, Xlae) using **OrthoFinder** and **AlphaFold → FoldSeek**
 Analysis of cells from three adult brain scRNA-Seq datasets from zebrafish, mouse, and frog (_Xenopus laevis_) using an Orthogroup or Structural scluster embedding.  
 Our analysis can be reproduced by running the provided notebooks in the following order.  
@@ -196,6 +209,9 @@ Our analysis can be reproduced by running the provided notebooks in the followin
 - [2_feature-embedding/2_DrerMmusXlae_adultbrain_runOrthoFinder.ipynb](notebooks/2_feature-embedding/2_DrerMmusXlae_adultbrain_runOrthoFinder.ipynb)
 > This runs OrthoFinder on peptides from the three datasets.  
 
+- [2_feature-embedding/d_OrthoFinder_renamer.ipynb](notebooks/2_feature-embedding/d_OrthoFinder_renamer.ipynb)  
+> This generates and updated OrthoFinder .tsv where protein IDs are replaced by gene names, for easier interpretation.  
+
 - [2_feature-embedding/2_DrerMmusXlae_adultbrain_runFoldSeek.ipynb](notebooks/2_feature-embedding/2_DrerMmusXlae_adultbrain_runFoldSeek.ipynb)
 > This downloads AlphaFold structures for all available proteins for each species, then clusters structures using FoldSeek.
 
@@ -217,6 +233,10 @@ Our analysis can be reproduced by running the provided notebooks in the followin
 - [4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-Foldseek.ipynb](notebooks/4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-Foldseek.ipynb)
 - [4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-OrthoFinder.ipynb](notebooks/4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-OrthoFinder.ipynb)
 > These notebooks visualize and analyze feature abundance for all three species in either Orthogroup or Structural cluster feature space.  
+
+- [4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-Foldseek_genesets.ipynb](notebooks/4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-Foldseek_genesets.ipynb)
+- [4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-OrthoFinder_genesets.ipynb](notebooks/4_multi-species-exploration/4_DrerMmusXlae_adultbrain_exploration-OrthoFinder_genesets.ipynb)
+> These notebooks perform a parameter sweep of top DE features for both OG and SC feature space.  
 
 - [4_multi-species-exploration/b_DrerMmusXlae_FoldSeek_plotly-testing.ipynb](notebooks/4_multi-species-exploration/b_DrerMmusXlae_FoldSeek_plotly-testing.ipynb)
 - [4_multi-species-exploration/b_DrerMmusXlae_FoldSeek_plotly-testing.ipynb](notebooks/4_multi-species-exploration/b_DrerMmusXlae_FoldSeek_plotly-testing.ipynb)
