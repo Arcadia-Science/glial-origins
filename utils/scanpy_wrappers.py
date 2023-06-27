@@ -183,7 +183,7 @@ class ScanpyMetaObject():
         cell_ids.fillna('Unlabeled', inplace = True)
         self.adata.obs['celltype'] = cell_ids['celltype'].values
     
-    def pca_basic(self, svd_solver='arpack', color = [], plot = True):
+    def pca_basic(self, svd_solver='arpack', color = [], plot = True, **kwargs):
         """Runs a simple PCA, displaying the first two components and variance plot.
         
         Args:
@@ -197,12 +197,12 @@ class ScanpyMetaObject():
             return None
         
         if color != []:
-            sc.pl.pca(self.adata, color = color, save = self.species_prefix + self.datatype + '_pca.pdf')
+            sc.pl.pca(self.adata, color = color, save = self.species_prefix + self.datatype + '_pca.pdf', **kwargs)
         else:
-            sc.pl.pca(self.adata, save = self.species_prefix + self.datatype + '_pca.pdf')
+            sc.pl.pca(self.adata, save = self.species_prefix + self.datatype + '_pca.pdf', **kwargs)
             sc.pl.pca_variance_ratio(self.adata, log=True)
     
-    def umap_leiden(self, n_neighbors=50, n_pcs = 40, legend_loc='on data', save = True, plot = True):
+    def umap_leiden(self, n_neighbors=50, n_pcs = 40, legend_loc='on data', save = True, plot = True, save_file = '', **kwargs):
         """Runs Leiden clustering, followed by UMAP, on the data.
         
         Args:
@@ -219,10 +219,13 @@ class ScanpyMetaObject():
         if not plot:
             return None
         
+        if save_file == '':
+            save_file = '_'.join([self.species_prefix, self.datatype, 'leiden.pdf'])
+        
         if save:
-            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, save = '_'.join([self.species_prefix, self.datatype, 'leiden.pdf']))
+            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, save = save_file, **kwargs)
         else:
-            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc)
+            sc.pl.umap(self.adata, color=['leiden'], legend_loc=legend_loc, **kwargs)
     
     def rank_genes(self, on = 'leiden', method = 't-test', plot = True, n_genes = 25, sharey = False):
         """Runs `sc.tl.rank_genes_groups` based on passed parameters.
@@ -269,7 +272,7 @@ class ScanpyMetaObject():
         
         return genelisttype, markergenetype
     
-    def export_top_genes(self, key: str):
+    def export_top_genes(self, key: str, filename_overwrite = ''):
         """Exports the top genes list to a text file, assigning the object as an attribute of the parent object.
         
         Args:
@@ -285,11 +288,16 @@ class ScanpyMetaObject():
         datatype = key.split('_')[2]
         
         top_genelist_filename = '_'.join([self.species_prefix, self.datatype, 'top', top_type, datatype, 'ids.txt'])
+        
+        if filename_overwrite != '':
+            top_genelist_filename = filename_overwrite
+        
         top_genelist_file = GeneListFile(filename = top_genelist_filename, 
                                          sampledict = self.sampledict, 
                                          sources = self.matrix, 
                                          genes = getattr(self, key), 
-                                         identifier = datatype)
+                                         identifier = datatype,
+                                         autoname = False)
         setattr(self, key + '_file', top_genelist_file)
     
     # Using an IdmmFile object, convert IDs from one type to another
