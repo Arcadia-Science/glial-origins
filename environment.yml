@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python=3.10.10
   - anndata=0.8.0
+  - harmonypy
   - matplotlib=3.5.3
   - matplotlib-base=3.5.3
   - numpy
