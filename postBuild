@@ -1,0 +1,2 @@
+wget -q https://zenodo.org/record/7838976/files/DrerMmusXlae_adultbrain_asOrthogroup_combined_exc_subsampled.h5ad?download=1
+wget -q https://zenodo.org/record/7838976/files/DrerMmusXlae_adultbrain_asStruCluster_combined_exc_subsampled.h5ad?download=1
