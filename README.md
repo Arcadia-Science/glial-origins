@@ -17,7 +17,7 @@ Our results are summarized in a [Pub](https://arcadia-research.pubpub.org/pub/id
 ---
 
 ## Data exploration
-If you'd simply like to explore the feature space embeddings we generated in this manuscript, we've built a Binder environment where you can quickly download compressed versions of our data from Zenodo and analyze our data using scanpy. TODO
+If you'd simply like to explore the feature space embeddings we generated in this manuscript, we've built a [Google CoLab notebook](https://colab.research.google.com/drive/1EVworofkY_-ClFfTmvHdjpLChFG4-sDP?usp=sharing) where you can quickly download compressed versions of our data from Zenodo and analyze our data using scanpy.
 
 ---
 
@@ -156,19 +156,6 @@ On the command line, use:
 5. Start working on analyses!
 
 ---
-
-## Pipeline organization
-
-### General naming conventions
-Notebooks for running analyses are prefixed with a number based on their function, as described below.
-
-`1_` – notebooks for downloading genome sequences, annotations, and genes x cells matrices  
-    `a_` – notebooks for downloading cell type annotation data  
-`2_` – notebooks for performing embedding of datasets  
-`3_` – notebooks for analyzing cells of a single species and comparing to the same cells in a new embedding  
-    `c_` – notebooks for generating plots of gene expression vs. feature abundance  
-`4_` – notebooks for analyzing cells of multiple species in the same joint embedding  
-    `b_` – notebooks for generating interactive plots of joint embedding spaces using Plotly  
 
 ## Pipeline organization
 

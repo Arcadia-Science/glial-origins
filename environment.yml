@@ -1,0 +1,17 @@
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10.10
+  - anndata=0.8.0
+  - harmonypy=0.0.6
+  - matplotlib=3.5.3
+  - matplotlib-base=3.5.3
+  - numpy=1.21.6
+  - pandas=1.4.4
+  - plotly=5.10.0
+  - scanpy=1.9.1
+  - pip
+  - pip:
+     - "--editable=git+https://github.com/Arcadia-Science/arcadia-pycolor.git#egg=arcadia_pycolor"

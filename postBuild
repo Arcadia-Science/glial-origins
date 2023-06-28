@@ -1,0 +1,8 @@
+mkdir binder_files
+
+wget -q -O binder_files/DrerMmusXlae_adultbrain_asOrthogroup_combined_exc_subsampled.h5ad https://zenodo.org/record/7838976/files/DrerMmusXlae_adultbrain_asOrthogroup_combined_exc_subsampled.h5ad?download=1
+wget -q -O binder_files/DrerMmusXlae_adultbrain_asStruCluster_combined_exc_subsampled.h5ad https://zenodo.org/record/7838976/files/DrerMmusXlae_adultbrain_asStruCluster_combined_exc_subsampled.h5ad?download=1
+
+wget -q -O binder_files/Drer_adultbrain_Brain_8_cellannot.tsv https://zenodo.org/record/7838976/files/Drer_adultbrain_Brain_8_cellannot.tsv?download=1
+wget -q -O binder_files/Mmus_adultbrain_Brain_1_cellannot.tsv https://zenodo.org/record/7838976/files/Mmus_adultbrain_Brain_1_cellannot.tsv?download=1
+wget -q -O binder_files/Xlae_adultbrain_Brain3_4_cellannot.tsv https://zenodo.org/record/7838976/files/Xlae_adultbrain_Brain3_4_cellannot.tsv?download=1
