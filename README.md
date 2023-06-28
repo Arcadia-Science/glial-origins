@@ -170,19 +170,6 @@ Notebooks for running analyses are prefixed with a number based on their functio
 `4_` – notebooks for analyzing cells of multiple species in the same joint embedding  
     `b_` – notebooks for generating interactive plots of joint embedding spaces using Plotly  
 
-## Pipeline organization
-
-### General naming conventions
-Notebooks for running analyses are prefixed with a number based on their function, as described below.
-
-`1_` – notebooks for downloading genome sequences, annotations, and genes x cells matrices  
-    `a_` – notebooks for downloading cell type annotation data  
-`2_` – notebooks for performing embedding of datasets  
-`3_` – notebooks for analyzing cells of a single species and comparing to the same cells in a new embedding  
-    `c_` – notebooks for generating plots of gene expression vs. feature abundance  
-`4_` – notebooks for analyzing cells of multiple species in the same joint embedding  
-    `b_` – notebooks for generating interactive plots of joint embedding spaces using Plotly  
-
 ### Vertebrate adult brain analysis (Drer, Mmus, Xlae) using **OrthoFinder** and **AlphaFold → FoldSeek**
 Analysis of cells from three adult brain scRNA-Seq datasets from zebrafish, mouse, and frog (_Xenopus laevis_) using an Orthogroup or Structural scluster embedding.  
 Our analysis can be reproduced by running the provided notebooks in the following order.  
