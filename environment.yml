@@ -5,12 +5,12 @@ channels:
 dependencies:
   - python=3.10.10
   - anndata=0.8.0
-  - harmonypy
+  - harmonypy=0.0.6
   - matplotlib=3.5.3
   - matplotlib-base=3.5.3
-  - numpy
+  - numpy=1.21.6
   - pandas=1.4.4
-  - plotly
+  - plotly=5.10.0
   - scanpy=1.9.1
   - pip
   - pip:
