@@ -48,4 +48,4 @@ dependencies:
   - certifi
   - openssl
   - pip:
-     - "--editable=git+https://github.com/Arcadia-Science/arcadia-pycolor.git#egg=arcadia_pycolor"
+     - "--editable=git+https://github.com/Arcadia-Science/arcadia-pycolor.git@das/v03#egg=arcadia_pycolor"
