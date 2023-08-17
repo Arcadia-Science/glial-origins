@@ -1,4 +1,7 @@
 # Comparing gene expression across species based on protein structure instead of sequence
+---
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7838976.svg)](https://doi.org/10.5281/zenodo.7838976) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EVworofkY_-ClFfTmvHdjpLChFG4-sDP)
+
 We investigated protein structure predictions as an alternative to protein sequence homology for comparing cell types and gene expression across species based on single-cell RNA-seq data.
 
 ---
@@ -12,12 +15,12 @@ We focused on three datasets of adult brain single-cell RNA-Sequencing generated
 - sample ["Brain1"](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2906405) from the [Han et al. 2018](https://www.sciencedirect.com/science/article/pii/S0092867418301168#sec4) mouse cell atlas
 - sample ["Xenopus_brain_COL65"](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6214268) from the [Liao et al. 2022](https://www.nature.com/articles/s41467-022-31949-2) Xenopus laevis adult cell atlas
 
-Our results are summarized in a [Pub](https://arcadia-research.pubpub.org/pub/idea-cell-type-evolution) on our website.
+Our results are summarized in a [Pub](https://arcadia-research.pubpub.org/pub/idea-cell-type-evolution) on our website.  
 
 ---
 
 ## Data exploration
-If you'd simply like to explore the feature space embeddings we generated in this manuscript, we've built a [Google CoLab notebook](https://colab.research.google.com/drive/1EVworofkY_-ClFfTmvHdjpLChFG4-sDP?usp=sharing) where you can quickly download compressed versions of our data from Zenodo and analyze our data using scanpy.
+If you'd simply like to explore the feature space embeddings we generated in this manuscript, we've built a Google CoLab notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EVworofkY_-ClFfTmvHdjpLChFG4-sDP) where you can quickly download compressed versions of our data from Zenodo [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7838976.svg)](https://doi.org/10.5281/zenodo.7838976) and analyze our data using scanpy.
 
 ---
 
@@ -29,7 +32,7 @@ If you'd like to run our pipelines and analyses for this repository, you'll need
     - you should use `awscli` or `boto3` to set up permissions for the bucket on your local machine
 - a **clone of this GitHub repository**
     - you should modify the [install_locs.py](env/install_locs.py) file to reflect the file paths to your local installs of the listed software
-    - you should also change the `S3_BUCKET_ADDRESS` variable to the address of your S3 bucket, following the format of the example provided
+    - you should also change the `S3_BUCKET_ADDRESS` variable to the address of your S3 bucket, following the format of the example provided in [install_locs.py](env/install_locs.py)
 
 ---
 
