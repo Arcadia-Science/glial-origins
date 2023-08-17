@@ -1,5 +1,4 @@
 # Comparing gene expression across species based on protein structure instead of sequence
----
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7838976.svg)](https://doi.org/10.5281/zenodo.7838976) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EVworofkY_-ClFfTmvHdjpLChFG4-sDP)
 
 We investigated protein structure predictions as an alternative to protein sequence homology for comparing cell types and gene expression across species based on single-cell RNA-seq data.
@@ -20,7 +19,7 @@ Our results are summarized in a [Pub](https://research.arcadiascience.com/pub/id
 ---
 
 ## Data exploration
-If you'd simply like to explore the feature space embeddings we generated in this manuscript, we've built a Google CoLab notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EVworofkY_-ClFfTmvHdjpLChFG4-sDP) where you can quickly download compressed versions of our data from Zenodo [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7838976.svg)](https://doi.org/10.5281/zenodo.7838976) and analyze our data using scanpy.
+If you'd simply like to explore the feature space embeddings we generated in this manuscript, we've built a Google CoLab notebook [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EVworofkY_-ClFfTmvHdjpLChFG4-sDP) where you can quickly download compressed versions of our data from Zenodo [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7838976.svg)](https://doi.org/10.5281/zenodo.7838976) and analyze our data using [scanpy](https://scanpy.readthedocs.io/en/stable/).
 
 ---
 
