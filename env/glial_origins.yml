@@ -664,5 +664,5 @@ dependencies:
   ## manually added this to add arcadia-pycolor support
   ## conda env update -f glial_origins.yml
   - pip:
-     - "--editable=git+https://github.com/Arcadia-Science/arcadia-pycolor.git@das/v03#egg=arcadia_pycolor"
+     - "--editable=git+https://github.com/Arcadia-Science/arcadia-pycolor.git@245ad0cd6d687fab89a9f7467bf29b633a927492#egg=arcadia_pycolor"
 prefix: /home/ec2-user/miniconda3/envs/glial_origins
