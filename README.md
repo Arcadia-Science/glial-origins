@@ -15,7 +15,7 @@ We focused on three datasets of adult brain single-cell RNA-Sequencing generated
 - sample ["Brain1"](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2906405) from the [Han et al. 2018](https://www.sciencedirect.com/science/article/pii/S0092867418301168#sec4) mouse cell atlas
 - sample ["Xenopus_brain_COL65"](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6214268) from the [Liao et al. 2022](https://www.nature.com/articles/s41467-022-31949-2) Xenopus laevis adult cell atlas
 
-Our results are summarized in a [Pub](https://arcadia-research.pubpub.org/pub/idea-cell-type-evolution) on our website.  
+Our results are summarized in a [Pub](https://research.arcadiascience.com/pub/idea-structure-based-expression-comparison) on our website.  
 
 ---
 
